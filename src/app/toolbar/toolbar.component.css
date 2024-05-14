@@ -1,0 +1,16 @@
+p {
+  margin: 0 20px 0 20px;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+i {
+  font-size: 24px;
+}
+
+::ng-deep .p-toolbar {
+  border: none;
+  padding: 0;
+  background: none;
+  margin-bottom: 20px;
+}

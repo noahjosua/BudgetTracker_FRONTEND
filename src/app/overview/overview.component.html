@@ -1,0 +1,14 @@
+<div class="outerContainer">
+  <div class="innerContainer">
+    <p-button label="Einnahmen" [text]="true" severity="success"></p-button>
+    <p>{{ total_income + '€' }}</p>
+  </div>
+  <div class="innerContainer">
+    <p-button label="Ausgaben" [text]="true" severity="danger"></p-button>
+    <p>{{ total_expense + '€' }}</p>
+  </div>
+  <div class="innerContainer">
+    <p-button label="Gesamt" [text]="true" severity="secondary"></p-button>
+    <p>{{ saldo + '€' }}</p>
+  </div>
+</div>

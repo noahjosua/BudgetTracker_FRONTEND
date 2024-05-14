@@ -1,0 +1,35 @@
+.button-container {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+}
+
+.dialog-container {
+  margin: 20px 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+.dialog-buttons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.dialog-label {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+::ng-deep .p-datepicker {
+  max-width: 100%;
+}
+
+::ng-deep .p-button {
+  background: var(--button-background-color);
+  box-shadow: none;
+  border: none;
+}

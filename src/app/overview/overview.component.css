@@ -1,0 +1,10 @@
+.outerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.innerContainer {
+  text-align: center;
+  margin-right: 20px;
+}

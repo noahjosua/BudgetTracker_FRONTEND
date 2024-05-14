@@ -1,0 +1,28 @@
+<p-table [value]="incomes_and_expenses">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Datum</th>
+      <th>Kategorie</th>
+      <th>Bezeichnung</th>
+      <th>Summe</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-entry>
+    <tr>
+      <td>{{ entry.datePlanned }}</td>
+      <td>{{ entry.category }}</td>
+      <td>{{ entry.description }}</td>
+      <td
+        [ngStyle]="{'color': entry.type == 'expense' ? 'var(--expense-label)' : 'var(--income-label)', 'font-weight': 'bold'}">{{ entry.amount }}
+      </td>
+      <td>
+        <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"></p-button>
+      </td>
+      <td>
+        <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary" (onClick)="onDelete(entry)"></p-button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

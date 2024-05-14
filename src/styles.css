@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+/* Import PrimeIcons, PrimeNG styles, and Lara Light Blue theme */
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+/* Define root variables for colors */
+:root{
+  --main-text-color: #15171C;
+  --expense-label: #ef4444;
+  --income-label: #22c55e;
+  --button-background-color: #64748b;
+}
+
+/* Body styles */
+body{
+  margin: 0;
+  font-size: 16px;
+}
+
+
+
+
+
+

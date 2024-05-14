@@ -1,0 +1,9 @@
+::ng-deep .p-button.p-button-text, .p-button.p-button-text:active {
+  background: none;
+  box-shadow: none;
+  padding-bottom: 0;
+}
+
+.container {
+  margin: 20px 20px 20px 20px; /* top, right, bottom, left */
+}
