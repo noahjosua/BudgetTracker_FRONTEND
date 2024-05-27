@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {ValidatorEntryDirective} from "./validator-entry.directive";
+
 
 @Component({
   selector: 'app-create-edit-entry',
@@ -6,6 +8,7 @@ import {Component} from '@angular/core';
   styleUrl: './create-edit-entry.component.css'
 })
 export class CreateEditEntryComponent {
+  validatorDirective: ValidatorEntryDirective = new ValidatorEntryDirective();
 
   visible: boolean = false;
   categories: any = [
@@ -26,6 +29,7 @@ export class CreateEditEntryComponent {
   constructor() {
   }
 
+
   onOpenDialog() {
     if (this.visible) {
       this.visible = false;
@@ -35,13 +39,32 @@ export class CreateEditEntryComponent {
   }
 
   onSave() {
-    this.entry.datePlanned = '11.05.2024';
-    this.entry.category = this.entry.category.name;
 
-    // clear entry and validation
+    if (this.validatorDirective.validate(this.entry) == null) {
+      this.entry.datePlanned = '11.05.2024';
+      this.entry.category = this.entry.category.name;
+      this.entry.amount = this.entry.amount;
+      this.entry.description = 'IDk m8';
+
+      this.entry.reset({
+        datePlanned: '',
+        category: '',
+        description: '',
+        amount: 0.0,
+        type: ''
+      });
+
+      this.visible = false;
+
+    } else {
+      console.log(this.validatorDirective.validate(this.entry));
+    }
+
   }
 
   onCancel() {
     this.visible = false;
   }
+
+
 }
