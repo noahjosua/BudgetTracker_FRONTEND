@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-import {EXPENSE, INCOME} from "../constants";
+import {mock_income_and_expenses} from "../mock-data-income-and-expenses";
+
 
 @Component({
   selector: 'app-revenue-list',
@@ -8,52 +9,15 @@ import {EXPENSE, INCOME} from "../constants";
 })
 export class RevenueListComponent {
 
-  incomes_and_expenses: any[] = [
-    {
-      id: 1,
-      datePlanned: "22.05.2024",
-      category: "Free time",
-      description: "Bubble-tea",
-      amount: 5.0,
-      type: EXPENSE
-    },
-    {
-      id: 2,
-      datePlanned: "01.06.2024",
-      category: "Rent",
-      description: "",
-      amount: 300.0,
-      type: EXPENSE
-    },
-    {
-      id: 3,
-      datePlanned: "02.06.2024",
-      category: "Salary",
-      description: "Salary for the Month of May",
-      amount: 538.0,
-      type: INCOME
-    },
-    {
-      id: 1,
-      datePlanned: "05.06.2024",
-      category: "Subscriptions",
-      description: "Netflix",
-      amount: 6.99,
-      type: EXPENSE
-    },
-    {
-      id: 1,
-      datePlanned: "18.05.2024",
-      category: "Pocket Money",
-      description: "",
-      amount: 200.0,
-      type: INCOME
-    }
-  ];
+  incomes_and_expenses: any[] = mock_income_and_expenses;
 
   constructor() {
   }
 
   onDelete(entry: any) {
+  }
+
+  formattedDate(date: Date) {
+    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
   }
 }

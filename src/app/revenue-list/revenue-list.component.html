@@ -11,7 +11,7 @@
   </ng-template>
   <ng-template pTemplate="body" let-entry>
     <tr>
-      <td>{{ entry.datePlanned }}</td>
+      <td>{{ formattedDate(entry.datePlanned) }}</td>
       <td>{{ entry.category }}</td>
       <td>{{ entry.description }}</td>
       <td
