@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {RevenueTypes} from "../model/revenue-types";
+import {EXPENSE, INCOME} from "../constants";
 
 @Component({
   selector: 'app-revenue-list',
@@ -15,7 +15,7 @@ export class RevenueListComponent {
       category: "Free time",
       description: "Bubble-tea",
       amount: 5.0,
-      type: RevenueTypes.EXPENSE
+      type: EXPENSE
     },
     {
       id: 2,
@@ -23,7 +23,7 @@ export class RevenueListComponent {
       category: "Rent",
       description: "",
       amount: 300.0,
-      type: RevenueTypes.EXPENSE
+      type: EXPENSE
     },
     {
       id: 3,
@@ -31,7 +31,7 @@ export class RevenueListComponent {
       category: "Salary",
       description: "Salary for the Month of May",
       amount: 538.0,
-      type: RevenueTypes.INCOME
+      type: INCOME
     },
     {
       id: 1,
@@ -39,7 +39,7 @@ export class RevenueListComponent {
       category: "Subscriptions",
       description: "Netflix",
       amount: 6.99,
-      type: RevenueTypes.EXPENSE
+      type: EXPENSE
     },
     {
       id: 1,
@@ -47,7 +47,7 @@ export class RevenueListComponent {
       category: "Pocket Money",
       description: "",
       amount: 200.0,
-      type: RevenueTypes.INCOME
+      type: INCOME
     }
   ];
 
