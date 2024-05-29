@@ -2,7 +2,8 @@ import {Category} from "./category";
 
 export interface Income {
   id?: number;
-  datePlanned: string;
+  datePlanned: Date;
+  dateCreated: Date;
   category: Category;
   description: string;
   amount: number;
