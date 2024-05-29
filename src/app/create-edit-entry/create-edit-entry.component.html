@@ -18,21 +18,21 @@
       <div class="dialog-container">
         <label class="dialog-label">Typ</label>
         <p-dropdown [options]="types" [(ngModel)]="type" optionLabel="name" [showClear]="true"
-                    placeholder="Wähle einen Typ">
+                    placeholder="Wähle einen Typ" (onChange)="typeChosen()">
         </p-dropdown>
       </div>
 
       <!--Description-->
       <div class="dialog-container">
         <label class="dialog-label">Bezeichnung</label>
-        <input pInputText type="text" maxlength="50" required [(ngModel)]="entry.description"/>
+        <input pInputText type="text" maxlength="50" required [(ngModel)]="entry.description" (input)="validateDes()"/>
       </div>
 
       <!--Category-->
       <div class="dialog-container">
         <label class="dialog-label">Kategorie</label>
         <p-dropdown [options]="categories" [(ngModel)]="entry.category" optionLabel="name" [showClear]="true"
-                    placeholder="Wähle eine Kategorie">
+                    placeholder="Wähle eine Kategorie" (onChange)="categoryChosen()">
         </p-dropdown>
       </div>
 
@@ -40,14 +40,14 @@
       <div class="dialog-container">
         <label class="dialog-label">Summe (in Euro)</label>
         <p-inputNumber [(ngModel)]="entry.amount" mode="decimal" [minFractionDigits]="2"
-                       [maxFractionDigits]="5"></p-inputNumber>
+                       [maxFractionDigits]="5" (input)="validateAmount()"></p-inputNumber>
       </div>
 
       <!-- Date planned -->
       <div class="dialog-container">
         <label class="dialog-label">Geplanter Zeitpunkt</label>
         <p-calendar [(ngModel)]="entry.datePlanned"
-                    dateFormat="dd/mm/yy" [showOnFocus]="true"/>
+                    dateFormat="dd/mm/yy" [showOnFocus]="true" (input)="validateDate()"/>
       </div>
     </div>
 

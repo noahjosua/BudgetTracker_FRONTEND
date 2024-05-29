@@ -1,6 +1,4 @@
 import {Component} from '@angular/core';
-import {ValidatorEntryDirective} from "./validator-entry.directive";
-
 
 @Component({
   selector: 'app-create-edit-entry',
@@ -8,7 +6,13 @@ import {ValidatorEntryDirective} from "./validator-entry.directive";
   styleUrl: './create-edit-entry.component.css'
 })
 export class CreateEditEntryComponent {
-  validatorDirective: ValidatorEntryDirective = new ValidatorEntryDirective();
+
+  isTypeChosen: boolean = false;
+  isDesValid: boolean = false;
+  isCategoryChosen: boolean = false;
+  isAmountValid: boolean = false;
+  isDateValid: boolean = false;
+
 
   visible: boolean = false;
   categories: any = [
@@ -39,12 +43,14 @@ export class CreateEditEntryComponent {
   }
 
   onSave() {
+    let isEntryValid = this.entryValidator();
 
-    if (this.validatorDirective.validate(this.entry) == null) {
-      this.entry.datePlanned = '11.05.2024';
+    if(isEntryValid) {
+      this.entry.datePlanned = this.entry.datePlanned;
       this.entry.category = this.entry.category.name;
       this.entry.amount = this.entry.amount;
-      this.entry.description = 'IDk m8';
+      this.entry.description = this.entry.description;
+      this.entry.type = '';
 
       this.entry.reset({
         datePlanned: '',
@@ -53,11 +59,8 @@ export class CreateEditEntryComponent {
         amount: 0.0,
         type: ''
       });
-
+      
       this.visible = false;
-
-    } else {
-      console.log(this.validatorDirective.validate(this.entry));
     }
 
   }
@@ -66,5 +69,42 @@ export class CreateEditEntryComponent {
     this.visible = false;
   }
 
+ entryValidator(): boolean {
+    if (this.isTypeChosen && this.isDesValid && this.isCategoryChosen && this.isAmountValid && this.isDateValid) {
+      return true;
+    }
+    return false;
+  }
 
+  typeChosen() : boolean {
+    this.isTypeChosen = true;
+    return this.isTypeChosen;
+  }
+
+  validateDes(): boolean {
+    if (this.entry.category.length > 0 && this.entry.category.length < 50) {
+      this.isDesValid = true;
+    }
+    return this.isDesValid;
+  }
+
+  categoryChosen(): boolean {
+    this.isCategoryChosen = true;
+    return this.isCategoryChosen;
+  }
+
+  validateAmount(): boolean {
+    if (this.entry.amount > 0) {
+      this.isAmountValid = true;
+    }
+    return this.isAmountValid;
+  }
+
+  validateDate(): boolean {
+    const regex = /^((0[1-9]|[12][0-9]|3[01])[\.\/](0[13578]|1[02])[\.\/](19|20)\d{2}|(0[1-9]|[12][0-9]|30)[\.\/](0[469]|11)[\.\/](19|20)\d{2}|(0[1-9]|1[0-9]|2[0-8])[\.\/]02[\.\/](19|20)\d{2}|29[\.\/]02[\.\/]((19|20)(04|08|[2468][048]|[13579][26])|2000))$/;
+    if (regex.test(this.entry.datePlanned)){
+      this.isDateValid = true;
+    }
+    return this.isDateValid;
+  }
 }
