@@ -1,5 +1,12 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {mock_income_and_expenses} from "../mock-data-income-and-expenses";
+import {Expense} from "../model/expense.model";
+import {ExpenseService} from "../services/expense.service";
+import {Income} from "../model/income.model";
+import {Subscription} from "rxjs";
+import {IncomeService} from "../services/income.service";
+import {EXPENSE, INCOME} from "../constants";
+import {formatDate} from "../helper";
 
 
 @Component({
@@ -7,17 +14,40 @@ import {mock_income_and_expenses} from "../mock-data-income-and-expenses";
   templateUrl: './revenue-list.component.html',
   styleUrl: './revenue-list.component.css'
 })
-export class RevenueListComponent {
+export class RevenueListComponent implements OnInit {
 
-  incomes_and_expenses: any[] = mock_income_and_expenses;
+  private incomeSubscription: Subscription | undefined;
+  private expenseSubscription: Subscription | undefined;
+  incomes: Income[] = [];
+  expenses: Expense[] = [];
+  incomes_and_expenses: any[] = [];
 
-  constructor() {
+  constructor(public incomeService: IncomeService, public expenseService: ExpenseService) {
+  }
+
+  ngOnInit() {
+    this.incomeService.fetchIncomes();
+    this.incomeSubscription = this.incomeService.getIncomesUpdatedListener().subscribe((incomes: Income[]) => {
+      this.incomes = incomes;
+      for (const income of this.incomes) {
+        income.type = INCOME;
+      }
+      this.incomes_and_expenses = this.incomes.concat(this.expenses);
+    });
+
+    this.expenseService.fetchExpenses();
+    this.expenseSubscription = this.expenseService.getExpensesUpdatedListener().subscribe((expenses: Expense[]) => {
+      this.expenses = expenses;
+      for (const expense of this.expenses) {
+        expense.type = EXPENSE;
+      }
+      this.incomes_and_expenses = this.incomes.concat(this.expenses);
+    });
   }
 
   onDelete(entry: any) {
   }
 
-  formattedDate(date: Date) {
-    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
-  }
+  protected readonly EXPENSE = EXPENSE;
+  protected readonly formatDate = formatDate;
 }
