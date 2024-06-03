@@ -1,4 +1,6 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
+import { ExpenseService } from '../services/expense.service';
+import { IncomeService } from '../services/income.service';
 
 @Component({
   selector: 'app-create-edit-entry',
@@ -9,10 +11,10 @@ export class CreateEditEntryComponent {
 
   visible: boolean = false;
   categories: any = [
-    {name: 'A'}, {name: 'B'}, {name: 'C'}
+    { name: 'A' }, { name: 'B' }, { name: 'C' }
   ];
   types: any = [
-    {name: 'Einnahme'}, {name: 'Ausgabe'} // abhängig davon an unterschiedliche Endpunkte
+    { name: 'Einnahme' }, { name: 'Ausgabe' } // abhängig davon an unterschiedliche Endpunkte
   ];
 
   entry: any = {
@@ -21,9 +23,9 @@ export class CreateEditEntryComponent {
     description: '',
     amount: 0.0
   };
-  type: string = '';
+  type: any = '';
 
-  constructor() {
+  constructor(public expenseService: ExpenseService, public incomeService: IncomeService) {
   }
 
   onOpenDialog() {
@@ -35,8 +37,17 @@ export class CreateEditEntryComponent {
   }
 
   onSave() {
-    this.entry.datePlanned = '11.05.2024';
-    this.entry.category = this.entry.category.name;
+    this.entry.dateCreated = new Date();
+    this.entry.datePlanned = new Date();
+    this.entry.category = "GROCERIES";
+
+    if (this.type.name == 'Ausgabe') {
+      this.expenseService.addExpense(this.entry);
+    }
+
+    if (this.type.name == 'Einnahme') {
+      this.incomeService.addIncome(this.entry);
+    }
 
     // clear entry and validation
   }
