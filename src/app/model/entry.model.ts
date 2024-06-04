@@ -1,8 +1,8 @@
-export interface Income {
+export interface Entry {
   id?: number;
   datePlanned: Date;
   dateCreated: Date;
-  category: string;
+  category: any;
   description: string;
   amount: number;
   type?: string;
