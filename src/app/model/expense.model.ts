@@ -1,10 +1,8 @@
-import {Category} from "./category";
-
 export interface Expense {
   id?: number;
   datePlanned: Date;
   dateCreated: Date;
-  category: Category;
+  category: string;
   description: string;
   amount: number;
   type?: string;

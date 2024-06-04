@@ -11,17 +11,18 @@
   </ng-template>
   <ng-template pTemplate="body" let-entry>
     <tr>
-      <td>{{ formattedDate(entry.datePlanned) }}</td>
+      <td>{{ formatDate(entry.datePlanned) }}</td>
       <td>{{ entry.category }}</td>
       <td>{{ entry.description }}</td>
       <td
-        [ngStyle]="{'color': entry.type == 'expense' ? 'var(--expense-label)' : 'var(--income-label)', 'font-weight': 'bold'}">{{ entry.amount }}
+        [ngStyle]="{'color': entry.type == EXPENSE ? 'var(--expense-label)' : 'var(--income-label)', 'font-weight': 'bold'}">{{ entry.amount }}
       </td>
       <td>
         <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"></p-button>
       </td>
       <td>
-        <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary" (onClick)="onDelete(entry)"></p-button>
+        <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary"
+                  (onClick)="onDelete(entry)"></p-button>
       </td>
     </tr>
   </ng-template>
