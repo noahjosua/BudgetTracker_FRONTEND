@@ -48,6 +48,6 @@ export class RevenueListComponent implements OnChanges {
     }
   }
 
-  protected readonly formatDate = formatDate;
   protected readonly EXPENSE = EXPENSE;
+  protected readonly formatDate = formatDate;
 }
