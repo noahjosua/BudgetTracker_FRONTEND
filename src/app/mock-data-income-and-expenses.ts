@@ -1,6 +1,5 @@
 import {Expense} from './model/expense.model';
 import {Income} from './model/income.model';
-import {Category} from "./model/category";
 import {EXPENSE, INCOME} from "./constants";
 
 const mockExpenses: Expense[] = [
@@ -8,7 +7,7 @@ const mockExpenses: Expense[] = [
     id: 1,
     datePlanned: parseDate("22.05.2024"),
     dateCreated: parseDate("29.05.2024"),
-    category: Category.FREE_TIME,
+    category: "FREE_TIME",
     description: "Bubble-tea",
     amount: 5.0,
     type: EXPENSE
@@ -17,7 +16,7 @@ const mockExpenses: Expense[] = [
     id: 2,
     datePlanned: parseDate("01.06.2024"),
     dateCreated: parseDate("29.05.2024"),
-    category: Category.RENT,
+    category: "RENT",
     description: "",
     amount: 300.0,
     type: EXPENSE
@@ -26,7 +25,7 @@ const mockExpenses: Expense[] = [
     id: 1,
     datePlanned: parseDate("05.06.2024"),
     dateCreated: parseDate("29.05.2024"),
-    category: Category.SUBSCRIPTIONS,
+    category: "SUBSCRIPTIONS",
     description: "Netflix",
     amount: 6.99,
     type: EXPENSE
@@ -38,7 +37,7 @@ const mockIncome: Income[] = [
     id: 3,
     datePlanned: parseDate("02.06.2024"),
     dateCreated: parseDate("29.05.2024"),
-    category: Category.SALARY,
+    category: "SALARY",
     description: "Salary for the Month of May",
     amount: 538.0,
     type: INCOME
@@ -47,7 +46,7 @@ const mockIncome: Income[] = [
     id: 1,
     datePlanned: parseDate("18.05.2024"),
     dateCreated: parseDate("29.05.2024"),
-    category: Category.POCKET_MONEY,
+    category: "POCKET_MONEY",
     description: "",
     amount: 200.0,
     type: INCOME

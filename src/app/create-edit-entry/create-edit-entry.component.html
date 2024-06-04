@@ -17,7 +17,7 @@
       <!--Type-->
       <div class="dialog-container">
         <label class="dialog-label">Typ</label>
-        <p-dropdown [options]="types" [(ngModel)]="type" optionLabel="name" [showClear]="true"
+        <p-dropdown [options]="types" [(ngModel)]="type" optionLabel="name" optionValue="value" [showClear]="true"
                     placeholder="Wähle einen Typ">
         </p-dropdown>
       </div>
@@ -31,9 +31,16 @@
       <!--Category-->
       <div class="dialog-container">
         <label class="dialog-label">Kategorie</label>
-        <p-dropdown [options]="categories" [(ngModel)]="entry.category" optionLabel="name" [showClear]="true"
-                    placeholder="Wähle eine Kategorie">
-        </p-dropdown>
+        <p-dropdown *ngIf="type == INCOME" [options]="incomeCategories"
+                    [(ngModel)]="entry.category"
+                    optionLabel="name"
+                    [showClear]="true"></p-dropdown>
+        <p-dropdown *ngIf="type == EXPENSE" [options]="expenseCategories"
+                    [(ngModel)]="entry.category"
+                    optionLabel="name"
+                    [showClear]="true"></p-dropdown>
+        <p-dropdown *ngIf="type == '' || type == null" [loading]="true"
+                    placeholder="Wähle zuerst einen Typ"></p-dropdown>
       </div>
 
       <!--Amount-->
