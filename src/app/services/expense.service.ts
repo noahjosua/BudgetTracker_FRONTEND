@@ -89,7 +89,6 @@ export class ExpenseService {
       });
   }
 
-  /*
   fetchExpensesByDate(date: Date) {
     console.log(date);
     const url = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_get_by_date}/${date}`;
@@ -102,6 +101,7 @@ export class ExpenseService {
         if (body && typeof body === 'object' && RESPONSE_MESSAGE_KEY in body && RESPONSE_ENTRY_KEY in body) {
           try {
             const newExpenses: Entry[] = JSON.parse(JSON.stringify(body.entry));
+            this.expenses = [];
             newExpenses.forEach(expense => this.expenses.push(expense));
             this.expensesUpdated.next([...this.expenses]);
           } catch (error) {
@@ -112,8 +112,6 @@ export class ExpenseService {
         }
       });
   }
-
-   */
 
   addExpense(expense: Entry) {
     const URL = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_save}`

@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
 
   onDateChanged(date: Date) {
     this.selectedDate = date.toLocaleString('default', {month: 'long', year: 'numeric'});
-    // this.expenseService.fetchExpensesByDate(date);
+    this.expenseService.fetchExpensesByDate(date);
     // TODO Einträge für den jeweiligen Monat fetchen
   }
 }
