@@ -56,8 +56,6 @@ export class RevenueListComponent implements OnInit {
     });
   }
 
-  onDelete(entry: any) {
-  }
-
   protected readonly EXPENSE = EXPENSE;
+  protected readonly formatDate = formatDate;
 }
