@@ -1,0 +1,37 @@
+{
+  "LABELS": {
+    "CREATE_EDIT_ENTRY_DIALOG_HEADER": "Neuer Eintrag",
+    "TYPE": "Typ",
+    "DESCRIPTION": "Bezeichnung",
+    "CATEGORY": "Kategorie",
+    "AMOUNT": "Summe (in Euro)",
+    "DATE_PLANNED": "Geplanter Zeitpunkt",
+    "DATE": "Datum",
+    "INCOME": "Einnahmen",
+    "EXPENSE": "Ausgaben",
+    "TOTAL": "Gesamt"
+  },
+  "BUTTONS": {
+    "SAVE": "Speichern",
+    "CANCEL": "Abbrechen"
+  },
+  "TYPE": {
+    "INCOME": "Einnahme",
+    "EXPENSE": "Ausgabe"
+  },
+  "CATEGORIES": {
+    "SALARY": "Gehalt",
+    "POCKET_MONEY": "Taschengeld",
+    "ALIMENT": "Unterhalt",
+    "CAPITAL_ASSETS": "Kapitalvermögen",
+    "RENTAL": "Vermietung",
+    "GROCERIES": "Lebensmittel",
+    "DRUGSTORE": "Drogerie",
+    "FREE_TIME": "Freizeit",
+    "RENT": "Miete",
+    "INSURANCE": "Versicherung",
+    "SUBSCRIPTIONS": "Abonnement",
+    "EDUCATION": "Bildung",
+    "OTHER": "Sonstiges"
+  }
+}

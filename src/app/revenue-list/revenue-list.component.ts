@@ -1,11 +1,8 @@
-import { mock_income_and_expenses } from "../mock-data-income-and-expenses";
-import { ExpenseService } from '../services/expense.service';
-import { IncomeService } from '../services/income.service';
-import { Expense } from '../model/expense.model';
-import { EXPENSE, INCOME } from '../constants';
-import {Component, OnInit} from '@angular/core';
-import {Income} from "../model/income.model";
-import {Subscription} from "rxjs";
+import {ExpenseService} from '../services/expense.service';
+import {IncomeService} from '../services/income.service';
+import {Entry} from '../model/entry.model';
+import {EXPENSE, INCOME} from '../constants';
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {formatDate} from "../helper";
 
 @Component({
@@ -13,47 +10,42 @@ import {formatDate} from "../helper";
   templateUrl: './revenue-list.component.html',
   styleUrl: './revenue-list.component.css'
 })
-export class RevenueListComponent implements OnInit {
+export class RevenueListComponent implements OnChanges {
 
-  private incomeSubscription: Subscription | undefined;
-  private expenseSubscription: Subscription | undefined;
-  incomes: Income[] = [];
-  expenses: Expense[] = [];
+  @Input() income: any;
+  @Input() expense: any;
   incomes_and_expenses: any[] = [];
 
-
-  constructor(public expenseService: ExpenseService, public incomeService: IncomeService) {
+  constructor(public incomeService: IncomeService, public expenseService: ExpenseService) {
   }
 
-  onDelete(entry: Expense) {
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes[INCOME]) {
+      for (const income of this.income) {
+        income.type = INCOME;
+      }
+      this.incomes_and_expenses = this.income.concat(this.expense); // TODO Anzeigen, so wie so abgespeichert wurden --> wie werden sie aus der DB geholt? In der Reihenfolge, in der sie auch gespeichert werden?
+    }
+    if (changes[EXPENSE]) {
+      for (const expense of this.expense) {
+        expense.type = EXPENSE;
+      }
+      this.incomes_and_expenses = this.income.concat(this.expense);
+    }
+  }
 
+  // TODO
+  onUpdate(entry: Entry) {
+
+  }
+
+  onDelete(entry: Entry) {
     if (entry.type == EXPENSE) {
       this.expenseService.deleteExpense(entry);
     }
     if (entry.type == INCOME) {
       this.incomeService.deleteIncome(entry);
     }
-  }
-
-
-  ngOnInit() {
-    this.incomeService.fetchIncomes();
-    this.incomeSubscription = this.incomeService.getIncomesUpdatedListener().subscribe((incomes: Income[]) => {
-      this.incomes = incomes;
-      for (const income of this.incomes) {
-        income.type = INCOME;
-      }
-      this.incomes_and_expenses = this.incomes.concat(this.expenses);
-    });
-
-    this.expenseService.fetchExpenses();
-    this.expenseSubscription = this.expenseService.getExpensesUpdatedListener().subscribe((expenses: Expense[]) => {
-      this.expenses = expenses;
-      for (const expense of this.expenses) {
-        expense.type = EXPENSE;
-      }
-      this.incomes_and_expenses = this.incomes.concat(this.expenses);
-    });
   }
 
   protected readonly EXPENSE = EXPENSE;

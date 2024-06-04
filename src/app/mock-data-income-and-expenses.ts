@@ -1,8 +1,8 @@
-import {Expense} from './model/expense.model';
-import {Income} from './model/income.model';
+import {Entry} from './model/entry.model';
 import {EXPENSE, INCOME} from "./constants";
 
-const mockExpenses: Expense[] = [
+// TODO löschen, wenn nicht mehr gebraucht
+const mockExpenses: Entry[] = [
   {
     id: 1,
     datePlanned: parseDate("22.05.2024"),
@@ -32,7 +32,7 @@ const mockExpenses: Expense[] = [
   }
 ];
 
-const mockIncome: Income[] = [
+const mockIncome: Entry[] = [
   {
     id: 3,
     datePlanned: parseDate("02.06.2024"),

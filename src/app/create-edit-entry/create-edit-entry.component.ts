@@ -1,8 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {EXPENSE, INCOME} from "../constants";
+import {CATEGORIES_KEY, EXPENSE, INCOME, TYPE_EXPENSE_KEY, TYPE_INCOME_KEY} from "../constants";
 import {ExpenseService} from "../services/expense.service";
 import {map, Subscription} from "rxjs";
 import {IncomeService} from "../services/income.service";
+import {Entry} from "../model/entry.model";
+import {TranslateService} from "@ngx-translate/core";
+import {getCategoryForBackend} from "../helper";
 
 @Component({
   selector: 'app-create-edit-entry',
@@ -13,13 +16,14 @@ export class CreateEditEntryComponent implements OnInit {
 
   private expenseCategorySubscription: Subscription | undefined;
   private incomeCategorySubscription: Subscription | undefined;
-  
 
   /* Dialog models for data binding */
   expenseCategories: any = [];
+  translatedExpenseCategories: any = [];
   incomeCategories: any = [];
-  types: any = [{name: 'Einnahme', value: INCOME}, {name: 'Ausgabe', value: EXPENSE}];
-  entry: any = {
+  translatedIncomeCategories: any = [];
+  types: any = [];
+  entry: Entry = {
     dateCreated: new Date(),
     datePlanned: new Date(),
     category: '',
@@ -28,12 +32,19 @@ export class CreateEditEntryComponent implements OnInit {
   };
   type: any = '';
 
-
   /* Dialog handling */
-  visible: boolean = false;
+  isVisible: boolean = false;
 
+  /* Validation */
+  validation: any = {
+    isTypeChosen: false,
+    isDesValid: false,
+    isCategoryChosen: false,
+    isAmountValid: false,
+    isDateValid: false,
+  }
 
-  constructor(public incomeService: IncomeService, public expenseService: ExpenseService) {
+  constructor(public incomeService: IncomeService, public expenseService: ExpenseService, private translate: TranslateService) {
   }
 
   ngOnInit() {
@@ -44,6 +55,7 @@ export class CreateEditEntryComponent implements OnInit {
       )
       .subscribe((mappedCategories) => {
         this.expenseCategories = mappedCategories;
+        this.translatedExpenseCategories = this.translateCategories(this.expenseCategories, this.translatedExpenseCategories);
       });
 
     this.incomeService.fetchCategories();
@@ -53,31 +65,74 @@ export class CreateEditEntryComponent implements OnInit {
       )
       .subscribe((mappedCategories) => {
         this.incomeCategories = mappedCategories;
+        this.translatedIncomeCategories = this.translateCategories(this.incomeCategories, this.translatedIncomeCategories);
       });
+
+    this.translate.get([TYPE_INCOME_KEY, TYPE_EXPENSE_KEY]).subscribe(translations => {
+      this.types.push({name: translations[TYPE_INCOME_KEY], value: INCOME});
+      this.types.push({name: translations[TYPE_EXPENSE_KEY], value: EXPENSE});
+    });
+  }
+
+  translateCategories(categories: any[], translatedCategories: any[]) {
+    const categoryNames = categories.map(c => c.name);
+    for (const category of categoryNames) {
+      this.translate.get(CATEGORIES_KEY + category).subscribe(translations => {
+        translatedCategories.push(translations);
+      });
+    }
+    return translatedCategories.map(c => ({name: c}));
   }
 
   onOpenDialog() {
-    this.visible = !this.visible;
+    this.isVisible = !this.isVisible;
   }
 
   onSave() {
     this.entry.dateCreated = new Date();
-    this.entry.datePlanned = new Date(); // TODO nicht usereingabe überschreiben
-    this.entry.category = this.entry.category.name;
+    this.entry.category = getCategoryForBackend(this.entry.category.name);
 
-    if (this.type.name == 'Ausgabe') {
+    if (this.type == EXPENSE) {
       this.expenseService.addExpense(this.entry);
     }
-
-    if (this.type.name == 'Einnahme') {
+    if (this.type == INCOME) {
       this.incomeService.addIncome(this.entry);
     }
 
-    // clear entry and validation
+    this.clearEntry();
+    this.clearValidation();
+    this.isVisible = false;
   }
 
   onCancel() {
-    this.visible = false;
+    this.isVisible = false;
+    this.clearEntry();
+    this.clearValidation();
+  }
+
+  /*
+  TODO
+  Validation implementieren
+   */
+
+  clearEntry() {
+    this.entry = {
+      dateCreated: new Date(),
+      datePlanned: new Date(),
+      category: '',
+      description: '',
+      amount: 0.0
+    }
+  }
+
+  clearValidation() {
+    this.validation = {
+      isTypeChosen: false,
+      isDesValid: false,
+      isCategoryChosen: false,
+      isAmountValid: false,
+      isDateValid: false,
+    }
   }
 
   protected readonly INCOME = INCOME;

@@ -6,17 +6,17 @@
           (onClick)="onOpenDialog()">
 </p-button>
 
-<p-dialog header="Neuer Eintrag"
+<p-dialog header="{{'LABELS.CREATE_EDIT_ENTRY_DIALOG_HEADER' | translate}}"
           styleClass="p-fluid"
           [modal]="true"
-          [(visible)]="visible"
+          [(visible)]="isVisible"
           [style]="{ width: '50vw' }"
           [closable]="false">
   <ng-template pTemplate="content">
     <div>
       <!--Type-->
       <div class="dialog-container">
-        <label class="dialog-label">Typ</label>
+        <label class="dialog-label">{{ 'LABELS.TYPE' | translate }}</label>
         <p-dropdown [options]="types" [(ngModel)]="type" optionLabel="name" optionValue="value" [showClear]="true"
                     placeholder="Wähle einen Typ">
         </p-dropdown>
@@ -24,18 +24,18 @@
 
       <!--Description-->
       <div class="dialog-container">
-        <label class="dialog-label">Bezeichnung</label>
+        <label class="dialog-label">{{ 'LABELS.DESCRIPTION' | translate }}</label>
         <input pInputText type="text" maxlength="50" required [(ngModel)]="entry.description"/>
       </div>
 
       <!--Category-->
       <div class="dialog-container">
-        <label class="dialog-label">Kategorie</label>
-        <p-dropdown *ngIf="type == INCOME" [options]="incomeCategories"
+        <label class="dialog-label">{{ 'LABELS.CATEGORY' | translate }}</label>
+        <p-dropdown *ngIf="type == INCOME" [options]="translatedIncomeCategories"
                     [(ngModel)]="entry.category"
                     optionLabel="name"
                     [showClear]="true"></p-dropdown>
-        <p-dropdown *ngIf="type == EXPENSE" [options]="expenseCategories"
+        <p-dropdown *ngIf="type == EXPENSE" [options]="translatedExpenseCategories"
                     [(ngModel)]="entry.category"
                     optionLabel="name"
                     [showClear]="true"></p-dropdown>
@@ -45,14 +45,14 @@
 
       <!--Amount-->
       <div class="dialog-container">
-        <label class="dialog-label">Summe (in Euro)</label>
+        <label class="dialog-label">{{ 'LABELS.AMOUNT' | translate }}</label>
         <p-inputNumber [(ngModel)]="entry.amount" mode="decimal" [minFractionDigits]="2"
                        [maxFractionDigits]="5"></p-inputNumber>
       </div>
 
       <!-- Date planned -->
       <div class="dialog-container">
-        <label class="dialog-label">Geplanter Zeitpunkt</label>
+        <label class="dialog-label">{{ 'LABELS.DATE_PLANNED' | translate }}</label>
         <p-calendar [(ngModel)]="entry.datePlanned"
                     dateFormat="dd/mm/yy" [showOnFocus]="true"/>
       </div>
@@ -60,11 +60,15 @@
 
     <!-- Save and Cancel Buttons -->
     <div class="dialog-buttons-container">
-      <p-button label="Speichern" icon="pi pi-save" iconPos="right"
+      <p-button label="{{'BUTTONS.SAVE' | translate}}" icon="pi pi-save" iconPos="right"
                 styleClass="p-button-sm" (onClick)="onSave()">
-        <!--[disabled]=""-->
+        <!-- TODO
+        [disabled]="!validation.isTypeChosen || !validation.isDesValid || !validation.isCategoryChosen || !validation.isAmountValid || !validation.isDateValid"
+        -->
+
       </p-button>
-      <p-button label="Abbrechen" icon="" iconPos="right" styleClass="p-button-sm" (onClick)="onCancel()"></p-button>
+      <p-button label="{{'BUTTONS.CANCEL'|translate}}" icon="" iconPos="right" styleClass="p-button-sm"
+                (onClick)="onCancel()"></p-button>
     </div>
   </ng-template>
 </p-dialog>
