@@ -13,6 +13,7 @@ export class CreateEditEntryComponent implements OnInit {
 
   private expenseCategorySubscription: Subscription | undefined;
   private incomeCategorySubscription: Subscription | undefined;
+  
 
   /* Dialog models for data binding */
   expenseCategories: any = [];
@@ -26,6 +27,7 @@ export class CreateEditEntryComponent implements OnInit {
     amount: 0.0
   };
   type: any = '';
+
 
   /* Dialog handling */
   visible: boolean = false;
@@ -59,8 +61,17 @@ export class CreateEditEntryComponent implements OnInit {
   }
 
   onSave() {
-    this.entry.datePlanned = '11.05.2024'; // TODO nicht hardgecoded
+    this.entry.dateCreated = new Date();
+    this.entry.datePlanned = new Date(); // TODO nicht usereingabe überschreiben
     this.entry.category = this.entry.category.name;
+
+    if (this.type.name == 'Ausgabe') {
+      this.expenseService.addExpense(this.entry);
+    }
+
+    if (this.type.name == 'Einnahme') {
+      this.incomeService.addIncome(this.entry);
+    }
 
     // clear entry and validation
   }

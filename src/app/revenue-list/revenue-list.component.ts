@@ -1,13 +1,12 @@
+import { mock_income_and_expenses } from "../mock-data-income-and-expenses";
+import { ExpenseService } from '../services/expense.service';
+import { IncomeService } from '../services/income.service';
+import { Expense } from '../model/expense.model';
+import { EXPENSE, INCOME } from '../constants';
 import {Component, OnInit} from '@angular/core';
-import {mock_income_and_expenses} from "../mock-data-income-and-expenses";
-import {Expense} from "../model/expense.model";
-import {ExpenseService} from "../services/expense.service";
 import {Income} from "../model/income.model";
 import {Subscription} from "rxjs";
-import {IncomeService} from "../services/income.service";
-import {EXPENSE, INCOME} from "../constants";
 import {formatDate} from "../helper";
-
 
 @Component({
   selector: 'app-revenue-list',
@@ -22,8 +21,20 @@ export class RevenueListComponent implements OnInit {
   expenses: Expense[] = [];
   incomes_and_expenses: any[] = [];
 
-  constructor(public incomeService: IncomeService, public expenseService: ExpenseService) {
+
+  constructor(public expenseService: ExpenseService, public incomeService: IncomeService) {
   }
+
+  onDelete(entry: Expense) {
+
+    if (entry.type == EXPENSE) {
+      this.expenseService.deleteExpense(entry);
+    }
+    if (entry.type == INCOME) {
+      this.incomeService.deleteIncome(entry);
+    }
+  }
+
 
   ngOnInit() {
     this.incomeService.fetchIncomes();
@@ -49,5 +60,4 @@ export class RevenueListComponent implements OnInit {
   }
 
   protected readonly EXPENSE = EXPENSE;
-  protected readonly formatDate = formatDate;
 }

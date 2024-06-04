@@ -63,4 +63,27 @@ export class IncomeService {
           // this.incomesUpdated.next([...this.incomes]);
         });
   }
+  
+      addIncome(income: Income) {
+
+        const URL = `${environment.baseUrl}${environment.endpoint_saveIncome}`
+        this.httpClient.post(URL, JSON.stringify(income), { observe: 'response', responseType: 'text' })
+            .subscribe((result) => {
+                console.log(result);
+                this.incomes.push(income);
+                this.incomesUpdated.next([...this.incomes]);
+
+            });
+
+    }
+    deleteIncome(income: Income) {
+        const incomeId = income.id;
+        const URL = `${environment.baseUrl}${environment.endpoint_deleteIncome}/${incomeId}`;
+        this.httpClient.delete(URL, { observe: 'response', responseType: 'text' })
+            .subscribe((result) => {
+                console.log(result);
+                this.incomes = this.incomes.filter(i => i.id !== incomeId);
+                this.incomesUpdated.next([...this.incomes]);
+            });
+    }
 }
