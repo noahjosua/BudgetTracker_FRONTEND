@@ -1,12 +1,12 @@
-import {Observable, Subject} from "rxjs";
-import {HttpClient, HttpResponse} from "@angular/common/http";
-import {Injectable} from "@angular/core";
-import {map} from 'rxjs/operators';
-import {environment} from "../../environments/environment";
-import {Entry} from "../model/entry.model";
-import {RESPONSE_ENTRY_KEY, RESPONSE_MESSAGE_KEY} from "../constants";
+import { Observable, Subject } from "rxjs";
+import { HttpClient, HttpResponse } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { map } from 'rxjs/operators';
+import { environment } from "../../environments/environment";
+import { Entry } from "../model/entry.model";
+import { RESPONSE_ENTRY_KEY, RESPONSE_MESSAGE_KEY } from "../constants";
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class IncomeService {
   private categories: string[] = [];
   private categoriesUpdated = new Subject<string[]>();
@@ -92,7 +92,7 @@ export class IncomeService {
   // TODO Fehler fangen -- wie in saveExpense
   addIncome(income: Entry) {
     const URL = `${environment.baseUrl}${environment.path_income}${environment.endpoint_save}`
-    this.httpClient.post(URL, JSON.stringify(income), {observe: 'response', responseType: 'text'})
+    this.httpClient.post(URL, JSON.stringify(income), { observe: 'response', responseType: 'text' })
       .subscribe((result) => {
         console.log(result);
         this.incomes.push(income);
@@ -100,16 +100,42 @@ export class IncomeService {
       });
   }
 
-  // TODO
   updateIncome(income: Entry) {
 
+    const incomeId = income.id;
+    const URL = `${environment.baseUrl}${environment.path_income}${environment.endpoint_update}/${incomeId}`
+    this.httpClient.put(URL, JSON.stringify(income), {
+      headers: { 'Content-Type': 'application/json' },
+      observe: 'response'
+    })
+      .pipe(map(response => response.body))
+      .subscribe((body) => {
+        if (body && typeof body === 'object' && RESPONSE_MESSAGE_KEY in body && RESPONSE_ENTRY_KEY in body) {
+          try {
+            const indexId = this.incomes.findIndex(i => i.id === income.id);
+            if (indexId !== -1) {
+
+              const updatedIncome: Entry = JSON.parse(JSON.stringify(body.entry));
+              this.incomes[indexId] = updatedIncome;
+              this.incomesUpdated.next([...this.incomes]);
+            }
+            else {
+              console.error('Error finding income with the specified ID.')
+            }
+          } catch (error) {
+            console.error('Error parsing json income object:', error);
+          }
+        } else {
+          console.error('The response body does not contain an entry property.');
+        }
+      });
   }
 
   // TODO Fehler fangen -- wie in saveExpense
   deleteIncome(income: Entry) {
     const incomeId = income.id;
     const URL = `${environment.baseUrl}${environment.path_income}${environment.endpoint_delete}/${incomeId}`;
-    this.httpClient.delete(URL, {observe: 'response', responseType: 'text'})
+    this.httpClient.delete(URL, { observe: 'response', responseType: 'text' })
       .subscribe((result) => {
         console.log(result);
         this.incomes = this.incomes.filter(i => i.id !== incomeId);

@@ -1,9 +1,9 @@
-import {ExpenseService} from '../services/expense.service';
-import {IncomeService} from '../services/income.service';
-import {Entry} from '../model/entry.model';
-import {EXPENSE, INCOME} from '../constants';
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {formatDate} from "../helper";
+import { ExpenseService } from '../services/expense.service';
+import { IncomeService } from '../services/income.service';
+import { Entry } from '../model/entry.model';
+import { EXPENSE, INCOME } from '../constants';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { formatDate } from "../helper";
 
 @Component({
   selector: 'app-revenue-list',
@@ -34,9 +34,14 @@ export class RevenueListComponent implements OnChanges {
     }
   }
 
-  // TODO
   onUpdate(entry: Entry) {
+    if (entry.type == EXPENSE) {
+      this.expenseService.updateExpense(entry);
+    }
 
+    if (entry.type == INCOME) {
+      this.incomeService.updateIncome(entry);
+    }
   }
 
   onDelete(entry: Entry) {

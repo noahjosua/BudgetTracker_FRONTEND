@@ -15,14 +15,16 @@
       <td>{{ entry.category }}</td>
       <td>{{ entry.description }}</td>
       <td
-        [ngStyle]="{'color': entry.type == EXPENSE ? 'var(--expense-label)' : 'var(--income-label)', 'font-weight': 'bold'}">{{ entry.amount }}
+        [ngStyle]="{'color': entry.type == EXPENSE ? 'var(--expense-label)' : 'var(--income-label)', 'font-weight': 'bold'}">
+        {{ entry.amount }}
       </td>
       <td>
-        <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"></p-button>
+        <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
+          (onClick)="onUpdate(entry)"></p-button>
       </td>
       <td>
         <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary"
-                  (onClick)="onDelete(entry)"></p-button>
+          (onClick)="onDelete(entry)"></p-button>
       </td>
     </tr>
   </ng-template>

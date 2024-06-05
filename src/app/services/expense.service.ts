@@ -1,12 +1,12 @@
-import {Injectable} from "@angular/core";
-import {Entry} from "../model/entry.model";
-import {map, Observable, Subject} from "rxjs";
-import {HttpClient, HttpResponse} from "@angular/common/http";
-import {environment} from "../../environments/environment";
-import {RESPONSE_ENTRY_KEY, RESPONSE_MESSAGE_KEY} from "../constants";
+import { Injectable } from "@angular/core";
+import { Entry } from "../model/entry.model";
+import { map, Observable, Subject } from "rxjs";
+import { HttpClient, HttpResponse } from "@angular/common/http";
+import { environment } from "../../environments/environment";
+import { RESPONSE_ENTRY_KEY, RESPONSE_MESSAGE_KEY } from "../constants";
 
 // TODO refactor: doppeltes zusammenfassen
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ExpenseService {
   private categories: string[] = [];
   private categoriesUpdated = new Subject<string[]>();
@@ -118,7 +118,7 @@ export class ExpenseService {
   addExpense(expense: Entry) {
     const URL = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_save}`
     this.httpClient.post(URL, JSON.stringify(expense), {
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       observe: 'response'
     })
       .pipe(map(response => response.body))
@@ -137,16 +137,42 @@ export class ExpenseService {
       });
   }
 
-  // TODO
-  updateExpense(expense: Entry) {
 
+  updateExpense(expense: Entry) {
+    const expenseId = expense.id;
+    const URL = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_update}/${expenseId}`
+    this.httpClient.put(URL, JSON.stringify(expense), {
+      headers: { 'Content-Type': 'application/json' },
+      observe: 'response'
+    })
+      .pipe(map(response => response.body))
+      .subscribe((body) => {
+        if (body && typeof body === 'object' && RESPONSE_MESSAGE_KEY in body && RESPONSE_ENTRY_KEY in body) {
+          try {
+            const indexId = this.expenses.findIndex(e => e.id === expense.id);
+            if (indexId !== -1) {
+
+              const updatedExpense: Entry = JSON.parse(JSON.stringify(body.entry));
+              this.expenses[indexId] = updatedExpense;
+              this.expensesUpdated.next([...this.expenses]);
+            }
+            else {
+              console.error('Error finding expense with the specified ID.')
+            }
+          } catch (error) {
+            console.error('Error parsing json expense object:', error);
+          }
+        } else {
+          console.error('The response body does not contain an entry property.');
+        }
+      });
   }
 
   // TODO Fehler fangen -- wie in saveExpense
   deleteExpense(expense: Entry) {
     const expenseId = expense.id;
     const URL = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_delete}/${expenseId}`;
-    this.httpClient.delete(URL, {observe: 'response', responseType: 'text'})
+    this.httpClient.delete(URL, { observe: 'response', responseType: 'text' })
       .subscribe((result) => {
         console.log(result);
         this.expenses = this.expenses.filter(e => e.id !== expenseId);
