@@ -5,7 +5,6 @@ import {map, Subscription} from "rxjs";
 import {IncomeService} from "../services/income.service";
 import {Entry} from "../model/entry.model";
 import {TranslateService} from "@ngx-translate/core";
-import {getCategoryForBackend} from "../helper";
 
 @Component({
   selector: 'app-create-edit-entry',
@@ -75,13 +74,13 @@ export class CreateEditEntryComponent implements OnInit {
   }
 
   translateCategories(categories: any[], translatedCategories: any[]) {
-    const categoryNames = categories.map(c => c.name);
+    const categoryNames = categories.map(c => c.name.toLowerCase());
     for (const category of categoryNames) {
       this.translate.get(CATEGORIES_KEY + category).subscribe(translations => {
-        translatedCategories.push(translations);
+        translatedCategories.push({name: translations, value: category.toUpperCase()});
       });
     }
-    return translatedCategories.map(c => ({name: c}));
+    return translatedCategories;
   }
 
   onOpenDialog() {
@@ -90,7 +89,7 @@ export class CreateEditEntryComponent implements OnInit {
 
   onSave() {
     this.entry.dateCreated = new Date();
-    this.entry.category = getCategoryForBackend(this.entry.category.name);
+    this.entry.category = this.entry.category.value;
 
     if (this.type == EXPENSE) {
       this.expenseService.addExpense(this.entry);

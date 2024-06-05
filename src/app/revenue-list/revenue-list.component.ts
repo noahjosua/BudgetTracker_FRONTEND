@@ -1,7 +1,7 @@
 import {ExpenseService} from '../services/expense.service';
 import {IncomeService} from '../services/income.service';
 import {Entry} from '../model/entry.model';
-import {EXPENSE, INCOME} from '../constants';
+import {CATEGORIES_KEY, EXPENSE, INCOME} from '../constants';
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {formatDate} from "../helper";
 
@@ -50,4 +50,5 @@ export class RevenueListComponent implements OnChanges {
 
   protected readonly formatDate = formatDate;
   protected readonly EXPENSE = EXPENSE;
+    protected readonly CATEGORIES_KEY = CATEGORIES_KEY;
 }

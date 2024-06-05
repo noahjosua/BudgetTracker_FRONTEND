@@ -1,10 +1,10 @@
 <p-table [value]="incomes_and_expenses">
   <ng-template pTemplate="header">
     <tr>
-      <th>{{ 'LABELS.DATE' | translate }}</th>
-      <th>{{ 'LABELS.CATEGORY' | translate }}</th>
-      <th>{{ 'LABELS.DESCRIPTION' | translate }}</th>
-      <th>{{ 'LABELS.AMOUNT' | translate }}</th>
+      <th>{{ 'labels.date' | translate }}</th>
+      <th>{{ 'labels.category' | translate }}</th>
+      <th>{{ 'labels.description' | translate }}</th>
+      <th>{{ 'labels.amount' | translate }}</th>
       <th></th>
       <th></th>
     </tr>
@@ -12,7 +12,7 @@
   <ng-template pTemplate="body" let-entry>
     <tr>
       <td>{{ formatDate(entry.datePlanned) }}</td>
-      <td>{{ entry.category }}</td>
+      <td>{{ CATEGORIES_KEY + entry.category.toLowerCase() | translate }}</td>
       <td>{{ entry.description }}</td>
       <td
         [ngStyle]="{'color': entry.type == EXPENSE ? 'var(--expense-label)' : 'var(--income-label)', 'font-weight': 'bold'}">{{ entry.amount }}
