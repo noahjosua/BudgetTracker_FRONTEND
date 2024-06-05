@@ -45,6 +45,30 @@ export class ExpenseService {
       });
   }
 
+  fetchExpensesByDate(date: Date) {
+    const url = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_get_by_date}/${date}`;
+    this.httpClient.get(url, {
+      observe: 'response',
+      responseType: 'json'
+    })
+      .pipe(map(response => response.body))
+      .subscribe((body) => {
+        if (body && typeof body === 'object' && RESPONSE_MESSAGE_KEY in body && RESPONSE_ENTRY_KEY in body) {
+          try {
+            const newExpenses: Entry[] = JSON.parse(JSON.stringify(body.entry));
+            this.expenses = [];
+            newExpenses.forEach(expense => this.expenses.push(expense));
+            this.expensesUpdated.next([...this.expenses]);
+          } catch (error) {
+            console.error('Error parsing json expense object:', error);
+          }
+        } else {
+          console.error('The response body does not contain an entry property.');
+        }
+      });
+  }
+
+  /*
   fetchExpenses() {
     const url = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_get_all}`;
     this.httpClient.get(url, {
@@ -66,6 +90,7 @@ export class ExpenseService {
         }
       });
   }
+   */
 
   fetchExpenseById(id: number) {
     const url = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_get_by_id}${id}`;
@@ -89,30 +114,6 @@ export class ExpenseService {
       });
   }
 
-  fetchExpensesByDate(date: Date) {
-    console.log(date);
-    const url = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_get_by_date}/${date}`;
-    this.httpClient.get(url, {
-      observe: 'response',
-      responseType: 'json'
-    })
-      .pipe(map(response => response.body))
-      .subscribe((body) => {
-        if (body && typeof body === 'object' && RESPONSE_MESSAGE_KEY in body && RESPONSE_ENTRY_KEY in body) {
-          try {
-            const newExpenses: Entry[] = JSON.parse(JSON.stringify(body.entry));
-            this.expenses = [];
-            newExpenses.forEach(expense => this.expenses.push(expense));
-            this.expensesUpdated.next([...this.expenses]);
-          } catch (error) {
-            console.error('Error parsing json expense object:', error);
-          }
-        } else {
-          console.error('The response body does not contain an entry property.');
-        }
-      });
-  }
-
   addExpense(expense: Entry) {
     const URL = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_save}`
     this.httpClient.post(URL, JSON.stringify(expense), {
@@ -124,7 +125,7 @@ export class ExpenseService {
         if (body && typeof body === 'object' && RESPONSE_MESSAGE_KEY in body && RESPONSE_ENTRY_KEY in body) {
           try {
             const newExpense: Entry = JSON.parse(JSON.stringify(body.entry));
-            this.expenses.push(newExpense);
+            this.expenses.push(newExpense); // TODO Nur die für den aktuellen Monat anzeigen --> wenn ich im Juni für Juli anlege, dann darf der Eintrag nicht im Juni angezeigt werden
             this.expensesUpdated.next([...this.expenses]);
           } catch (error) {
             console.error('Error parsing json expense object:', error);

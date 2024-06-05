@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {CATEGORIES_KEY, EXPENSE, INCOME, TYPE_EXPENSE_KEY, TYPE_INCOME_KEY} from "../constants";
 import {ExpenseService} from "../services/expense.service";
 import {map, Subscription} from "rxjs";

@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.incomeService.fetchIncomes();
+    this.incomeService.fetchIncomesByDate(new Date());
     this.incomeSubscription = this.incomeService.getIncomesUpdatedListener().subscribe((incomes: Entry[]) => {
       this.income = incomes;
       this.total_income = 0;
@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
       this.updateTotal();
     });
 
-    this.expenseService.fetchExpenses();
+    this.expenseService.fetchExpensesByDate(new Date());
     this.expenseSubscription = this.expenseService.getExpensesUpdatedListener().subscribe((expenses: Entry[]) => {
       this.expense = expenses;
       this.total_expense = 0;
@@ -59,6 +59,6 @@ export class AppComponent implements OnInit {
   onDateChanged(date: Date) {
     this.selectedDate = date.toLocaleString('default', {month: 'long', year: 'numeric'});
     this.expenseService.fetchExpensesByDate(date);
-    // TODO Einträge für den jeweiligen Monat fetchen
+    this.incomeService.fetchIncomesByDate(date);
   }
 }
