@@ -43,14 +43,22 @@ export class CreateEditEntryComponent {
   }
 
   onSave() {
-    let isEntryValid = this.entryValidator();
 
-    if(isEntryValid) {
+    if (this.entryValidator()) {
+
       this.entry.datePlanned = this.entry.datePlanned;
       this.entry.category = this.entry.category.name;
       this.entry.amount = this.entry.amount;
       this.entry.description = this.entry.description;
       this.entry.type = '';
+
+      this.isDateValid = false;
+      this.isCategoryChosen = false;
+      this.isAmountValid = false;
+      this.isDesValid = false;
+      this.isTypeChosen = false;
+
+      this.visible = false;
 
       this.entry.reset({
         datePlanned: '',
@@ -59,30 +67,29 @@ export class CreateEditEntryComponent {
         amount: 0.0,
         type: ''
       });
-      
-      this.visible = false;
     }
-
   }
+
 
   onCancel() {
     this.visible = false;
   }
 
- entryValidator(): boolean {
-    if (this.isTypeChosen && this.isDesValid && this.isCategoryChosen && this.isAmountValid && this.isDateValid) {
+  entryValidator(): boolean {
+    if (this.isTypeChosen && this.isAmountValid && this.isDateValid && this.isDesValid && this.isCategoryChosen) {
       return true;
     }
     return false;
   }
 
-  typeChosen() : boolean {
+  typeChosen(): boolean {
     this.isTypeChosen = true;
     return this.isTypeChosen;
   }
 
   validateDes(): boolean {
-    if (this.entry.category.length > 0 && this.entry.category.length < 50) {
+
+    if (this.entry.description.length > 0 && this.entry.description.length < 50) {
       this.isDesValid = true;
     }
     return this.isDesValid;
@@ -101,10 +108,7 @@ export class CreateEditEntryComponent {
   }
 
   validateDate(): boolean {
-    const regex = /^((0[1-9]|[12][0-9]|3[01])[\.\/](0[13578]|1[02])[\.\/](19|20)\d{2}|(0[1-9]|[12][0-9]|30)[\.\/](0[469]|11)[\.\/](19|20)\d{2}|(0[1-9]|1[0-9]|2[0-8])[\.\/]02[\.\/](19|20)\d{2}|29[\.\/]02[\.\/]((19|20)(04|08|[2468][048]|[13579][26])|2000))$/;
-    if (regex.test(this.entry.datePlanned)){
-      this.isDateValid = true;
-    }
+    this.isDateValid = true;
     return this.isDateValid;
   }
 }

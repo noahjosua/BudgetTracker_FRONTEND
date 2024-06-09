@@ -40,14 +40,14 @@
       <div class="dialog-container">
         <label class="dialog-label">Summe (in Euro)</label>
         <p-inputNumber [(ngModel)]="entry.amount" mode="decimal" [minFractionDigits]="2"
-                       [maxFractionDigits]="5" (input)="validateAmount()"></p-inputNumber>
+                       [maxFractionDigits]="5" (onInput)="validateAmount()"></p-inputNumber>
       </div>
 
       <!-- Date planned -->
       <div class="dialog-container">
         <label class="dialog-label">Geplanter Zeitpunkt</label>
         <p-calendar [(ngModel)]="entry.datePlanned"
-                    dateFormat="dd/mm/yy" [showOnFocus]="true" (input)="validateDate()"/>
+                    dateFormat="dd/mm/yy" [showOnFocus]="true" (onSelect)="validateDate()"/>
       </div>
     </div>
 
