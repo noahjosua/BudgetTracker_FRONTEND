@@ -107,7 +107,63 @@ export class CreateEditEntryComponent {
     return this.isAmountValid;
   }
 
+
   validateDate(): boolean {
+    /*
+          if(!this.entry.datePlanned){
+            this.isDateValid = false;
+          }
+
+          this.entry.datePlanned = this.entry.datePlanned.replace(/[-/]/g, '.'); // Trennzeichen normalisieren
+          this.entry.datePlanned = this.entry.datePlanned.replace(/[^0-9.: ]/g, ''); // ungültige Zeichen entfernen
+          this.entry.datePlanned = this.entry.datePlanned.replace(/ +/g, ' '); // doppelte Leerzeichen entfernen
+
+          var splitParts = this.entry.datePlanned.split('.');
+          var day = splitParts[0];
+          var month = splitParts[1];
+          var year = splitParts[2];
+
+          var check = new Date(year, month - 1, day);
+
+          var day2 = check.getDate();
+          var year2 = check.getFullYear();
+          var month2 = check.getMonth() + 1;
+
+          if(year2 == year && month == month2 && day == day2 ){
+            this.isDateValid = true;
+          }
+
+          return this.isDateValid;
+        }
+        /*
+            let dateArray = this.entry.datePlanned.split("/");
+
+            if (dateArray.length !== 3) {
+              this.isDateValid = false;
+              return this.isDateValid;
+            }
+
+            let day = parseInt(dateArray[0], 10);
+            let month = parseInt(dateArray[1], 10) - 1;
+            let year = parseInt(dateArray[2], 10);
+
+            if (isNaN(day) || isNaN(month) || isNaN(year)) {
+              this.isDateValid = false;
+              return this.isDateValid;
+            }
+
+            let dateObj = new Date(year, month, day);
+
+            if (dateObj.getFullYear() === year && dateObj.getMonth() === month && dateObj.getDate() === day) {
+              console.log("Gültiges Datum");
+              this.isDateValid = true;
+            } else {
+              console.log("Ungültiges Datum: Datum existiert nicht");
+              this.isDateValid = false;
+            }
+
+            return this.isDateValid;
+          } */
     this.isDateValid = true;
     return this.isDateValid;
   }
