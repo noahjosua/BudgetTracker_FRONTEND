@@ -3,7 +3,7 @@
     "type": "Typ",
     "description": "Bezeichnung",
     "category": "Kategorie",
-    "amount": "Summe (in Euro)",
+    "amount": "Summe",
     "datePlanned": "Geplanter Zeitpunkt",
     "date": "Datum",
     "income": "Einnahmen",
