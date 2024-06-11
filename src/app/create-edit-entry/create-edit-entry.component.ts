@@ -1,20 +1,23 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Constants} from "../constants";
 import {ExpenseService} from "../services/expense.service";
 import {map, Subscription} from "rxjs";
 import {IncomeService} from "../services/income.service";
 import {Entry} from "../model/entry.model";
 import {TranslateService} from "@ngx-translate/core";
+import {translateCategories} from "../helper";
 
 @Component({
   selector: 'app-create-edit-entry',
   templateUrl: './create-edit-entry.component.html',
   styleUrl: './create-edit-entry.component.css'
 })
-export class CreateEditEntryComponent implements OnInit, OnDestroy {
+export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
 
   private expenseCategorySubscription: Subscription | undefined;
   private incomeCategorySubscription: Subscription | undefined;
+
+  @Input() title: any;
 
   /* Dialog models for data binding */
   expenseCategories: any = [];
@@ -22,17 +25,18 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy {
   incomeCategories: any = [];
   translatedIncomeCategories: any = [];
   types: any = [];
-  entry: Entry = {
+  @Input() entry: Entry = {
     dateCreated: new Date(),
     datePlanned: new Date(),
     category: '',
     description: '',
     amount: 0.0
   };
-  type: any = '';
+  type: any;
 
   /* Dialog handling */
-  isVisible: boolean = false;
+  @Input() isVisible: boolean = false;
+  @Output() visibilityChanged = new EventEmitter<boolean>();
 
   /* Validation */
   validation: any = {
@@ -43,29 +47,14 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy {
     isDateValid: false,
   }
 
-  constructor(public incomeService: IncomeService, public expenseService: ExpenseService, private translate: TranslateService) {
+  constructor(public incomeService: IncomeService,
+              public expenseService: ExpenseService,
+              private translate: TranslateService) {
   }
 
   ngOnInit() {
-    this.expenseService.fetchCategories();
-    this.expenseCategorySubscription = this.expenseService.getCategoriesUpdatedListener()
-      .pipe(
-        map((categories: string[]) => categories.map(c => ({name: c})))
-      )
-      .subscribe((mappedCategories) => {
-        this.expenseCategories = mappedCategories;
-        this.translatedExpenseCategories = this.translateCategories(this.expenseCategories, this.translatedExpenseCategories);
-      });
-
-    this.incomeService.fetchCategories();
-    this.incomeCategorySubscription = this.incomeService.getCategoriesUpdatedListener()
-      .pipe(
-        map((categories: string[]) => categories.map(c => ({name: c})))
-      )
-      .subscribe((mappedCategories) => {
-        this.incomeCategories = mappedCategories;
-        this.translatedIncomeCategories = this.translateCategories(this.incomeCategories, this.translatedIncomeCategories);
-      });
+    this.initializeIncomeCategories();
+    this.initializeExpenseCategories();
 
     this.translate.get([Constants.TYPE_INCOME_KEY, Constants.TYPE_EXPENSE_KEY]).subscribe(translations => {
       this.types.push({name: translations[Constants.TYPE_INCOME_KEY], value: Constants.INCOME});
@@ -73,23 +62,24 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy {
     });
   }
 
-  translateCategories(categories: any[], translatedCategories: any[]) {
-    const categoryNames = categories.map(c => c.name.toLowerCase());
-    for (const category of categoryNames) {
-      this.translate.get(Constants.CATEGORIES_KEY + category).subscribe(translations => {
-        translatedCategories.push({name: translations, value: category.toUpperCase()});
-      });
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['entry']) {
+      const changedEntry = changes['entry'].currentValue;
+      if (changedEntry !== undefined) {
+        this.type = this.types.find((type: any) => type.value === changedEntry.type)['value'];
+        if (this.type === Constants.INCOME) {
+          this.entry.category = this.translatedIncomeCategories.find((category: any) => category.value == changedEntry.category)['value'];
+        }
+        if (this.type === Constants.EXPENSE) {
+          this.entry.category = this.translatedExpenseCategories.find((category: any) => category.value == changedEntry.category)['value'];
+        }
+        this.entry.datePlanned = new Date(changedEntry.datePlanned);
+      }
     }
-    return translatedCategories;
-  }
-
-  onOpenDialog() {
-    this.isVisible = !this.isVisible;
   }
 
   onSave() {
     this.entry.dateCreated = new Date();
-    this.entry.category = this.entry.category.value;
 
     if (this.type == Constants.EXPENSE) {
       this.expenseService.addExpense(this.entry);
@@ -97,16 +87,11 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy {
     if (this.type == Constants.INCOME) {
       this.incomeService.addIncome(this.entry);
     }
-
-    this.clearEntry();
-    this.clearValidation();
-    this.isVisible = false;
+    this.reset();
   }
 
   onCancel() {
-    this.isVisible = false;
-    this.clearEntry();
-    this.clearValidation();
+    this.reset();
   }
 
   /*
@@ -114,7 +99,38 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy {
   Validation implementieren
    */
 
-  clearEntry() {
+  private initializeExpenseCategories() {
+    this.expenseService.fetchCategories();
+    this.expenseCategorySubscription = this.expenseService.getCategoriesUpdatedListener()
+      .pipe(
+        map((categories: string[]) => categories.map(c => ({name: c})))
+      )
+      .subscribe((mappedCategories) => {
+        this.expenseCategories = mappedCategories;
+        this.translatedExpenseCategories = translateCategories(this.expenseCategories, this.translatedExpenseCategories, this.translate);
+      });
+  }
+
+  private initializeIncomeCategories() {
+    this.incomeService.fetchCategories();
+    this.incomeCategorySubscription = this.incomeService.getCategoriesUpdatedListener()
+      .pipe(
+        map((categories: string[]) => categories.map(c => ({name: c})))
+      )
+      .subscribe((mappedCategories) => {
+        this.incomeCategories = mappedCategories;
+        this.translatedIncomeCategories = translateCategories(this.incomeCategories, this.translatedIncomeCategories, this.translate);
+      });
+  }
+
+  private reset() {
+    this.isVisible = false;
+    this.visibilityChanged.emit(this.isVisible);
+    this.clearEntry();
+    this.clearValidation();
+  }
+
+  private clearEntry() {
     this.entry = {
       dateCreated: new Date(),
       datePlanned: new Date(),
@@ -124,7 +140,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy {
     }
   }
 
-  clearValidation() {
+  private clearValidation() {
     this.validation = {
       isTypeChosen: false,
       isDesValid: false,

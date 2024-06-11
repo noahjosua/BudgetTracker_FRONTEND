@@ -1,12 +1,4 @@
-<p-button class="button-container"
-          icon="pi pi-plus"
-          [rounded]="true"
-          size="large"
-          severity="secondary"
-          (onClick)="onOpenDialog()">
-</p-button>
-
-<p-dialog header="{{'labels.newEntry' | translate}}"
+<p-dialog header="{{title}}"
           styleClass="p-fluid"
           [modal]="true"
           [(visible)]="isVisible"
@@ -33,11 +25,11 @@
         <label class="dialog-label">{{ 'labels.category' | translate }}</label>
         <p-dropdown *ngIf="type == Constants.INCOME" [options]="translatedIncomeCategories"
                     [(ngModel)]="entry.category"
-                    optionLabel="name"
+                    optionLabel="name" optionValue="value"
                     [showClear]="true"></p-dropdown>
         <p-dropdown *ngIf="type == Constants.EXPENSE" [options]="translatedExpenseCategories"
                     [(ngModel)]="entry.category"
-                    optionLabel="name"
+                    optionLabel="name" optionValue="value"
                     [showClear]="true"></p-dropdown>
         <p-dropdown *ngIf="type == '' || type == null" [loading]="true"
                     placeholder="Wähle zuerst einen Typ"></p-dropdown>

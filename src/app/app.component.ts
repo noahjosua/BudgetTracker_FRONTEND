@@ -24,22 +24,24 @@ export class AppComponent implements OnInit, OnDestroy {
   total_expense: any;
   total: any;
 
-  constructor(public incomeService: IncomeService, public expenseService: ExpenseService, private translate: TranslateService) {
-    translate.setDefaultLang('de');
+  constructor(public incomeService: IncomeService,
+              public expenseService: ExpenseService,
+              private translate: TranslateService) {
+    this.translate.setDefaultLang('de');
   }
 
   ngOnInit() {
-    this.incomeService.fetchIncomesByDate(new Date());
-    this.incomeSubscription = this.incomeService.getIncomesUpdatedListener().subscribe((incomes: Entry[]) => {
-      this.income = incomes;
-      this.total_income = 0;
-      for (const income of this.income) {
-        income.type = Constants.INCOME;
-        this.total_income += income.amount;
-      }
-      this.updateTotal();
-    });
+    this.fetchIncomesByDate();
+    this.fetchExpensesByDate();
+  }
 
+  onDateChanged(date: Date) {
+    this.selectedDate = date.toLocaleString('default', {month: 'long', year: 'numeric'});
+    this.expenseService.fetchExpensesByDate(date);
+    this.incomeService.fetchIncomesByDate(date);
+  }
+
+  private fetchExpensesByDate() {
     this.expenseService.fetchExpensesByDate(new Date());
     this.expenseSubscription = this.expenseService.getExpensesUpdatedListener().subscribe((expenses: Entry[]) => {
       this.expense = expenses;
@@ -52,14 +54,21 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateTotal() {
-    this.total = this.total_income - this.total_expense;
+  private fetchIncomesByDate() {
+    this.incomeService.fetchIncomesByDate(new Date());
+    this.incomeSubscription = this.incomeService.getIncomesUpdatedListener().subscribe((incomes: Entry[]) => {
+      this.income = incomes;
+      this.total_income = 0;
+      for (const income of this.income) {
+        income.type = Constants.INCOME;
+        this.total_income += income.amount;
+      }
+      this.updateTotal();
+    });
   }
 
-  onDateChanged(date: Date) {
-    this.selectedDate = date.toLocaleString('default', {month: 'long', year: 'numeric'});
-    this.expenseService.fetchExpensesByDate(date);
-    this.incomeService.fetchIncomesByDate(date);
+  private updateTotal() {
+    this.total = this.total_income - this.total_expense;
   }
 
   ngOnDestroy() {

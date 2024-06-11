@@ -9,13 +9,13 @@ import {Constants} from "../constants";
 @Injectable({providedIn: 'root'})
 export class ExpenseService {
   private categories: string[] = [];
-  private categoriesUpdated = new Subject<string[]>();
+  private categoriesUpdated: Subject<string[]> = new Subject<string[]>();
 
   private expenses: Entry[] = [];
-  private expensesUpdated = new Subject<Entry[]>();
+  private expensesUpdated: Subject<Entry[]> = new Subject<Entry[]>();
 
   private expense: Entry | undefined = undefined;
-  private expenseUpdated = new Subject<Entry>();
+  private expenseUpdated: Subject<Entry> = new Subject<Entry>();
 
 
   constructor(private httpClient: HttpClient) {
@@ -55,8 +55,8 @@ export class ExpenseService {
       .subscribe((body) => {
         if (body && typeof body === 'object' && Constants.RESPONSE_MESSAGE_KEY in body && Constants.RESPONSE_ENTRY_KEY in body) {
           try {
-            const newExpenses: Entry[] = JSON.parse(JSON.stringify(body.entry));
             this.expenses = [];
+            const newExpenses: Entry[] = JSON.parse(JSON.stringify(body.entry));
             newExpenses.forEach(expense => this.expenses.push(expense));
             this.expensesUpdated.next([...this.expenses]);
           } catch (error) {

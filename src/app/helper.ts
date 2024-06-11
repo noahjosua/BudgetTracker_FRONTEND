@@ -1,3 +1,6 @@
+import {TranslateService} from "@ngx-translate/core";
+import {Constants} from "./constants";
+
 export function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const day = date.getDate().toString().padStart(2, '0');
@@ -7,35 +10,12 @@ export function formatDate(dateString: string): string {
   return `${day}.${month}.${year}`;
 }
 
-export function getCategoryForBackend(selectedCategory: string) {
-  switch (selectedCategory) {
-    case 'Gehalt':
-      return 'SALARY';
-    case 'Taschengeld':
-      return 'POCKET_MONEY';
-    case 'Unterhalt':
-      return 'ALIMENT';
-    case 'Kapitalvermögen':
-      return 'CAPITAL_ASSETS';
-    case 'Vermietung':
-      return 'RENTAL';
-    case 'Lebensmittel':
-      return 'GROCERIES';
-    case 'Drogerie':
-      return 'DRUGSTORE';
-    case 'Freizeit':
-      return 'FREE_TIME';
-    case 'Miete':
-      return 'RENT';
-    case 'Versicherung':
-      return 'INSURANCE';
-    case 'Abonnement':
-      return 'SUBSCRIPTIONS';
-    case 'Bildung':
-      return 'EDUCATION';
-    case 'Sonstiges':
-      return 'OTHER';
-    default:
-      return 'OTHER';
+export function translateCategories(categories: any[], translatedCategories: any[], translate: TranslateService) {
+  const categoryNames = categories.map(c => c.name.toLowerCase());
+  for (const category of categoryNames) {
+    translate.get(Constants.CATEGORIES_KEY + category).subscribe(translations => {
+      translatedCategories.push({name: translations, value: category.toUpperCase()});
+    });
   }
+  return translatedCategories;
 }

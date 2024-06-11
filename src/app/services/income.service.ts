@@ -46,7 +46,7 @@ export class IncomeService {
   }
 
   fetchIncomesByDate(date: Date) {
-    const url = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_get_by_date}/${date}`;
+    const url = `${environment.baseUrl}${environment.path_income}${environment.endpoint_get_by_date}/${date}`;
     this.httpClient.get(url, {
       observe: 'response',
       responseType: 'json'
@@ -55,8 +55,8 @@ export class IncomeService {
       .subscribe((body) => {
         if (body && typeof body === 'object' && Constants.RESPONSE_MESSAGE_KEY in body && Constants.RESPONSE_ENTRY_KEY in body) {
           try {
-            const newIncomes: Entry[] = JSON.parse(JSON.stringify(body.entry));
             this.incomes = [];
+            const newIncomes: Entry[] = JSON.parse(JSON.stringify(body.entry));
             newIncomes.forEach(income => this.incomes.push(income));
             this.incomesUpdated.next([...this.incomes]);
           } catch (error) {
