@@ -68,6 +68,7 @@ export class ExpenseService {
       });
   }
 
+  /*
   fetchExpenseById(id: number) {
     const url = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_get_by_id}${id}`;
     this.httpClient.get(url, {
@@ -89,8 +90,9 @@ export class ExpenseService {
         }
       });
   }
+   */
 
-  addExpense(expense: Entry) {
+  addExpense(expense: Entry, date: Date) {
     const URL = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_save}`
     this.httpClient.post(URL, JSON.stringify(expense), {
       headers: {'Content-Type': 'application/json'},
@@ -101,7 +103,10 @@ export class ExpenseService {
         if (body && typeof body === 'object' && Constants.RESPONSE_MESSAGE_KEY in body && Constants.RESPONSE_ENTRY_KEY in body) {
           try {
             const newExpense: Entry = JSON.parse(JSON.stringify(body.entry));
-            this.expenses.push(newExpense); // TODO Noah Nur die für den aktuellen Monat anzeigen --> wenn ich im Juni für Juli anlege, dann darf der Eintrag nicht im Juni angezeigt werden
+            const planned = new Date(newExpense.datePlanned);
+            if(planned.getMonth() === date.getMonth()) {
+              this.expenses.push(newExpense);
+            }
             this.expensesUpdated.next([...this.expenses]);
           } catch (error) {
             console.error('Error parsing json expense object:', error);

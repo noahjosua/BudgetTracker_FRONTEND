@@ -20,17 +20,20 @@ export class RevenueListComponent implements OnChanges {
   isDialogVisible: boolean = false;
   title = "Eintrag bearbeiten";
   entry: any;
+  @Input() currentDate: any;
+  selectedDate: any;
+
 
   constructor(public incomeService: IncomeService, public expenseService: ExpenseService, private translate: TranslateService) {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.incomes_and_expenses.forEach(entry => console.log(entry))
+
     if (changes[Constants.INCOME]) {
       for (const income of this.income) {
         income.type = Constants.INCOME;
       }
-      this.incomes_and_expenses = this.income.concat(this.expense); // TODO Anzeigen, so wie so abgespeichert wurden --> wie werden sie aus der DB geholt? In der Reihenfolge, in der sie auch gespeichert werden?
+      this.incomes_and_expenses = this.income.concat(this.expense);
     }
     if (changes[Constants.EXPENSE]) {
       for (const expense of this.expense) {
@@ -38,9 +41,12 @@ export class RevenueListComponent implements OnChanges {
       }
       this.incomes_and_expenses = this.income.concat(this.expense);
     }
+
+    if(changes['currentDate']) {
+      this.selectedDate = changes['currentDate'].currentValue;
+    }
   }
 
-  // TODO
   onUpdate(entry: Entry) {
     this.entry = entry;
     this.isDialogVisible = true;

@@ -14,6 +14,7 @@ import {TranslateService} from "@ngx-translate/core";
 export class AppComponent implements OnInit, OnDestroy {
   title = 'budget-tracker-frontend';
   selectedDate: string = '';
+  selectedDateAsDate: Date = new Date();
 
   private incomeSubscription: Subscription | undefined;
   private expenseSubscription: Subscription | undefined;
@@ -36,6 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onDateChanged(date: Date) {
+    this.selectedDateAsDate = date;
     this.selectedDate = date.toLocaleString('default', {month: 'long', year: 'numeric'});
     this.expenseService.fetchExpensesByDate(date);
     this.incomeService.fetchIncomesByDate(date);

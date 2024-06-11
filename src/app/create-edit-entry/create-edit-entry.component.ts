@@ -18,6 +18,8 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
   private incomeCategorySubscription: Subscription | undefined;
 
   @Input() title: any;
+  @Input() currentDate: any;
+  selectedDate: any;
 
   /* Dialog models for data binding */
   expenseCategories: any = [];
@@ -76,16 +78,20 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
         this.entry.datePlanned = new Date(changedEntry.datePlanned);
       }
     }
+
+    if(changes['currentDate']) {
+      this.selectedDate = changes['currentDate'].currentValue;
+    }
   }
 
   onSave() {
     this.entry.dateCreated = new Date();
 
     if (this.type == Constants.EXPENSE) {
-      this.expenseService.addExpense(this.entry);
+      this.expenseService.addExpense(this.entry, this.selectedDate);
     }
     if (this.type == Constants.INCOME) {
-      this.incomeService.addIncome(this.entry);
+      this.incomeService.addIncome(this.entry, this.selectedDate);
     }
     this.reset();
   }

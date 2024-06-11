@@ -68,6 +68,7 @@ export class IncomeService {
       });
   }
 
+  /*
   fetchIncomeById(id: number) {
     const url = `${environment.baseUrl}${environment.path_income}${environment.endpoint_get_by_id}${id}`;
     this.httpClient.get(url, {
@@ -89,15 +90,30 @@ export class IncomeService {
         }
       });
   }
+   */
 
-  // TODO Fehler fangen -- wie in saveExpense
-  addIncome(income: Entry) {
+  addIncome(income: Entry, date: Date) {
     const URL = `${environment.baseUrl}${environment.path_income}${environment.endpoint_save}`
-    this.httpClient.post(URL, JSON.stringify(income), {observe: 'response', responseType: 'text'})
-      .subscribe((result) => {
-        console.log(result);
-        this.incomes.push(income);
-        this.incomesUpdated.next([...this.incomes]);
+    this.httpClient.post(URL, JSON.stringify(income), {
+      headers: {'Content-Type': 'application/json'},
+      observe: 'response'
+    })
+      .pipe(map(response => response.body))
+      .subscribe((body) => {
+        if (body && typeof body === 'object' && Constants.RESPONSE_MESSAGE_KEY in body && Constants.RESPONSE_ENTRY_KEY in body) {
+          try {
+            const newIncome: Entry = JSON.parse(JSON.stringify(body.entry));
+            const planned = new Date(newIncome.datePlanned);
+            if(planned.getMonth() === date.getMonth()) {
+              this.incomes.push(newIncome);
+            }
+            this.incomesUpdated.next([...this.incomes]);
+          } catch (error) {
+            console.error('Error parsing json income object:', error);
+          }
+        } else {
+          console.error('The response body does not contain an entry property.');
+        }
       });
   }
 
