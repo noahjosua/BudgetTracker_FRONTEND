@@ -3,7 +3,6 @@ import {IncomeService} from '../services/income.service';
 import {Entry} from '../model/entry.model';
 import {Constants} from "../constants";
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {formatDate} from "../helper";
 import {TranslateService} from "@ngx-translate/core";
 
 @Component({
@@ -42,7 +41,7 @@ export class RevenueListComponent implements OnChanges {
       this.incomes_and_expenses = this.income.concat(this.expense);
     }
 
-    if(changes['currentDate']) {
+    if (changes['currentDate']) {
       this.selectedDate = changes['currentDate'].currentValue;
     }
   }
@@ -61,6 +60,14 @@ export class RevenueListComponent implements OnChanges {
     }
   }
 
-  protected readonly formatDate = formatDate;
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${day}.${month}.${year}`;
+  }
+
   protected readonly Constants = Constants;
 }

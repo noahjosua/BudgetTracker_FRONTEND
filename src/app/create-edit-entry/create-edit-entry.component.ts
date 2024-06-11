@@ -5,7 +5,6 @@ import {map, Subscription} from "rxjs";
 import {IncomeService} from "../services/income.service";
 import {Entry} from "../model/entry.model";
 import {TranslateService} from "@ngx-translate/core";
-import {translateCategories} from "../helper";
 
 @Component({
   selector: 'app-create-edit-entry',
@@ -113,7 +112,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe((mappedCategories) => {
         this.expenseCategories = mappedCategories;
-        this.translatedExpenseCategories = translateCategories(this.expenseCategories, this.translatedExpenseCategories, this.translate);
+        this.translatedExpenseCategories = this.translateCategories(this.expenseCategories, this.translatedExpenseCategories, this.translate);
       });
   }
 
@@ -125,8 +124,18 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe((mappedCategories) => {
         this.incomeCategories = mappedCategories;
-        this.translatedIncomeCategories = translateCategories(this.incomeCategories, this.translatedIncomeCategories, this.translate);
+        this.translatedIncomeCategories = this.translateCategories(this.incomeCategories, this.translatedIncomeCategories, this.translate);
       });
+  }
+
+  private translateCategories(categories: any[], translatedCategories: any[], translate: TranslateService) {
+    const categoryNames = categories.map(c => c.name.toLowerCase());
+    for (const category of categoryNames) {
+      translate.get(Constants.CATEGORIES_KEY + category).subscribe(translations => {
+        translatedCategories.push({name: translations, value: category.toUpperCase()});
+      });
+    }
+    return translatedCategories;
   }
 
   private reset() {
