@@ -5,7 +5,6 @@ import {HttpClient, HttpResponse} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Constants} from "../constants";
 
-// TODO refactor: doppeltes zusammenfassen
 @Injectable({providedIn: 'root'})
 export class ExpenseService {
   private categories: string[] = [];
@@ -104,7 +103,7 @@ export class ExpenseService {
           try {
             const newExpense: Entry = JSON.parse(JSON.stringify(body.entry));
             const planned = new Date(newExpense.datePlanned);
-            if(planned.getMonth() === date.getMonth()) {
+            if (planned.getMonth() === date.getMonth()) {
               this.expenses.push(newExpense);
             }
             this.expensesUpdated.next([...this.expenses]);
