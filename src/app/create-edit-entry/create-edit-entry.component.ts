@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {CATEGORIES_KEY, EXPENSE, INCOME, TYPE_EXPENSE_KEY, TYPE_INCOME_KEY} from "../constants";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Constants} from "../constants";
 import {ExpenseService} from "../services/expense.service";
 import {map, Subscription} from "rxjs";
 import {IncomeService} from "../services/income.service";
@@ -11,7 +11,7 @@ import {TranslateService} from "@ngx-translate/core";
   templateUrl: './create-edit-entry.component.html',
   styleUrl: './create-edit-entry.component.css'
 })
-export class CreateEditEntryComponent implements OnInit {
+export class CreateEditEntryComponent implements OnInit, OnDestroy {
 
   private expenseCategorySubscription: Subscription | undefined;
   private incomeCategorySubscription: Subscription | undefined;
@@ -67,16 +67,16 @@ export class CreateEditEntryComponent implements OnInit {
         this.translatedIncomeCategories = this.translateCategories(this.incomeCategories, this.translatedIncomeCategories);
       });
 
-    this.translate.get([TYPE_INCOME_KEY, TYPE_EXPENSE_KEY]).subscribe(translations => {
-      this.types.push({name: translations[TYPE_INCOME_KEY], value: INCOME});
-      this.types.push({name: translations[TYPE_EXPENSE_KEY], value: EXPENSE});
+    this.translate.get([Constants.TYPE_INCOME_KEY, Constants.TYPE_EXPENSE_KEY]).subscribe(translations => {
+      this.types.push({name: translations[Constants.TYPE_INCOME_KEY], value: Constants.INCOME});
+      this.types.push({name: translations[Constants.TYPE_EXPENSE_KEY], value: Constants.EXPENSE});
     });
   }
 
   translateCategories(categories: any[], translatedCategories: any[]) {
     const categoryNames = categories.map(c => c.name.toLowerCase());
     for (const category of categoryNames) {
-      this.translate.get(CATEGORIES_KEY + category).subscribe(translations => {
+      this.translate.get(Constants.CATEGORIES_KEY + category).subscribe(translations => {
         translatedCategories.push({name: translations, value: category.toUpperCase()});
       });
     }
@@ -91,10 +91,10 @@ export class CreateEditEntryComponent implements OnInit {
     this.entry.dateCreated = new Date();
     this.entry.category = this.entry.category.value;
 
-    if (this.type == EXPENSE) {
+    if (this.type == Constants.EXPENSE) {
       this.expenseService.addExpense(this.entry);
     }
-    if (this.type == INCOME) {
+    if (this.type == Constants.INCOME) {
       this.incomeService.addIncome(this.entry);
     }
 
@@ -134,6 +134,10 @@ export class CreateEditEntryComponent implements OnInit {
     }
   }
 
-  protected readonly INCOME = INCOME;
-  protected readonly EXPENSE = EXPENSE;
+  ngOnDestroy(): void {
+    this.expenseCategorySubscription?.unsubscribe();
+    this.incomeCategorySubscription?.unsubscribe();
+  }
+
+  protected readonly Constants = Constants;
 }

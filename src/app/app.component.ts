@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Entry} from "./model/entry.model";
-import {EXPENSE, INCOME} from "./constants";
+import {Constants} from "./constants";
 import {IncomeService} from "./services/income.service";
 import {ExpenseService} from "./services/expense.service";
 import {Subscription} from "rxjs";
@@ -11,7 +11,7 @@ import {TranslateService} from "@ngx-translate/core";
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'budget-tracker-frontend';
   selectedDate: string = '';
 
@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
       this.income = incomes;
       this.total_income = 0;
       for (const income of this.income) {
-        income.type = INCOME;
+        income.type = Constants.INCOME;
         this.total_income += income.amount;
       }
       this.updateTotal();
@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
       this.expense = expenses;
       this.total_expense = 0;
       for (const expense of this.expense) {
-        expense.type = EXPENSE;
+        expense.type = Constants.EXPENSE;
         this.total_expense += expense.amount;
       }
       this.updateTotal();
@@ -60,5 +60,10 @@ export class AppComponent implements OnInit {
     this.selectedDate = date.toLocaleString('default', {month: 'long', year: 'numeric'});
     this.expenseService.fetchExpensesByDate(date);
     this.incomeService.fetchIncomesByDate(date);
+  }
+
+  ngOnDestroy() {
+    this.incomeSubscription?.unsubscribe();
+    this.expenseSubscription?.unsubscribe();
   }
 }

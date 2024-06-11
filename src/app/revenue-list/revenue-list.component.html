@@ -12,10 +12,10 @@
   <ng-template pTemplate="body" let-entry>
     <tr>
       <td>{{ formatDate(entry.datePlanned) }}</td>
-      <td>{{ CATEGORIES_KEY + entry.category.toLowerCase() | translate }}</td>
+      <td>{{ Constants.CATEGORIES_KEY + entry.category.toLowerCase() | translate }}</td>
       <td>{{ entry.description }}</td>
       <td
-        [ngStyle]="{'color': entry.type == EXPENSE ? 'var(--expense-label)' : 'var(--income-label)', 'font-weight': 'bold'}">{{ entry.amount }}
+        [ngStyle]="{'color': entry.type == Constants.EXPENSE ? 'var(--expense-label)' : 'var(--income-label)', 'font-weight': 'bold'}">{{ entry.amount }}
       </td>
       <td>
         <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"></p-button>

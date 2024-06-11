@@ -3,7 +3,7 @@ import {Entry} from "../model/entry.model";
 import {map, Observable, Subject} from "rxjs";
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {RESPONSE_ENTRY_KEY, RESPONSE_MESSAGE_KEY} from "../constants";
+import {Constants} from "../constants";
 
 // TODO refactor: doppeltes zusammenfassen
 @Injectable({providedIn: 'root'})
@@ -53,7 +53,7 @@ export class ExpenseService {
     })
       .pipe(map(response => response.body))
       .subscribe((body) => {
-        if (body && typeof body === 'object' && RESPONSE_MESSAGE_KEY in body && RESPONSE_ENTRY_KEY in body) {
+        if (body && typeof body === 'object' && Constants.RESPONSE_MESSAGE_KEY in body && Constants.RESPONSE_ENTRY_KEY in body) {
           try {
             const newExpenses: Entry[] = JSON.parse(JSON.stringify(body.entry));
             this.expenses = [];
@@ -68,30 +68,6 @@ export class ExpenseService {
       });
   }
 
-  /*
-  fetchExpenses() {
-    const url = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_get_all}`;
-    this.httpClient.get(url, {
-      observe: 'response',
-      responseType: 'json'
-    })
-      .pipe(map(response => response.body))
-      .subscribe((body) => {
-        if (body && typeof body === 'object' && RESPONSE_MESSAGE_KEY in body && RESPONSE_ENTRY_KEY in body) {
-          try {
-            const newExpenses: Entry[] = JSON.parse(JSON.stringify(body.entry));
-            newExpenses.forEach(expense => this.expenses.push(expense));
-            this.expensesUpdated.next([...this.expenses]);
-          } catch (error) {
-            console.error('Error parsing json expense object:', error);
-          }
-        } else {
-          console.error('The response body does not contain an entry property.');
-        }
-      });
-  }
-   */
-
   fetchExpenseById(id: number) {
     const url = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_get_by_id}${id}`;
     this.httpClient.get(url, {
@@ -99,7 +75,7 @@ export class ExpenseService {
       responseType: 'json'
     }).pipe(map(response => response.body))
       .subscribe((body) => {
-        if (body && typeof body === 'object' && RESPONSE_MESSAGE_KEY in body && RESPONSE_ENTRY_KEY in body) {
+        if (body && typeof body === 'object' && Constants.RESPONSE_MESSAGE_KEY in body && Constants.RESPONSE_ENTRY_KEY in body) {
           try {
             this.expense = JSON.parse(JSON.stringify(body.entry));
             if (this.expense !== null && this.expense !== undefined) {
@@ -122,10 +98,10 @@ export class ExpenseService {
     })
       .pipe(map(response => response.body))
       .subscribe((body) => {
-        if (body && typeof body === 'object' && RESPONSE_MESSAGE_KEY in body && RESPONSE_ENTRY_KEY in body) {
+        if (body && typeof body === 'object' && Constants.RESPONSE_MESSAGE_KEY in body && Constants.RESPONSE_ENTRY_KEY in body) {
           try {
             const newExpense: Entry = JSON.parse(JSON.stringify(body.entry));
-            this.expenses.push(newExpense); // TODO Nur die für den aktuellen Monat anzeigen --> wenn ich im Juni für Juli anlege, dann darf der Eintrag nicht im Juni angezeigt werden
+            this.expenses.push(newExpense); // TODO Noah Nur die für den aktuellen Monat anzeigen --> wenn ich im Juni für Juli anlege, dann darf der Eintrag nicht im Juni angezeigt werden
             this.expensesUpdated.next([...this.expenses]);
           } catch (error) {
             console.error('Error parsing json expense object:', error);

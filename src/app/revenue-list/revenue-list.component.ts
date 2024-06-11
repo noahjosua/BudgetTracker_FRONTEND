@@ -1,7 +1,7 @@
 import {ExpenseService} from '../services/expense.service';
 import {IncomeService} from '../services/income.service';
 import {Entry} from '../model/entry.model';
-import {CATEGORIES_KEY, EXPENSE, INCOME} from '../constants';
+import {Constants} from "../constants";
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {formatDate} from "../helper";
 
@@ -20,15 +20,15 @@ export class RevenueListComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes[INCOME]) {
+    if (changes[Constants.INCOME]) {
       for (const income of this.income) {
-        income.type = INCOME;
+        income.type = Constants.INCOME;
       }
       this.incomes_and_expenses = this.income.concat(this.expense); // TODO Anzeigen, so wie so abgespeichert wurden --> wie werden sie aus der DB geholt? In der Reihenfolge, in der sie auch gespeichert werden?
     }
-    if (changes[EXPENSE]) {
+    if (changes[Constants.EXPENSE]) {
       for (const expense of this.expense) {
-        expense.type = EXPENSE;
+        expense.type = Constants.EXPENSE;
       }
       this.incomes_and_expenses = this.income.concat(this.expense);
     }
@@ -40,15 +40,14 @@ export class RevenueListComponent implements OnChanges {
   }
 
   onDelete(entry: Entry) {
-    if (entry.type == EXPENSE) {
+    if (entry.type == Constants.EXPENSE) {
       this.expenseService.deleteExpense(entry);
     }
-    if (entry.type == INCOME) {
+    if (entry.type == Constants.INCOME) {
       this.incomeService.deleteIncome(entry);
     }
   }
 
   protected readonly formatDate = formatDate;
-  protected readonly EXPENSE = EXPENSE;
-    protected readonly CATEGORIES_KEY = CATEGORIES_KEY;
+  protected readonly Constants = Constants;
 }

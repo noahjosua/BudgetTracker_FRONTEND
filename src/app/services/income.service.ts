@@ -4,7 +4,7 @@ import {Injectable} from "@angular/core";
 import {map} from 'rxjs/operators';
 import {environment} from "../../environments/environment";
 import {Entry} from "../model/entry.model";
-import {RESPONSE_ENTRY_KEY, RESPONSE_MESSAGE_KEY} from "../constants";
+import {Constants} from "../constants";
 
 @Injectable({providedIn: 'root'})
 export class IncomeService {
@@ -53,7 +53,7 @@ export class IncomeService {
     })
       .pipe(map(response => response.body))
       .subscribe((body) => {
-        if (body && typeof body === 'object' && RESPONSE_MESSAGE_KEY in body && RESPONSE_ENTRY_KEY in body) {
+        if (body && typeof body === 'object' && Constants.RESPONSE_MESSAGE_KEY in body && Constants.RESPONSE_ENTRY_KEY in body) {
           try {
             const newIncomes: Entry[] = JSON.parse(JSON.stringify(body.entry));
             this.incomes = [];
@@ -68,30 +68,6 @@ export class IncomeService {
       });
   }
 
-  /*
-  fetchIncomes() {
-    const url = `${environment.baseUrl}${environment.path_income}${environment.endpoint_get_all}`;
-    this.httpClient.get(url, {
-      observe: 'response',
-      responseType: 'json'
-    })
-      .pipe(map(response => response.body))
-      .subscribe((body) => {
-        if (body && typeof body === 'object' && RESPONSE_MESSAGE_KEY in body && RESPONSE_ENTRY_KEY in body) {
-          try {
-            const newIncomes: Entry[] = JSON.parse(JSON.stringify(body.entry));
-            newIncomes.forEach((income) => this.incomes.push(income));
-            this.incomesUpdated.next([...this.incomes]);
-          } catch (error) {
-            console.error('Error parsing json income object:', error);
-          }
-        } else {
-          console.error('The response body does not contain an entry property.');
-        }
-      });
-  }
-   */
-
   fetchIncomeById(id: number) {
     const url = `${environment.baseUrl}${environment.path_income}${environment.endpoint_get_by_id}${id}`;
     this.httpClient.get(url, {
@@ -99,7 +75,7 @@ export class IncomeService {
       responseType: 'json'
     }).pipe(map(response => response.body))
       .subscribe((body) => {
-        if (body && typeof body === 'object' && RESPONSE_MESSAGE_KEY in body && RESPONSE_ENTRY_KEY in body) {
+        if (body && typeof body === 'object' && Constants.RESPONSE_MESSAGE_KEY in body && Constants.RESPONSE_ENTRY_KEY in body) {
           try {
             this.income = JSON.parse(JSON.stringify(body.entry));
             if (this.income !== null && this.income !== undefined) {
