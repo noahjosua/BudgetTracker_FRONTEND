@@ -4,6 +4,7 @@ import {map, Observable, Subject} from "rxjs";
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Constants} from "../constants";
+import {NotificationMessage} from "../model/NotificationMessage";
 
 @Injectable({providedIn: 'root'})
 export class ExpenseService {
@@ -13,9 +14,12 @@ export class ExpenseService {
   private expenses: Entry[] = [];
   private expensesUpdated: Subject<Entry[]> = new Subject<Entry[]>();
 
-  private expense: Entry | undefined = undefined;
-  private expenseUpdated: Subject<Entry> = new Subject<Entry>();
-
+  private showMessageToUserSubject = new Subject<NotificationMessage>();
+  private notificationErrorAddExpense: NotificationMessage = {
+    severity: 'error',
+    summary: 'Fehler',
+    detail: 'Ausgabe konnte nicht gespeichert werden.'
+  };
 
   constructor(private httpClient: HttpClient) {
   }
@@ -28,8 +32,8 @@ export class ExpenseService {
     return this.expensesUpdated.asObservable();
   }
 
-  getExpenseUpdatedListener(): Observable<Entry> {
-    return this.expenseUpdated.asObservable();
+  getShowMessageToUserSubject() {
+    return this.showMessageToUserSubject.asObservable();
   }
 
   fetchCategories() {
@@ -45,7 +49,8 @@ export class ExpenseService {
   }
 
   fetchExpensesByDate(date: Date) {
-    const url = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_get_by_date}/${date}`;
+    const isoDateString = date.toISOString().split('T')[0];
+    const url = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_get_by_date}/${isoDateString}`;
     this.httpClient.get(url, {
       observe: 'response',
       responseType: 'json'
@@ -67,30 +72,6 @@ export class ExpenseService {
       });
   }
 
-  /*
-  fetchExpenseById(id: number) {
-    const url = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_get_by_id}${id}`;
-    this.httpClient.get(url, {
-      observe: 'response',
-      responseType: 'json'
-    }).pipe(map(response => response.body))
-      .subscribe((body) => {
-        if (body && typeof body === 'object' && Constants.RESPONSE_MESSAGE_KEY in body && Constants.RESPONSE_ENTRY_KEY in body) {
-          try {
-            this.expense = JSON.parse(JSON.stringify(body.entry));
-            if (this.expense !== null && this.expense !== undefined) {
-              this.expenseUpdated.next(this.expense);
-            }
-          } catch (error) {
-            console.error('Error parsing json expense object:', error);
-          }
-        } else {
-          console.error('The response body does not contain an entry property.');
-        }
-      });
-  }
-   */
-
   addExpense(expense: Entry, date: Date) {
     const URL = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_save}`
     this.httpClient.post(URL, JSON.stringify(expense), {
@@ -98,39 +79,60 @@ export class ExpenseService {
       observe: 'response'
     })
       .pipe(map(response => response.body))
-      .subscribe((body) => {
-        if (body && typeof body === 'object' && Constants.RESPONSE_MESSAGE_KEY in body && Constants.RESPONSE_ENTRY_KEY in body) {
-          try {
-            const newExpense: Entry = JSON.parse(JSON.stringify(body.entry));
-            const planned = new Date(newExpense.datePlanned);
-            if (planned.getMonth() === date.getMonth()) {
-              this.expenses.push(newExpense);
+      .subscribe({
+        next: (body) => {
+          if (body && typeof body === 'object' && Constants.RESPONSE_MESSAGE_KEY in body && Constants.RESPONSE_ENTRY_KEY in body) {
+            try {
+              const newExpense: Entry = JSON.parse(JSON.stringify(body.entry));
+              const planned = new Date(newExpense.datePlanned);
+              if (planned.getMonth() === date.getMonth()) {
+                this.expenses.push(newExpense);
+              }
+              this.expensesUpdated.next([...this.expenses]);
+              this.showMessageToUserSubject.next({
+                severity: 'success',
+                summary: 'Erfolg',
+                detail: 'Ausgabe gespeichert.'
+              });
+            } catch (error) {
+              this.showMessageToUserSubject.next(this.notificationErrorAddExpense);
             }
-            this.expensesUpdated.next([...this.expenses]);
-          } catch (error) {
-            console.error('Error parsing json expense object:', error);
           }
-        } else {
-          console.error('The response body does not contain an entry property.');
+        },
+        error: () => {
+          this.showMessageToUserSubject.next(this.notificationErrorAddExpense);
         }
       });
   }
 
   // TODO
   updateExpense(expense: Entry) {
-
   }
 
   // TODO Fehler fangen -- wie in saveExpense
   deleteExpense(expense: Entry) {
-    const expenseId = expense.id;
+    const expenseId = expense.id
     const URL = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_delete}/${expenseId}`;
     this.httpClient.delete(URL, {observe: 'response', responseType: 'text'})
-      .subscribe((result) => {
-        console.log(result);
-        this.expenses = this.expenses.filter(e => e.id !== expenseId);
-        this.expensesUpdated.next([...this.expenses]);
-      });
+      .subscribe({
+        next: (body) => {
+          console.log(body);
+          this.expenses = this.expenses.filter(i => i.id !== expenseId);
+          this.expensesUpdated.next([...this.expenses]);
+          this.showMessageToUserSubject.next({
+            severity: 'success',
+            summary: 'Erfolg',
+            detail: 'Ausgabe gelöscht.'
+          });
+        },
+        error: () => {
+          this.showMessageToUserSubject.next({
+            severity: 'error',
+            summary: 'Fehler',
+            detail: 'Ausgabe konnte nicht gelöscht werden.'
+          });
+        }
+      })
   }
 }
 

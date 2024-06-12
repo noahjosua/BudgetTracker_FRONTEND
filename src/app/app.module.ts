@@ -21,6 +21,8 @@ import {InputTextModule} from 'primeng/inputtext';
 import {DropdownModule} from 'primeng/dropdown';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {CalendarModule} from 'primeng/calendar';
+import { ToastModule } from 'primeng/toast';
+import {MessageService} from "primeng/api";
 
 @NgModule({
   declarations: [
@@ -50,9 +52,10 @@ import {CalendarModule} from 'primeng/calendar';
     InputTextModule,
     DropdownModule,
     InputNumberModule,
-    CalendarModule
+    CalendarModule,
+    ToastModule
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

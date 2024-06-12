@@ -5,6 +5,8 @@ import {map, Subscription} from "rxjs";
 import {IncomeService} from "../services/income.service";
 import {Entry} from "../model/entry.model";
 import {TranslateService} from "@ngx-translate/core";
+import {NotificationMessage} from "../model/NotificationMessage";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-create-edit-entry',
@@ -15,6 +17,8 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
 
   private expenseCategorySubscription: Subscription | undefined;
   private incomeCategorySubscription: Subscription | undefined;
+  private showMessageToUserSubscription: Subscription | undefined ;
+  private notification: NotificationMessage = { severity: '', summary: '', detail: '' };
 
   @Input() title: any;
   @Input() currentDate: any;
@@ -50,7 +54,8 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(public incomeService: IncomeService,
               public expenseService: ExpenseService,
-              private translate: TranslateService) {
+              private translate: TranslateService,
+              private messageService: MessageService) {
   }
 
   ngOnInit() {
@@ -61,6 +66,18 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
       this.types.push({name: translations[Constants.TYPE_INCOME_KEY], value: Constants.INCOME});
       this.types.push({name: translations[Constants.TYPE_EXPENSE_KEY], value: Constants.EXPENSE});
     });
+
+    this.showMessageToUserSubscription = this.incomeService.getShowMessageToUserSubject().subscribe(
+      message => {
+        this.notification = message;
+      }
+    );
+
+    this.showMessageToUserSubscription = this.expenseService.getShowMessageToUserSubject().subscribe(
+      message => {
+        this.notification = message;
+      }
+    );
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -78,7 +95,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
       }
     }
 
-    if(changes['currentDate']) {
+    if (changes['currentDate']) {
       this.selectedDate = changes['currentDate'].currentValue;
     }
   }
@@ -93,16 +110,36 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
       this.incomeService.addIncome(this.entry, this.selectedDate);
     }
     this.reset();
+    setTimeout(() => {
+      this.messageService.add(this.notification);
+    }, 1000);
   }
 
   onCancel() {
     this.reset();
   }
 
-  /*
-  TODO
-  Validation implementieren
-   */
+  validateType() {
+    this.validation.isTypeChosen = this.type == Constants.INCOME || this.type == Constants.EXPENSE;
+  }
+
+  validateDescription() {
+    this.validation.description = this.entry.description.length >= 5 && this.entry.description.length <= 50;
+  }
+
+  validateCategory() {
+    if (this.type == Constants.INCOME) {
+      this.validation.isCategoryChosen = this.translatedIncomeCategories.some((category: any) => category.value === this.entry.category);
+      console.log(this.validation.isCategoryChosen);
+    }
+    if (this.type == Constants.EXPENSE) {
+      this.validation.isCategoryChosen = this.translatedExpenseCategories.some((category: any) => category.value === this.entry.category);
+    }
+  }
+
+  validateAmount() {
+    this.validation.isAmountValid = this.entry.amount > 0;
+  }
 
   private initializeExpenseCategories() {
     this.expenseService.fetchCategories();
@@ -168,6 +205,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
   ngOnDestroy(): void {
     this.expenseCategorySubscription?.unsubscribe();
     this.incomeCategorySubscription?.unsubscribe();
+    this.showMessageToUserSubscription?.unsubscribe();
   }
 
   protected readonly Constants = Constants;
