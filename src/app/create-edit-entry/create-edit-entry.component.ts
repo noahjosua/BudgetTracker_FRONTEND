@@ -119,28 +119,6 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     this.reset();
   }
 
-  validateType() {
-    this.validation.isTypeChosen = this.type == Constants.INCOME || this.type == Constants.EXPENSE;
-  }
-
-  validateDescription() {
-    this.validation.description = this.entry.description.length >= 5 && this.entry.description.length <= 50;
-  }
-
-  validateCategory() {
-    if (this.type == Constants.INCOME) {
-      this.validation.isCategoryChosen = this.translatedIncomeCategories.some((category: any) => category.value === this.entry.category);
-      console.log(this.validation.isCategoryChosen);
-    }
-    if (this.type == Constants.EXPENSE) {
-      this.validation.isCategoryChosen = this.translatedExpenseCategories.some((category: any) => category.value === this.entry.category);
-    }
-  }
-
-  validateAmount() {
-    this.validation.isAmountValid = this.entry.amount > 0;
-  }
-
   private initializeExpenseCategories() {
     this.expenseService.fetchCategories();
     this.expenseCategorySubscription = this.expenseService.getCategoriesUpdatedListener()

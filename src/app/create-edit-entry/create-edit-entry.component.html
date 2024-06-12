@@ -10,14 +10,14 @@
       <div class="dialog-container">
         <label class="dialog-label">{{ 'labels.type' | translate }}</label>
         <p-dropdown [options]="types" [(ngModel)]="type" optionLabel="name" optionValue="value" [showClear]="true"
-                    placeholder="Wähle einen Typ" (onChange)="validateType()">
+                    placeholder="Wähle einen Typ">
         </p-dropdown>
       </div>
 
       <!--Description-->
       <div class="dialog-container">
         <label class="dialog-label">{{ 'labels.description' | translate }}</label>
-        <input pInputText type="text" maxlength="50" required [(ngModel)]="entry.description" (input)="validateDescription()" />
+        <input pInputText type="text" maxlength="50" required [(ngModel)]="entry.description"/>
       </div>
 
       <!--Category-->
@@ -26,11 +26,11 @@
         <p-dropdown *ngIf="type == Constants.INCOME" [options]="translatedIncomeCategories"
                     [(ngModel)]="entry.category"
                     optionLabel="name" optionValue="value"
-                    [showClear]="true" (onChange)="validateCategory()"></p-dropdown>
+                    [showClear]="true"></p-dropdown>
         <p-dropdown *ngIf="type == Constants.EXPENSE" [options]="translatedExpenseCategories"
                     [(ngModel)]="entry.category"
                     optionLabel="name" optionValue="value"
-                    [showClear]="true" (onChange)="validateCategory()"></p-dropdown>
+                    [showClear]="true"></p-dropdown>
         <p-dropdown *ngIf="type == '' || type == null" [loading]="true"
                     placeholder="Wähle zuerst einen Typ"></p-dropdown>
       </div>
@@ -44,7 +44,6 @@
                        locale="de-DE"
                        [minFractionDigits]="2"
                        [maxFractionDigits]="2"
-                       (onInput)="validateAmount()"
         ></p-inputNumber>
       </div>
 
