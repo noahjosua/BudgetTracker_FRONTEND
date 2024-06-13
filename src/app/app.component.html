@@ -1,13 +1,15 @@
 <div class="container">
   <app-toolbar (dateChanged)="onDateChanged($event)"></app-toolbar>
 </div>
+
 <div class="container">
   <app-overview [incomes]="income" [expenses]="expense" [total_income]="total_income" [total_expense]="total_expense"
                 [total]="total"></app-overview>
 </div>
 <div class="container">
-  <app-revenue-list [income]="income" [expense]="expense"></app-revenue-list>
+  <app-revenue-list [currentDate]="selectedDateAsDate" [income]="income" [expense]="expense"></app-revenue-list>
 </div>
-<div class="container">
-  <app-create-edit-entry></app-create-edit-entry>
+
+<div class="button-container">
+  <app-create-entry-button [currentDate]="selectedDateAsDate"></app-create-entry-button>
 </div>

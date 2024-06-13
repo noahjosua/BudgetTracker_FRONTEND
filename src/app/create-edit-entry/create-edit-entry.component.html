@@ -1,12 +1,4 @@
-<p-button class="button-container"
-          icon="pi pi-plus"
-          [rounded]="true"
-          size="large"
-          severity="secondary"
-          (onClick)="onOpenDialog()">
-</p-button>
-
-<p-dialog header="{{'labels.newEntry' | translate}}"
+<p-dialog header="{{title}}"
           styleClass="p-fluid"
           [modal]="true"
           [(visible)]="isVisible"
@@ -31,13 +23,13 @@
       <!--Category-->
       <div class="dialog-container">
         <label class="dialog-label">{{ 'labels.category' | translate }}</label>
-        <p-dropdown *ngIf="type == INCOME" [options]="translatedIncomeCategories"
+        <p-dropdown *ngIf="type == Constants.INCOME" [options]="translatedIncomeCategories"
                     [(ngModel)]="entry.category"
-                    optionLabel="name"
+                    optionLabel="name" optionValue="value"
                     [showClear]="true"></p-dropdown>
-        <p-dropdown *ngIf="type == EXPENSE" [options]="translatedExpenseCategories"
+        <p-dropdown *ngIf="type == Constants.EXPENSE" [options]="translatedExpenseCategories"
                     [(ngModel)]="entry.category"
-                    optionLabel="name"
+                    optionLabel="name" optionValue="value"
                     [showClear]="true"></p-dropdown>
         <p-dropdown *ngIf="type == '' || type == null" [loading]="true"
                     placeholder="Wähle zuerst einen Typ"></p-dropdown>
@@ -46,15 +38,20 @@
       <!--Amount-->
       <div class="dialog-container">
         <label class="dialog-label">{{ 'labels.amount' | translate }}</label>
-        <p-inputNumber [(ngModel)]="entry.amount" mode="decimal" [minFractionDigits]="2"
-                       [maxFractionDigits]="5"></p-inputNumber>
+        <p-inputNumber [(ngModel)]="entry.amount"
+                       mode="currency"
+                       currency="EUR"
+                       locale="de-DE"
+                       [minFractionDigits]="2"
+                       [maxFractionDigits]="2"
+        ></p-inputNumber>
       </div>
 
       <!-- Date planned -->
       <div class="dialog-container">
         <label class="dialog-label">{{ 'labels.datePlanned' | translate }}</label>
         <p-calendar [(ngModel)]="entry.datePlanned"
-                    dateFormat="dd/mm/yy" [showOnFocus]="true"/>
+                    dateFormat="dd/mm/yy" [readonlyInput]="true" [showOnFocus]="true"/>
       </div>
     </div>
 
