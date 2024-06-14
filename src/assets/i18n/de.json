@@ -1,0 +1,36 @@
+{
+  "labels": {
+    "type": "Typ",
+    "description": "Bezeichnung",
+    "category": "Kategorie",
+    "amount": "Summe",
+    "datePlanned": "Geplanter Zeitpunkt",
+    "date": "Datum",
+    "income": "Einnahmen",
+    "expense": "Ausgaben",
+    "total": "Gesamt"
+  },
+  "buttons": {
+    "save": "Speichern",
+    "cancel": "Abbrechen"
+  },
+  "type": {
+    "income": "Einnahme",
+    "expense": "Ausgabe"
+  },
+  "categories": {
+    "salary": "Gehalt",
+    "pocket_money": "Taschengeld",
+    "aliment": "Unterhalt",
+    "capital_assets": "Kapitalvermögen",
+    "rental": "Vermietung",
+    "groceries": "Lebensmittel",
+    "drugstore": "Drogerie",
+    "free_time": "Freizeit",
+    "rent": "Miete",
+    "insurance": "Versicherung",
+    "subscriptions": "Abonnement",
+    "education": "Bildung",
+    "other": "Sonstiges"
+  }
+}

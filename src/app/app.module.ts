@@ -1,15 +1,17 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
+import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 
-import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
+import {HttpLoaderFactory} from './translate-loader';
 import {OverviewComponent} from './overview/overview.component';
 import {ToolbarComponent} from './toolbar/toolbar.component';
 import {RevenueListComponent} from './revenue-list/revenue-list.component';
 import {CreateEditEntryComponent} from './create-edit-entry/create-edit-entry.component';
+import {CreateEntryButtonComponent} from './create-entry-button/create-entry-button.component';
 
 import {ButtonModule} from 'primeng/button';
 import {ToolbarModule} from 'primeng/toolbar';
@@ -19,6 +21,8 @@ import {InputTextModule} from 'primeng/inputtext';
 import {DropdownModule} from 'primeng/dropdown';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {CalendarModule} from 'primeng/calendar';
+import { ToastModule } from 'primeng/toast';
+import {MessageService} from "primeng/api";
 
 @NgModule({
   declarations: [
@@ -26,14 +30,21 @@ import {CalendarModule} from 'primeng/calendar';
     OverviewComponent,
     RevenueListComponent,
     ToolbarComponent,
-    CreateEditEntryComponent
+    CreateEditEntryComponent,
+    CreateEntryButtonComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    AppRoutingModule,
     ButtonModule,
     HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
     FormsModule,
     ToolbarModule,
     TableModule,
@@ -41,9 +52,10 @@ import {CalendarModule} from 'primeng/calendar';
     InputTextModule,
     DropdownModule,
     InputNumberModule,
-    CalendarModule
+    CalendarModule,
+    ToastModule
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

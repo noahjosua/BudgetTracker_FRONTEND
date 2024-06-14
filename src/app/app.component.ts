@@ -1,10 +1,80 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Entry} from "./model/entry.model";
+import {Constants} from "./constants";
+import {IncomeService} from "./services/income.service";
+import {ExpenseService} from "./services/expense.service";
+import {Subscription} from "rxjs";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'budget-tracker-frontend';
+  selectedDate: string = '';
+  selectedDateAsDate: Date = new Date();
+
+  private incomeSubscription: Subscription | undefined;
+  private expenseSubscription: Subscription | undefined;
+  income: Entry[] = [];
+  expense: Entry[] = [];
+
+  total_income: any;
+  total_expense: any;
+  total: any;
+
+  constructor(public incomeService: IncomeService,
+              public expenseService: ExpenseService,
+              private translate: TranslateService) {
+    this.translate.setDefaultLang('de');
+  }
+
+  ngOnInit() {
+    this.fetchIncomesByDate();
+    this.fetchExpensesByDate();
+  }
+
+  onDateChanged(date: Date) {
+    this.selectedDateAsDate = date;
+    this.selectedDate = date.toLocaleString('default', {month: 'long', year: 'numeric'});
+    this.expenseService.fetchExpensesByDate(date);
+    this.incomeService.fetchIncomesByDate(date);
+  }
+
+  private fetchExpensesByDate() {
+    this.expenseService.fetchExpensesByDate(new Date());
+    this.expenseSubscription = this.expenseService.getExpensesUpdatedListener().subscribe((expenses: Entry[]) => {
+      this.expense = expenses;
+      this.total_expense = 0;
+      for (const expense of this.expense) {
+        expense.type = Constants.EXPENSE;
+        this.total_expense += expense.amount;
+      }
+      this.updateTotal();
+    });
+  }
+
+  private fetchIncomesByDate() {
+    this.incomeService.fetchIncomesByDate(new Date());
+    this.incomeSubscription = this.incomeService.getIncomesUpdatedListener().subscribe((incomes: Entry[]) => {
+      this.income = incomes;
+      this.total_income = 0;
+      for (const income of this.income) {
+        income.type = Constants.INCOME;
+        this.total_income += income.amount;
+      }
+      this.updateTotal();
+    });
+  }
+
+  private updateTotal() {
+    this.total = this.total_income - this.total_expense;
+  }
+
+  ngOnDestroy() {
+    this.incomeSubscription?.unsubscribe();
+    this.expenseSubscription?.unsubscribe();
+  }
 }

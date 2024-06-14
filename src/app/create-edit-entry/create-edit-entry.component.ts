@@ -1,170 +1,214 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Constants} from "../constants";
+import {ExpenseService} from "../services/expense.service";
+import {map, Subscription} from "rxjs";
+import {IncomeService} from "../services/income.service";
+import {Entry} from "../model/entry.model";
+import {TranslateService} from "@ngx-translate/core";
+import {NotificationMessage} from "../model/NotificationMessage";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-create-edit-entry',
   templateUrl: './create-edit-entry.component.html',
   styleUrl: './create-edit-entry.component.css'
 })
-export class CreateEditEntryComponent {
+export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
 
-  isTypeChosen: boolean = false;
-  isDesValid: boolean = false;
-  isCategoryChosen: boolean = false;
-  isAmountValid: boolean = false;
-  isDateValid: boolean = false;
+  private expenseCategorySubscription: Subscription | undefined;
+  private incomeCategorySubscription: Subscription | undefined;
+  private showMessageToUserSubscription: Subscription | undefined;
+  private notification: NotificationMessage = {severity: '', summary: '', detail: ''};
 
+  @Input() title: any;
+  @Input() currentDate: any;
+  selectedDate: any;
 
-  visible: boolean = false;
-  categories: any = [
-    {name: 'A'}, {name: 'B'}, {name: 'C'}
-  ];
-  types: any = [
-    {name: 'Einnahme'}, {name: 'Ausgabe'} // abhängig davon an unterschiedliche Endpunkte
-  ];
-
-  entry: any = {
-    datePlanned: '',
+  /* Dialog models for data binding */
+  expenseCategories: any = [];
+  translatedExpenseCategories: any = [];
+  incomeCategories: any = [];
+  translatedIncomeCategories: any = [];
+  types: any = [];
+  @Input() entry: Entry = {
+    dateCreated: new Date(),
+    datePlanned: new Date(),
     category: '',
     description: '',
     amount: 0.0
   };
-  type: string = '';
+  type: any;
 
-  constructor() {
+  /* Dialog handling */
+  @Input() isVisible: boolean = false;
+  @Output() visibilityChanged = new EventEmitter<boolean>();
+
+  /* Validation */
+  validation: any = {
+    isTypeChosen: false,
+    isDesValid: false,
+    isCategoryChosen: false,
+    isAmountValid: false
   }
 
+  constructor(public incomeService: IncomeService,
+              public expenseService: ExpenseService,
+              private translate: TranslateService,
+              private messageService: MessageService) {
+  }
 
-  onOpenDialog() {
-    if (this.visible) {
-      this.visible = false;
-    } else {
-      this.visible = true;
+  ngOnInit() {
+    this.initializeIncomeCategories();
+    this.initializeExpenseCategories();
+
+    this.translate.get([Constants.TYPE_INCOME_KEY, Constants.TYPE_EXPENSE_KEY]).subscribe(translations => {
+      this.types.push({name: translations[Constants.TYPE_INCOME_KEY], value: Constants.INCOME});
+      this.types.push({name: translations[Constants.TYPE_EXPENSE_KEY], value: Constants.EXPENSE});
+    });
+
+    this.showMessageToUserSubscription = this.incomeService.getShowMessageToUserSubject().subscribe(
+      message => {
+        this.notification = message;
+      }
+    );
+
+    this.showMessageToUserSubscription = this.expenseService.getShowMessageToUserSubject().subscribe(
+      message => {
+        this.notification = message;
+      }
+    );
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['entry']) {
+      const changedEntry = changes['entry'].currentValue;
+      if (changedEntry !== undefined) {
+        this.type = this.types.find((type: any) => type.value === changedEntry.type)['value'];
+        if (this.type === Constants.INCOME) {
+          this.entry.category = this.translatedIncomeCategories.find((category: any) => category.value == changedEntry.category)['value'];
+        }
+        if (this.type === Constants.EXPENSE) {
+          this.entry.category = this.translatedExpenseCategories.find((category: any) => category.value == changedEntry.category)['value'];
+        }
+        this.entry.datePlanned = new Date(changedEntry.datePlanned);
+      }
+    }
+
+    if (changes['currentDate']) {
+      this.selectedDate = changes['currentDate'].currentValue;
     }
   }
 
   onSave() {
+    this.entry.dateCreated = new Date();
 
-    if (this.entryValidator()) {
-
-      this.entry.datePlanned = this.entry.datePlanned;
-      this.entry.category = this.entry.category.name;
-      this.entry.amount = this.entry.amount;
-      this.entry.description = this.entry.description;
-      this.entry.type = '';
-
-      this.isDateValid = false;
-      this.isCategoryChosen = false;
-      this.isAmountValid = false;
-      this.isDesValid = false;
-      this.isTypeChosen = false;
-
-      this.visible = false;
-
-      this.entry.reset({
-        datePlanned: '',
-        category: '',
-        description: '',
-        amount: 0.0,
-        type: ''
-      });
+    if (this.type == Constants.EXPENSE) {
+      this.expenseService.addExpense(this.entry, this.selectedDate);
     }
+    if (this.type == Constants.INCOME) {
+      this.incomeService.addIncome(this.entry, this.selectedDate);
+    }
+    this.reset();
+    setTimeout(() => {
+      this.messageService.add(this.notification);
+    }, 1000);
   }
 
-
   onCancel() {
-    this.visible = false;
+    this.reset();
   }
 
   entryValidator(): boolean {
-    if (this.isTypeChosen && this.isAmountValid && this.isDateValid && this.isDesValid && this.isCategoryChosen) {
-      return true;
+    return this.validation.isTypeChosen && this.validation.isAmountValid && this.validation.isDesValid && this.validation.isCategoryChosen;
+  }
+
+  typeChosen() {
+    this.validation.isTypeChosen = this.type == Constants.INCOME || this.type == Constants.EXPENSE;
+  }
+
+  validateDes() {
+    this.validation.isDesValid = this.entry.description.length > 0 && this.entry.description.length < 50;
+  }
+
+  categoryChosen() {
+
+    if (this.type == Constants.INCOME) {
+      this.validation.isCategoryChosen = this.translatedIncomeCategories.some((category: any) => category.value == this.entry.category);
+    } else if (this.type == Constants.EXPENSE) {
+      this.validation.isCategoryChosen = this.translatedExpenseCategories.some((category: any) => category.value == this.entry.category);
     }
-    return false;
   }
 
-  typeChosen(): boolean {
-    this.isTypeChosen = true;
-    return this.isTypeChosen;
+  validateAmount() {
+    this.validation.isAmountValid = this.entry.amount > 0;
   }
 
-  validateDes(): boolean {
 
-    if (this.entry.description.length > 0 && this.entry.description.length < 50) {
-      this.isDesValid = true;
+  private initializeExpenseCategories() {
+    this.expenseService.fetchCategories();
+    this.expenseCategorySubscription = this.expenseService.getCategoriesUpdatedListener()
+      .pipe(
+        map((categories: string[]) => categories.map(c => ({name: c})))
+      )
+      .subscribe((mappedCategories) => {
+        this.expenseCategories = mappedCategories;
+        this.translatedExpenseCategories = this.translateCategories(this.expenseCategories, this.translatedExpenseCategories, this.translate);
+      });
+  }
+
+  private initializeIncomeCategories() {
+    this.incomeService.fetchCategories();
+    this.incomeCategorySubscription = this.incomeService.getCategoriesUpdatedListener()
+      .pipe(
+        map((categories: string[]) => categories.map(c => ({name: c})))
+      )
+      .subscribe((mappedCategories) => {
+        this.incomeCategories = mappedCategories;
+        this.translatedIncomeCategories = this.translateCategories(this.incomeCategories, this.translatedIncomeCategories, this.translate);
+      });
+  }
+
+  private translateCategories(categories: any[], translatedCategories: any[], translate: TranslateService) {
+    const categoryNames = categories.map(c => c.name.toLowerCase());
+    for (const category of categoryNames) {
+      translate.get(Constants.CATEGORIES_KEY + category).subscribe(translations => {
+        translatedCategories.push({name: translations, value: category.toUpperCase()});
+      });
     }
-    return this.isDesValid;
+    return translatedCategories;
   }
 
-  categoryChosen(): boolean {
-    this.isCategoryChosen = true;
-    return this.isCategoryChosen;
+  private reset() {
+    this.isVisible = false;
+    this.visibilityChanged.emit(this.isVisible);
+    this.clearEntry();
+    this.clearValidation();
   }
 
-  validateAmount(): boolean {
-    if (this.entry.amount > 0) {
-      this.isAmountValid = true;
+  private clearEntry() {
+    this.entry = {
+      dateCreated: new Date(),
+      datePlanned: new Date(),
+      category: '',
+      description: '',
+      amount: 0.0
     }
-    return this.isAmountValid;
   }
 
-
-  validateDate(): boolean {
-    /*
-          if(!this.entry.datePlanned){
-            this.isDateValid = false;
-          }
-
-          this.entry.datePlanned = this.entry.datePlanned.replace(/[-/]/g, '.'); // Trennzeichen normalisieren
-          this.entry.datePlanned = this.entry.datePlanned.replace(/[^0-9.: ]/g, ''); // ungültige Zeichen entfernen
-          this.entry.datePlanned = this.entry.datePlanned.replace(/ +/g, ' '); // doppelte Leerzeichen entfernen
-
-          var splitParts = this.entry.datePlanned.split('.');
-          var day = splitParts[0];
-          var month = splitParts[1];
-          var year = splitParts[2];
-
-          var check = new Date(year, month - 1, day);
-
-          var day2 = check.getDate();
-          var year2 = check.getFullYear();
-          var month2 = check.getMonth() + 1;
-
-          if(year2 == year && month == month2 && day == day2 ){
-            this.isDateValid = true;
-          }
-
-          return this.isDateValid;
-        }
-        /*
-            let dateArray = this.entry.datePlanned.split("/");
-
-            if (dateArray.length !== 3) {
-              this.isDateValid = false;
-              return this.isDateValid;
-            }
-
-            let day = parseInt(dateArray[0], 10);
-            let month = parseInt(dateArray[1], 10) - 1;
-            let year = parseInt(dateArray[2], 10);
-
-            if (isNaN(day) || isNaN(month) || isNaN(year)) {
-              this.isDateValid = false;
-              return this.isDateValid;
-            }
-
-            let dateObj = new Date(year, month, day);
-
-            if (dateObj.getFullYear() === year && dateObj.getMonth() === month && dateObj.getDate() === day) {
-              console.log("Gültiges Datum");
-              this.isDateValid = true;
-            } else {
-              console.log("Ungültiges Datum: Datum existiert nicht");
-              this.isDateValid = false;
-            }
-
-            return this.isDateValid;
-          } */
-    this.isDateValid = true;
-    return this.isDateValid;
+  private clearValidation() {
+    this.validation = {
+      isTypeChosen: false,
+      isDesValid: false,
+      isCategoryChosen: false,
+      isAmountValid: false
+    }
   }
+
+  ngOnDestroy(): void {
+    this.expenseCategorySubscription?.unsubscribe();
+    this.incomeCategorySubscription?.unsubscribe();
+    this.showMessageToUserSubscription?.unsubscribe();
+  }
+
+  protected readonly Constants = Constants;
 }

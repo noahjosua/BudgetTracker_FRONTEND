@@ -1,11 +1,16 @@
 <p-toolbar>
   <ng-template pTemplate="start">
+    <!-- TODO Bild ersetzen -->
     <img src="https://primefaces.org/cdn/primeng/images/primeng.svg"/>
   </ng-template>
   <ng-template pTemplate="center">
-    <i class="pi pi-angle-left"></i>
-    <p>{{ month + ' ' + year }}</p>
-    <i class="pi pi-angle-right"></i>
+    <p-button [text]="true" (onClick)="prevMonth()">
+      <i class="pi pi-angle-left" style="font-size: 2rem; color: var(--main-text-color)"></i>
+    </p-button>
+    <p>{{ currentDate.toLocaleString('default', {month: 'long', year: 'numeric'}) }}</p>
+    <p-button [text]="true" (onClick)="nextMonth()">
+      <i class="pi pi-angle-right" style="font-size: 2rem; color: var(--main-text-color)"></i>
+    </p-button>
   </ng-template>
   <ng-template pTemplate="end"></ng-template>
 </p-toolbar>

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-overview',
@@ -6,10 +6,11 @@ import {Component, OnInit} from '@angular/core';
   styleUrl: './overview.component.css'
 })
 export class OverviewComponent {
-  total_income: number = 0;
-  total_expense: number = 2.50;
-  saldo: number = 5.00;
 
-  constructor() {
-  }
+  @Input() incomes: any;
+  @Input() expenses: any;
+
+  @Input() total_income: any;
+  @Input() total_expense: any;
+  @Input() total: any;
 }

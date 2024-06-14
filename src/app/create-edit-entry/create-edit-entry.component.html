@@ -1,63 +1,70 @@
-<p-button class="button-container"
-          icon="pi pi-plus"
-          [rounded]="true"
-          size="large"
-          severity="secondary"
-          (onClick)="onOpenDialog()">
-</p-button>
-
-<p-dialog header="Neuer Eintrag"
+<p-dialog header="{{title}}"
           styleClass="p-fluid"
           [modal]="true"
-          [(visible)]="visible"
+          [(visible)]="isVisible"
           [style]="{ width: '50vw' }"
           [closable]="false">
   <ng-template pTemplate="content">
     <div>
       <!--Type-->
       <div class="dialog-container">
-        <label class="dialog-label">Typ</label>
-        <p-dropdown [options]="types" [(ngModel)]="type" optionLabel="name" [showClear]="true"
-                    placeholder="Wähle einen Typ" (onChange)="typeChosen()">
+        <label class="dialog-label">{{ 'labels.type' | translate }}</label>
+        <p-dropdown [options]="types" [(ngModel)]="type" optionLabel="name" optionValue="value" [showClear]="true"
+                    placeholder="Wähle einen Typ" (onChange) = "typeChosen()">
         </p-dropdown>
       </div>
 
       <!--Description-->
       <div class="dialog-container">
-        <label class="dialog-label">Bezeichnung</label>
-        <input pInputText type="text" maxlength="50" required [(ngModel)]="entry.description" (input)="validateDes()"/>
+        <label class="dialog-label">{{ 'labels.description' | translate }}</label>
+        <input pInputText type="text" maxlength="50" required [(ngModel)]="entry.description" (input) = "validateDes()"/>
       </div>
 
       <!--Category-->
       <div class="dialog-container">
-        <label class="dialog-label">Kategorie</label>
-        <p-dropdown [options]="categories" [(ngModel)]="entry.category" optionLabel="name" [showClear]="true"
-                    placeholder="Wähle eine Kategorie" (onChange)="categoryChosen()">
-        </p-dropdown>
+        <label class="dialog-label">{{ 'labels.category' | translate }}</label>
+        <p-dropdown *ngIf="type == Constants.INCOME" [options]="translatedIncomeCategories"
+                    [(ngModel)]="entry.category"
+                    optionLabel="name" optionValue="value"
+                    [showClear]="true" (onChange) = "categoryChosen()"></p-dropdown>
+        <p-dropdown *ngIf="type == Constants.EXPENSE" [options]="translatedExpenseCategories"
+                    [(ngModel)]="entry.category"
+                    optionLabel="name" optionValue="value"
+                    [showClear]="true" (onChange) = "categoryChosen()"></p-dropdown>
+        <p-dropdown *ngIf="type == '' || type == null" [loading]="true"
+                    placeholder="Wähle zuerst einen Typ"></p-dropdown>
       </div>
 
       <!--Amount-->
       <div class="dialog-container">
-        <label class="dialog-label">Summe (in Euro)</label>
-        <p-inputNumber [(ngModel)]="entry.amount" mode="decimal" [minFractionDigits]="2"
-                       [maxFractionDigits]="5" (onInput)="validateAmount()"></p-inputNumber>
+        <label class="dialog-label">{{ 'labels.amount' | translate }}</label>
+        <p-inputNumber [(ngModel)]="entry.amount"
+                       mode="currency"
+                       currency="EUR"
+                       locale="de-DE"
+                       [minFractionDigits]="2"
+                       [maxFractionDigits]="2"
+                       (onInput)="validateAmount()"
+        ></p-inputNumber>
       </div>
 
       <!-- Date planned -->
       <div class="dialog-container">
-        <label class="dialog-label">Geplanter Zeitpunkt</label>
+        <label class="dialog-label">{{ 'labels.datePlanned' | translate }}</label>
         <p-calendar [(ngModel)]="entry.datePlanned"
-                    dateFormat="dd/mm/yy" [showOnFocus]="true" (onSelect)="validateDate()"/>
+                    dateFormat="dd/mm/yy" [readonlyInput]="true" [showOnFocus]="true"/>
       </div>
     </div>
 
     <!-- Save and Cancel Buttons -->
     <div class="dialog-buttons-container">
-      <p-button label="Speichern" icon="pi pi-save" iconPos="right"
-                styleClass="p-button-sm" (onClick)="onSave()">
-        <!--[disabled]=""-->
+      <p-button label="{{'buttons.save' | translate}}" icon="pi pi-save" iconPos="right"
+                styleClass="p-button-sm" (onClick)="onSave()" [disabled] = "!entryValidator()">
+
+
       </p-button>
-      <p-button label="Abbrechen" icon="" iconPos="right" styleClass="p-button-sm" (onClick)="onCancel()"></p-button>
+      <p-button label="{{'buttons.cancel'|translate}}" icon="" iconPos="right" styleClass="p-button-sm"
+                (onClick)="onCancel()"></p-button>
     </div>
   </ng-template>
 </p-dialog>
