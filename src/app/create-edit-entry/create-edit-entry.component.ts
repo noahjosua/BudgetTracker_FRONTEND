@@ -17,8 +17,8 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
 
   private expenseCategorySubscription: Subscription | undefined;
   private incomeCategorySubscription: Subscription | undefined;
-  private showMessageToUserSubscription: Subscription | undefined ;
-  private notification: NotificationMessage = { severity: '', summary: '', detail: '' };
+  private showMessageToUserSubscription: Subscription | undefined;
+  private notification: NotificationMessage = {severity: '', summary: '', detail: ''};
 
   @Input() title: any;
   @Input() currentDate: any;
@@ -48,8 +48,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     isTypeChosen: false,
     isDesValid: false,
     isCategoryChosen: false,
-    isAmountValid: false,
-    isDateValid: false,
+    isAmountValid: false
   }
 
   constructor(public incomeService: IncomeService,
@@ -119,6 +118,32 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     this.reset();
   }
 
+  entryValidator(): boolean {
+    return this.validation.isTypeChosen && this.validation.isAmountValid && this.validation.isDesValid && this.validation.isCategoryChosen;
+  }
+
+  typeChosen() {
+    this.validation.isTypeChosen = this.type == Constants.INCOME || this.type == Constants.EXPENSE;
+  }
+
+  validateDes() {
+    this.validation.isDesValid = this.entry.description.length > 0 && this.entry.description.length < 50;
+  }
+
+  categoryChosen() {
+
+    if (this.type == Constants.INCOME) {
+      this.validation.isCategoryChosen = this.translatedIncomeCategories.some((category: any) => category.value == this.entry.category);
+    } else if (this.type == Constants.EXPENSE) {
+      this.validation.isCategoryChosen = this.translatedExpenseCategories.some((category: any) => category.value == this.entry.category);
+    }
+  }
+
+  validateAmount() {
+    this.validation.isAmountValid = this.entry.amount > 0;
+  }
+
+
   private initializeExpenseCategories() {
     this.expenseService.fetchCategories();
     this.expenseCategorySubscription = this.expenseService.getCategoriesUpdatedListener()
@@ -175,8 +200,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
       isTypeChosen: false,
       isDesValid: false,
       isCategoryChosen: false,
-      isAmountValid: false,
-      isDateValid: false,
+      isAmountValid: false
     }
   }
 
