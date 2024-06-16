@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ToolbarComponent } from './toolbar.component';
+import {ToolbarComponent} from './toolbar.component';
+import {ToolbarModule} from "primeng/toolbar";
 
 describe('ToolbarComponent', () => {
   let component: ToolbarComponent;
@@ -8,10 +9,11 @@ describe('ToolbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ToolbarComponent]
+      declarations: [ToolbarComponent],
+      imports: [ToolbarModule]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(ToolbarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

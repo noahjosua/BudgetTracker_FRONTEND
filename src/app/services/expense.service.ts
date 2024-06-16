@@ -4,7 +4,7 @@ import {map, Observable, Subject} from "rxjs";
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Constants} from "../constants";
-import {NotificationMessage} from "../model/NotificationMessage";
+import {NotificationMessageModel} from "../model/notification-message.model";
 
 @Injectable({providedIn: 'root'})
 export class ExpenseService {
@@ -14,8 +14,8 @@ export class ExpenseService {
   private expenses: Entry[] = [];
   private expensesUpdated: Subject<Entry[]> = new Subject<Entry[]>();
 
-  private showMessageToUserSubject = new Subject<NotificationMessage>();
-  private notificationErrorAddExpense: NotificationMessage = {
+  private showMessageToUserSubject = new Subject<NotificationMessageModel>();
+  private notificationErrorAddExpense: NotificationMessageModel = {
     severity: 'error',
     summary: 'Fehler',
     detail: 'Ausgabe konnte nicht gespeichert werden.'

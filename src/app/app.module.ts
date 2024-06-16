@@ -21,7 +21,7 @@ import {InputTextModule} from 'primeng/inputtext';
 import {DropdownModule} from 'primeng/dropdown';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {CalendarModule} from 'primeng/calendar';
-import { ToastModule } from 'primeng/toast';
+import {ToastModule} from 'primeng/toast';
 import {MessageService} from "primeng/api";
 
 @NgModule({

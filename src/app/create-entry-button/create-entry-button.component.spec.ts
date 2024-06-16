@@ -11,7 +11,7 @@ describe('CreateEntryButtonComponent', () => {
       declarations: [CreateEntryButtonComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(CreateEntryButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

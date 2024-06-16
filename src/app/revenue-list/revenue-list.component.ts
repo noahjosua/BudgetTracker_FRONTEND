@@ -5,12 +5,11 @@ import {Constants} from "../constants";
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {MessageService} from "primeng/api";
 import {Subscription} from "rxjs";
-import {NotificationMessage} from "../model/NotificationMessage";
+import {NotificationMessageModel} from "../model/notification-message.model";
 
 @Component({
   selector: 'app-revenue-list',
   templateUrl: './revenue-list.component.html',
-  styleUrl: './revenue-list.component.css'
 })
 export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
 
@@ -25,7 +24,7 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
   selectedDate: any;
 
   private showMessageToUserSubscription: Subscription | undefined;
-  private notification: NotificationMessage = {severity: '', summary: '', detail: ''};
+  private notification: NotificationMessageModel = {severity: '', summary: '', detail: ''};
 
   constructor(public incomeService: IncomeService, public expenseService: ExpenseService, private messageService: MessageService) {
   }

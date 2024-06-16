@@ -5,7 +5,7 @@ import {map, Subscription} from "rxjs";
 import {IncomeService} from "../services/income.service";
 import {Entry} from "../model/entry.model";
 import {TranslateService} from "@ngx-translate/core";
-import {NotificationMessage} from "../model/NotificationMessage";
+import {NotificationMessageModel} from "../model/notification-message.model";
 import {MessageService} from "primeng/api";
 
 @Component({
@@ -18,7 +18,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
   private expenseCategorySubscription: Subscription | undefined;
   private incomeCategorySubscription: Subscription | undefined;
   private showMessageToUserSubscription: Subscription | undefined;
-  private notification: NotificationMessage = {severity: '', summary: '', detail: ''};
+  private notification: NotificationMessageModel = {severity: '', summary: '', detail: ''};
 
   @Input() title: any;
   @Input() currentDate: any;
