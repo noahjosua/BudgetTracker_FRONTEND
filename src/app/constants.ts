@@ -1,12 +1,14 @@
-/* Expense/Income */
-export const INCOME = 'income';
-export const EXPENSE = 'expense';
+export class Constants {
+  /* Expense/Income */
+  public static readonly INCOME = 'income';
+  public static readonly EXPENSE = 'expense';
 
-/* API Response Keys */
-export const RESPONSE_MESSAGE_KEY = 'message';
-export const RESPONSE_ENTRY_KEY = 'entry';
+  /* API Response Keys */
+  public static readonly RESPONSE_MESSAGE_KEY = 'message';
+  public static readonly RESPONSE_ENTRY_KEY = 'entry';
 
-/* Translation Keys */
-export const CATEGORIES_KEY = 'CATEGORIES.';
-export const TYPE_INCOME_KEY = 'TYPE.INCOME';
-export const TYPE_EXPENSE_KEY = 'TYPE.EXPENSE';
+  /* Translation Keys */
+  public static readonly CATEGORIES_KEY = 'categories.';
+  public static readonly TYPE_INCOME_KEY = 'type.income';
+  public static readonly TYPE_EXPENSE_KEY = 'type.expense';
+}

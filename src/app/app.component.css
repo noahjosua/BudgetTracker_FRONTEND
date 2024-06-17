@@ -7,3 +7,9 @@
 .container {
   margin: 20px 20px 20px 20px; /* top, right, bottom, left */
 }
+
+.button-container {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+}

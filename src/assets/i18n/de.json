@@ -1,37 +1,36 @@
 {
-  "LABELS": {
-    "CREATE_EDIT_ENTRY_DIALOG_HEADER": "Neuer Eintrag",
-    "TYPE": "Typ",
-    "DESCRIPTION": "Bezeichnung",
-    "CATEGORY": "Kategorie",
-    "AMOUNT": "Summe (in Euro)",
-    "DATE_PLANNED": "Geplanter Zeitpunkt",
-    "DATE": "Datum",
-    "INCOME": "Einnahmen",
-    "EXPENSE": "Ausgaben",
-    "TOTAL": "Gesamt"
+  "labels": {
+    "type": "Typ",
+    "description": "Bezeichnung",
+    "category": "Kategorie",
+    "amount": "Summe",
+    "datePlanned": "Geplanter Zeitpunkt",
+    "date": "Datum",
+    "income": "Einnahmen",
+    "expense": "Ausgaben",
+    "total": "Gesamt"
   },
-  "BUTTONS": {
-    "SAVE": "Speichern",
-    "CANCEL": "Abbrechen"
+  "buttons": {
+    "save": "Speichern",
+    "cancel": "Abbrechen"
   },
-  "TYPE": {
-    "INCOME": "Einnahme",
-    "EXPENSE": "Ausgabe"
+  "type": {
+    "income": "Einnahme",
+    "expense": "Ausgabe"
   },
-  "CATEGORIES": {
-    "SALARY": "Gehalt",
-    "POCKET_MONEY": "Taschengeld",
-    "ALIMENT": "Unterhalt",
-    "CAPITAL_ASSETS": "Kapitalvermögen",
-    "RENTAL": "Vermietung",
-    "GROCERIES": "Lebensmittel",
-    "DRUGSTORE": "Drogerie",
-    "FREE_TIME": "Freizeit",
-    "RENT": "Miete",
-    "INSURANCE": "Versicherung",
-    "SUBSCRIPTIONS": "Abonnement",
-    "EDUCATION": "Bildung",
-    "OTHER": "Sonstiges"
+  "categories": {
+    "salary": "Gehalt",
+    "pocket_money": "Taschengeld",
+    "aliment": "Unterhalt",
+    "capital_assets": "Kapitalvermögen",
+    "rental": "Vermietung",
+    "groceries": "Lebensmittel",
+    "drugstore": "Drogerie",
+    "free_time": "Freizeit",
+    "rent": "Miete",
+    "insurance": "Versicherung",
+    "subscriptions": "Abonnement",
+    "education": "Bildung",
+    "other": "Sonstiges"
   }
 }

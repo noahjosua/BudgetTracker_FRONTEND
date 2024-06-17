@@ -1,10 +1,11 @@
+<p-toast></p-toast>
 <p-table [value]="incomes_and_expenses">
   <ng-template pTemplate="header">
     <tr>
-      <th>{{ 'LABELS.DATE' | translate }}</th>
-      <th>{{ 'LABELS.CATEGORY' | translate }}</th>
-      <th>{{ 'LABELS.DESCRIPTION' | translate }}</th>
-      <th>{{ 'LABELS.AMOUNT' | translate }}</th>
+      <th>{{ 'labels.date' | translate }}</th>
+      <th>{{ 'labels.category' | translate }}</th>
+      <th>{{ 'labels.description' | translate }}</th>
+      <th>{{ 'labels.amount' | translate }}</th>
       <th></th>
       <th></th>
     </tr>
@@ -12,15 +13,15 @@
   <ng-template pTemplate="body" let-entry>
     <tr>
       <td>{{ formatDate(entry.datePlanned) }}</td>
-      <td>{{ entry.category }}</td>
+      <td>{{ Constants.CATEGORIES_KEY + entry.category.toLowerCase() | translate }}</td>
       <td>{{ entry.description }}</td>
       <td
-        [ngStyle]="{'color': entry.type == EXPENSE ? 'var(--expense-label)' : 'var(--income-label)', 'font-weight': 'bold'}">
-        {{ entry.amount }}
+
+        [ngStyle]="{'color': entry.type == Constants.EXPENSE ? 'var(--expense-label)' : 'var(--income-label)', 'font-weight': 'bold'}">{{ entry.amount }}
       </td>
       <td>
-        <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
-          (onClick)="onUpdate(entry)"></p-button>
+        <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" (onClick)="onUpdate(entry)"></p-button>
+
       </td>
       <td>
         <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary"
@@ -28,4 +29,8 @@
       </td>
     </tr>
   </ng-template>
+
 </p-table>
+
+<app-create-edit-entry [currentDate]="selectedDate" [title]="title" [entry]="entry" [isVisible]="isDialogVisible" (visibilityChanged)="isDialogVisible = $event"></app-create-edit-entry>
+

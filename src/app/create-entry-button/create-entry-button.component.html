@@ -1,0 +1,9 @@
+<p-button icon="pi pi-plus"
+          [rounded]="true"
+          size="large"
+          severity="secondary"
+          (onClick)="onOpenDialog()">
+</p-button>
+
+<app-create-edit-entry [currentDate]="selectedDate" [title]="title" [isVisible]="isDialogVisible"
+                       (visibilityChanged)="isDialogVisible = $event"></app-create-edit-entry>

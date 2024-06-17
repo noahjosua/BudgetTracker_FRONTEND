@@ -5,7 +5,7 @@ export const environment = {
   path_expense: '/api/expenses',
 
   endpoint_get_categories: '/categories',
-  endpoint_get_all: '',
+  //endpoint_get_all: '',
   endpoint_get_by_id: '/byId',
   endpoint_get_by_date: '/byDate',
   endpoint_save: '/save',

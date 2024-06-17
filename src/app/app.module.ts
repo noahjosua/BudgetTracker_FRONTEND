@@ -4,7 +4,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 import {AppComponent} from './app.component';
 import {HttpLoaderFactory} from './translate-loader';
@@ -12,6 +11,7 @@ import {OverviewComponent} from './overview/overview.component';
 import {ToolbarComponent} from './toolbar/toolbar.component';
 import {RevenueListComponent} from './revenue-list/revenue-list.component';
 import {CreateEditEntryComponent} from './create-edit-entry/create-edit-entry.component';
+import {CreateEntryButtonComponent} from './create-entry-button/create-entry-button.component';
 
 import {ButtonModule} from 'primeng/button';
 import {ToolbarModule} from 'primeng/toolbar';
@@ -21,6 +21,8 @@ import {InputTextModule} from 'primeng/inputtext';
 import {DropdownModule} from 'primeng/dropdown';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {CalendarModule} from 'primeng/calendar';
+import { ToastModule } from 'primeng/toast';
+import {MessageService} from "primeng/api";
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import {CalendarModule} from 'primeng/calendar';
     OverviewComponent,
     RevenueListComponent,
     ToolbarComponent,
-    CreateEditEntryComponent
+    CreateEditEntryComponent,
+    CreateEntryButtonComponent
   ],
   imports: [
     BrowserModule,
@@ -49,9 +52,10 @@ import {CalendarModule} from 'primeng/calendar';
     InputTextModule,
     DropdownModule,
     InputNumberModule,
-    CalendarModule
+    CalendarModule,
+    ToastModule
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
