@@ -37,6 +37,14 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     description: '',
     amount: 0.0
   };
+  newEntry: Entry = {
+    dateCreated: new Date(),
+    datePlanned: new Date(),
+    category: '',
+    description: '',
+    amount: 0.0
+  };
+
   @Input() isUpdating: any;
   type: any;
 
@@ -81,47 +89,21 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['entry']) {
-      const changedEntry = changes['entry'].currentValue;
-      if (changedEntry !== undefined) {
-        this.type = this.types.find((type: any) => type.value === changedEntry.type)['value'];
-        if (this.type === Constants.INCOME) {
-          this.entry.category = this.translatedIncomeCategories.find((category: any) => category.value == changedEntry.category)['value'];
-        }
-        if (this.type === Constants.EXPENSE) {
-          this.entry.category = this.translatedExpenseCategories.find((category: any) => category.value == changedEntry.category)['value'];
-        }
-        this.entry.datePlanned = new Date(changedEntry.datePlanned);
-      }
-    }
-
-    if (changes['isUpdating']) {
-      this.isUpdating = changes['isUpdating'].currentValue;
-      if (this.isUpdating) {
-        this.validation = {
-          isTypeChosen: true,
-          isDesValid: true,
-          isCategoryChosen: true,
-          isAmountValid: true
-        }
-      }
-    }
-
-    console.log(this.validation);
-
+    this.onEntryChanges(changes);
+    this.onIsUpdatingChanges(changes);
     if (changes['currentDate']) {
       this.selectedDate = changes['currentDate'].currentValue;
     }
   }
 
   onSave() {
-    this.entry.dateCreated = new Date();
+    this.newEntry.dateCreated = new Date();
 
     if (this.type == Constants.EXPENSE) {
-      this.expenseService.addExpense(this.entry, this.selectedDate);
+      this.expenseService.addExpense(this.newEntry, this.selectedDate);
     }
     if (this.type == Constants.INCOME) {
-      this.incomeService.addIncome(this.entry, this.selectedDate);
+      this.incomeService.addIncome(this.newEntry, this.selectedDate);
     }
     this.reset();
     setTimeout(() => {
@@ -140,25 +122,25 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
   typeChosen() {
     this.validation.isTypeChosen = this.type == Constants.INCOME || this.type == Constants.EXPENSE;
     if (this.isUpdating) {
-      this.entry.category = '';
+      this.newEntry.category = '';
       this.validation.isCategoryChosen = false;
     }
   }
 
   validateDes() {
-    this.validation.isDesValid = this.entry.description.length > 0 && this.entry.description.length < 50;
+    this.validation.isDesValid = this.newEntry.description.length > 0 && this.newEntry.description.length < 50;
   }
 
   categoryChosen() {
     if (this.type == Constants.INCOME) {
-      this.validation.isCategoryChosen = this.translatedIncomeCategories.some((category: any) => category.value == this.entry.category);
+      this.validation.isCategoryChosen = this.translatedIncomeCategories.some((category: any) => category.value == this.newEntry.category);
     } else if (this.type == Constants.EXPENSE) {
-      this.validation.isCategoryChosen = this.translatedExpenseCategories.some((category: any) => category.value == this.entry.category);
+      this.validation.isCategoryChosen = this.translatedExpenseCategories.some((category: any) => category.value == this.newEntry.category);
     }
   }
 
   validateAmount() {
-    this.validation.isAmountValid = this.entry.amount > 0;
+    this.validation.isAmountValid = this.newEntry.amount > 0;
   }
 
   private initializeExpenseCategories() {
@@ -203,12 +185,16 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private clearEntry() {
-    this.entry = {
-      dateCreated: new Date(),
-      datePlanned: new Date(),
-      category: '',
-      description: '',
-      amount: 0.0
+    if (this.isUpdating) {
+      this.newEntry = this.entry;
+    } else {
+      this.newEntry = {
+        dateCreated: new Date(),
+        datePlanned: new Date(),
+        category: '',
+        description: '',
+        amount: 0.0
+      }
     }
   }
 
@@ -218,6 +204,38 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
       isDesValid: false,
       isCategoryChosen: false,
       isAmountValid: false
+    }
+  }
+
+  private onEntryChanges(changes: SimpleChanges) {
+    if (changes['entry']) {
+      const changedEntry = changes['entry'].currentValue;
+      if (changedEntry !== undefined) {
+        this.newEntry.description = changedEntry.description;
+        this.newEntry.amount = changedEntry.amount;
+        this.type = this.types.find((type: any) => type.value === changedEntry.type)['value'];
+        if (this.type === Constants.INCOME) {
+          this.newEntry.category = this.translatedIncomeCategories.find((category: any) => category.value == changedEntry.category)['value'];
+        }
+        if (this.type === Constants.EXPENSE) {
+          this.newEntry.category = this.translatedExpenseCategories.find((category: any) => category.value == changedEntry.category)['value'];
+        }
+        this.newEntry.datePlanned = new Date(changedEntry.datePlanned);
+      }
+    }
+  }
+
+  private onIsUpdatingChanges(changes: SimpleChanges) {
+    if (changes['isUpdating']) {
+      this.isUpdating = changes['isUpdating'].currentValue;
+      if (this.isUpdating) {
+        this.validation = {
+          isTypeChosen: true,
+          isDesValid: true,
+          isCategoryChosen: true,
+          isAmountValid: true
+        }
+      }
     }
   }
 
