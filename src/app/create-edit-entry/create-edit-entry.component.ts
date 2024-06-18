@@ -37,6 +37,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     description: '',
     amount: 0.0
   };
+  @Input() isUpdating: any;
   type: any;
 
   /* Dialog handling */
@@ -94,6 +95,20 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
       }
     }
 
+    if (changes['isUpdating']) {
+      this.isUpdating = changes['isUpdating'].currentValue;
+      if (this.isUpdating) {
+        this.validation = {
+          isTypeChosen: true,
+          isDesValid: true,
+          isCategoryChosen: true,
+          isAmountValid: true
+        }
+      }
+    }
+
+    console.log(this.validation);
+
     if (changes['currentDate']) {
       this.selectedDate = changes['currentDate'].currentValue;
     }
@@ -124,25 +139,38 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
 
   typeChosen() {
     this.validation.isTypeChosen = this.type == Constants.INCOME || this.type == Constants.EXPENSE;
+    if (this.isUpdating) {
+      this.entry.category = '';
+      this.validation.isCategoryChosen = false;
+    }
   }
 
   validateDes() {
     this.validation.isDesValid = this.entry.description.length > 0 && this.entry.description.length < 50;
+    console.log("desc");
+    console.log(this.validation.isDesValid)
   }
 
   categoryChosen() {
-
     if (this.type == Constants.INCOME) {
       this.validation.isCategoryChosen = this.translatedIncomeCategories.some((category: any) => category.value == this.entry.category);
     } else if (this.type == Constants.EXPENSE) {
       this.validation.isCategoryChosen = this.translatedExpenseCategories.some((category: any) => category.value == this.entry.category);
     }
+    console.log("category");
+    console.log(this.entry.category)
+    console.log(this.validation.isCategoryChosen)
   }
 
   validateAmount() {
     this.validation.isAmountValid = this.entry.amount > 0;
+    console.log("amount");
+    console.log(this.validation.isAmountValid)
   }
 
+  validateIfUpdating() {
+
+  }
 
   private initializeExpenseCategories() {
     this.expenseService.fetchCategories();

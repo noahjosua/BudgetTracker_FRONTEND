@@ -19,6 +19,7 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
   values: any[] = [];
 
   isDialogVisible: boolean = false;
+  isUpdating: boolean = false;
   title = "Eintrag bearbeiten";
   entry: any;
   @Input() currentDate: any;
@@ -71,9 +72,11 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+
   onUpdate(entry: Entry) {
     this.entry = entry;
     this.isDialogVisible = true;
+    this.isUpdating = true;
   }
 
   onDelete(entry: Entry) {
