@@ -37,6 +37,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     description: '',
     amount: 0.0
   };
+
   newEntry: Entry = {
     dateCreated: new Date(),
     datePlanned: new Date(),

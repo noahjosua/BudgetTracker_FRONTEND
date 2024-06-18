@@ -5,6 +5,7 @@ import {HttpClient, HttpResponse} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Constants} from "../constants";
 import {NotificationMessage} from "../model/NotificationMessage";
+import {DateConverterService} from "./date-converter.service";
 
 @Injectable({providedIn: 'root'})
 export class ExpenseService {
@@ -21,7 +22,7 @@ export class ExpenseService {
     detail: 'Ausgabe konnte nicht gespeichert werden.'
   };
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private dateConverterService: DateConverterService) {
   }
 
   getCategoriesUpdatedListener(): Observable<string[]> {
@@ -49,7 +50,7 @@ export class ExpenseService {
   }
 
   fetchExpensesByDate(date: Date) {
-    const isoDateString = date.toISOString().split('T')[0];
+    const isoDateString = this.dateConverterService.convertToDateString(date);
     const url = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_get_by_date}/${isoDateString}`;
     this.httpClient.get(url, {
       observe: 'response',
@@ -73,6 +74,7 @@ export class ExpenseService {
   }
 
   addExpense(expense: Entry, date: Date) {
+    expense = this.dateConverterService.setTime(expense);
     const URL = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_save}`
     this.httpClient.post(URL, JSON.stringify(expense), {
       headers: {'Content-Type': 'application/json'},
