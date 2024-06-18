@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'app-overview',
@@ -13,4 +13,11 @@ export class OverviewComponent {
   @Input() total_income: any;
   @Input() total_expense: any;
   @Input() total: any;
+
+  @Output() showIncomes: EventEmitter<boolean> = new EventEmitter();
+
+  showOnlyIncomes() {
+    this.showIncomes.emit(true);
+  }
+
 }

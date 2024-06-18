@@ -37,6 +37,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     description: '',
     amount: 0.0
   };
+  @Input() isUpdating: any;
   type: any;
 
   /* Dialog handling */
@@ -94,6 +95,20 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
       }
     }
 
+    if (changes['isUpdating']) {
+      this.isUpdating = changes['isUpdating'].currentValue;
+      if (this.isUpdating) {
+        this.validation = {
+          isTypeChosen: true,
+          isDesValid: true,
+          isCategoryChosen: true,
+          isAmountValid: true
+        }
+      }
+    }
+
+    console.log(this.validation);
+
     if (changes['currentDate']) {
       this.selectedDate = changes['currentDate'].currentValue;
     }
@@ -124,6 +139,10 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
 
   typeChosen() {
     this.validation.isTypeChosen = this.type == Constants.INCOME || this.type == Constants.EXPENSE;
+    if (this.isUpdating) {
+      this.entry.category = '';
+      this.validation.isCategoryChosen = false;
+    }
   }
 
   validateDes() {
@@ -131,7 +150,6 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   categoryChosen() {
-
     if (this.type == Constants.INCOME) {
       this.validation.isCategoryChosen = this.translatedIncomeCategories.some((category: any) => category.value == this.entry.category);
     } else if (this.type == Constants.EXPENSE) {
@@ -142,7 +160,6 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
   validateAmount() {
     this.validation.isAmountValid = this.entry.amount > 0;
   }
-
 
   private initializeExpenseCategories() {
     this.expenseService.fetchCategories();

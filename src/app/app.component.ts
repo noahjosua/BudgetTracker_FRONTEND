@@ -21,6 +21,8 @@ export class AppComponent implements OnInit, OnDestroy {
   income: Entry[] = [];
   expense: Entry[] = [];
 
+  showOnlyIncomes: boolean = false;
+
   total_income: any;
   total_expense: any;
   total: any;
@@ -41,6 +43,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.selectedDate = date.toLocaleString('default', {month: 'long', year: 'numeric'});
     this.expenseService.fetchExpensesByDate(date);
     this.incomeService.fetchIncomesByDate(date);
+  }
+
+  showIncomes(showIncomes: boolean) {
+    this.showOnlyIncomes = showIncomes;
   }
 
   private fetchExpensesByDate() {
