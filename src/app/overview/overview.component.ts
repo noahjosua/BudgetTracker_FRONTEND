@@ -7,6 +7,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 })
 export class OverviewComponent {
 
+  /* Inputs from the AppComponent */
   @Input() incomes: any;
   @Input() expenses: any;
 
@@ -14,6 +15,7 @@ export class OverviewComponent {
   @Input() total_expense: any;
   @Input() total: any;
 
+  /* Outputs to the AppComponent */
   @Output() showIncomes: EventEmitter<boolean> = new EventEmitter();
 
   showOnlyIncomes() {

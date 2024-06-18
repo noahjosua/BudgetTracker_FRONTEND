@@ -12,20 +12,22 @@ import {TranslateService} from "@ngx-translate/core";
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = 'budget-tracker-frontend';
-  selectedDate: string = '';
-  selectedDateAsDate: Date = new Date();
 
+  /* Subscriptions */
   private incomeSubscription: Subscription | undefined;
   private expenseSubscription: Subscription | undefined;
+
   income: Entry[] = [];
   expense: Entry[] = [];
-
-  showOnlyIncomes: boolean = false;
-
   total_income: any;
   total_expense: any;
   total: any;
+
+  /* holds the date that was emitted by the ToolbarComponent */
+  selectedDate: Date = new Date();
+
+  /* holds the value that was outputted by the OverviewComponent */
+  showOnlyIncomes: boolean = false;
 
   constructor(public incomeService: IncomeService,
               public expenseService: ExpenseService,
@@ -33,22 +35,37 @@ export class AppComponent implements OnInit, OnDestroy {
     this.translate.setDefaultLang('de');
   }
 
+  /**
+   * Initializes the component by fetching incomes and expenses for the current date.
+   * Subscribes to income and expense updates to refresh data when changes occur.
+   */
   ngOnInit() {
     this.fetchIncomesByDate();
     this.fetchExpensesByDate();
   }
 
+  /**
+   * Updates the selected date and fetches incomes and expenses for the new date.
+   * @param date - The new selected date.
+   */
   onDateChanged(date: Date) {
-    this.selectedDateAsDate = date;
-    this.selectedDate = date.toLocaleString('default', {month: 'long', year: 'numeric'});
+    this.selectedDate = date;
     this.expenseService.fetchExpensesByDate(date);
     this.incomeService.fetchIncomesByDate(date);
   }
 
+  /**
+   * Sets whether to show only incomes.
+   * @param showIncomes - True to show only incomes.
+   */
   showIncomes(showIncomes: boolean) {
     this.showOnlyIncomes = showIncomes;
   }
 
+  /**
+   * Fetches expenses for the current date and subscribes to updates.
+   * Updates 'expense' and calculates 'total_expense' based on fetched data.
+   */
   private fetchExpensesByDate() {
     this.expenseService.fetchExpensesByDate(new Date());
     this.expenseSubscription = this.expenseService.getExpensesUpdatedListener().subscribe((expenses: Entry[]) => {
@@ -62,6 +79,10 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Fetches incomes for the current date and subscribes to updates.
+   * Updates 'income' and calculates 'total_income' based on fetched data.
+   */
   private fetchIncomesByDate() {
     this.incomeService.fetchIncomesByDate(new Date());
     this.incomeSubscription = this.incomeService.getIncomesUpdatedListener().subscribe((incomes: Entry[]) => {
@@ -79,6 +100,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this.total = this.total_income - this.total_expense;
   }
 
+  /**
+   * Unsubscribes from income and expense subscriptions when the component is destroyed to prevent memory leaks.
+   */
   ngOnDestroy() {
     this.incomeSubscription?.unsubscribe();
     this.expenseSubscription?.unsubscribe();
