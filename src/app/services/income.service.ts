@@ -6,6 +6,7 @@ import {environment} from "../../environments/environment";
 import {Entry} from "../model/entry.model";
 import {Constants} from "../constants";
 import {NotificationMessage} from "../model/NotificationMessage";
+import {DateConverterService} from "./date-converter.service";
 
 @Injectable({providedIn: 'root'})
 export class IncomeService {
@@ -22,7 +23,7 @@ export class IncomeService {
     detail: 'Einnahme konnte nicht gespeichert werden.'
   };
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private dateConverterService: DateConverterService) {
   }
 
   getCategoriesUpdatedListener(): Observable<string[]> {
@@ -50,7 +51,7 @@ export class IncomeService {
   }
 
   fetchIncomesByDate(date: Date) {
-    const isoDateString = date.toISOString().split('T')[0];
+    const isoDateString = this.dateConverterService.convertToDateString(date);
     const url = `${environment.baseUrl}${environment.path_income}${environment.endpoint_get_by_date}/${isoDateString}`;
     this.httpClient.get(url, {
       observe: 'response',
@@ -74,6 +75,7 @@ export class IncomeService {
   }
 
   addIncome(income: Entry, date: Date) {
+    income = this.dateConverterService.setTime(income);
     const URL = `${environment.baseUrl}${environment.path_income}${environment.endpoint_save}`
     this.httpClient.post(URL, JSON.stringify(income), {
       headers: {'Content-Type': 'application/json'},

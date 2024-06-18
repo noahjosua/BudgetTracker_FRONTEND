@@ -1,5 +1,6 @@
 import {ExpenseService} from '../services/expense.service';
 import {IncomeService} from '../services/income.service';
+import {DateConverterService} from "../services/date-converter.service";
 import {Entry} from '../model/entry.model';
 import {Constants} from "../constants";
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
@@ -30,7 +31,7 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
   private showMessageToUserSubscription: Subscription | undefined;
   private notification: NotificationMessage = {severity: '', summary: '', detail: ''};
 
-  constructor(public incomeService: IncomeService, public expenseService: ExpenseService, private messageService: MessageService) {
+  constructor(public incomeService: IncomeService, public expenseService: ExpenseService, private messageService: MessageService, public dateConverterService: DateConverterService) {
   }
 
   ngOnInit() {
@@ -90,13 +91,8 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
     }, 1000);
   }
 
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear();
-
-    return `${day}.${month}.${year}`;
+  formatDate(dateString: string) {
+    return this.dateConverterService.convertToEUFormat(new Date(dateString));
   }
 
   ngOnDestroy(): void {
