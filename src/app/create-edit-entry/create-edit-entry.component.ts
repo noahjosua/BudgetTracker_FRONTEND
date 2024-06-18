@@ -5,7 +5,7 @@ import {map, Subscription} from "rxjs";
 import {IncomeService} from "../services/income.service";
 import {Entry} from "../model/entry.model";
 import {TranslateService} from "@ngx-translate/core";
-import {NotificationMessage} from "../model/NotificationMessage";
+import {NotificationMessageModel} from "../model/notification-message.model";
 import {MessageService} from "primeng/api";
 
 @Component({
@@ -15,13 +15,29 @@ import {MessageService} from "primeng/api";
 })
 export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
 
+  /* Subscriptions */
   private expenseCategorySubscription: Subscription | undefined;
   private incomeCategorySubscription: Subscription | undefined;
   private showMessageToUserSubscription: Subscription | undefined;
-  private notification: NotificationMessage = {severity: '', summary: '', detail: ''};
+  private notification: NotificationMessageModel = {severity: '', summary: '', detail: ''};
 
+  /* Inputs from RevenueListComponent */
   @Input() title: any;
   @Input() currentDate: any;
+  @Input() entry: Entry = {
+    dateCreated: new Date(),
+    datePlanned: new Date(),
+    category: '',
+    description: '',
+    amount: 0.0
+  };
+  @Input() isUpdating: any;
+  @Input() isDialogVisible: boolean = false;
+
+  /* Output to RevenueListComponent */
+  @Output() visibilityChanged = new EventEmitter<boolean>();
+
+  /* holds the value of the currentDate from the RevenueListComponent */
   selectedDate: any;
 
   /* Dialog models for data binding */
@@ -30,14 +46,6 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
   incomeCategories: any = [];
   translatedIncomeCategories: any = [];
   types: any = [];
-  @Input() entry: Entry = {
-    dateCreated: new Date(),
-    datePlanned: new Date(),
-    category: '',
-    description: '',
-    amount: 0.0
-  };
-
   newEntry: Entry = {
     dateCreated: new Date(),
     datePlanned: new Date(),
@@ -45,13 +53,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     description: '',
     amount: 0.0
   };
-
-  @Input() isUpdating: any;
   type: any;
-
-  /* Dialog handling */
-  @Input() isVisible: boolean = false;
-  @Output() visibilityChanged = new EventEmitter<boolean>();
 
   /* Validation */
   validation: any = {
@@ -67,6 +69,12 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
               private messageService: MessageService) {
   }
 
+  /**
+   * Initializes the component.
+   * Calls functions to initialize income and expense categories.
+   * Translates income and expense types and adds them to the 'types' list.
+   * Subscribes to notifications for messages (which will be shown to the user) from income and expense services.
+   */
   ngOnInit() {
     this.initializeIncomeCategories();
     this.initializeExpenseCategories();
@@ -179,8 +187,8 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private reset() {
-    this.isVisible = false;
-    this.visibilityChanged.emit(this.isVisible);
+    this.isDialogVisible = false;
+    this.visibilityChanged.emit(this.isDialogVisible);
     this.clearEntry();
     this.clearValidation();
   }

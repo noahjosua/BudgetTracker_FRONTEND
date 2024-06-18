@@ -5,7 +5,7 @@ import {map} from 'rxjs/operators';
 import {environment} from "../../environments/environment";
 import {Entry} from "../model/entry.model";
 import {Constants} from "../constants";
-import {NotificationMessage} from "../model/NotificationMessage";
+import {NotificationMessageModel} from "../model/notification-message.model";
 import {DateConverterService} from "./date-converter.service";
 
 @Injectable({providedIn: 'root'})
@@ -16,8 +16,8 @@ export class IncomeService {
   private incomes: Entry[] = [];
   private incomesUpdated = new Subject<Entry[]>();
 
-  private showMessageToUserSubject = new Subject<NotificationMessage>();
-  private notificationErrorAddIncome: NotificationMessage = {
+  private showMessageToUserSubject = new Subject<NotificationMessageModel>();
+  private notificationErrorAddIncome: NotificationMessageModel = {
     severity: 'error',
     summary: 'Fehler',
     detail: 'Einnahme konnte nicht gespeichert werden.'
