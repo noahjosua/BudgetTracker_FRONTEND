@@ -73,6 +73,7 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+
   onUpdate(entry: Entry) {
     this.entry = entry;
     this.isDialogVisible = true;
