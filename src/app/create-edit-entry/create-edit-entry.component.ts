@@ -147,8 +147,6 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
 
   validateDes() {
     this.validation.isDesValid = this.entry.description.length > 0 && this.entry.description.length < 50;
-    console.log("desc");
-    console.log(this.validation.isDesValid)
   }
 
   categoryChosen() {
@@ -157,19 +155,10 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     } else if (this.type == Constants.EXPENSE) {
       this.validation.isCategoryChosen = this.translatedExpenseCategories.some((category: any) => category.value == this.entry.category);
     }
-    console.log("category");
-    console.log(this.entry.category)
-    console.log(this.validation.isCategoryChosen)
   }
 
   validateAmount() {
     this.validation.isAmountValid = this.entry.amount > 0;
-    console.log("amount");
-    console.log(this.validation.isAmountValid)
-  }
-
-  validateIfUpdating() {
-
   }
 
   private initializeExpenseCategories() {
