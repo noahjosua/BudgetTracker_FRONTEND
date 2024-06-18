@@ -1,12 +1,11 @@
-
-import {ExpenseService} from '../services/expense.service';
-import {IncomeService} from '../services/income.service';
-import {Entry} from '../model/entry.model';
-import {Constants} from "../constants";
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {MessageService} from "primeng/api";
-import {Subscription} from "rxjs";
-import {NotificationMessage} from "../model/NotificationMessage";
+import { ExpenseService } from '../services/expense.service';
+import { IncomeService } from '../services/income.service';
+import { Entry } from '../model/entry.model';
+import { Constants } from "../constants";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { MessageService } from "primeng/api";
+import { Subscription } from "rxjs";
+import { NotificationMessage } from "../model/NotificationMessage";
 
 
 @Component({
@@ -18,7 +17,7 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() income: any;
   @Input() expense: any;
-  incomes_and_expenses: any[] = [];
+  values: any[] = [];
 
   isDialogVisible: boolean = false;
   title = "Eintrag bearbeiten";
@@ -26,8 +25,12 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() currentDate: any;
   selectedDate: any;
 
+  @Input() showOnlyIncomes: any;
+  @Input() showOnlyExpenses: any;
+  @Input() showAllEntries: any;
+
   private showMessageToUserSubscription: Subscription | undefined;
-  private notification: NotificationMessage = {severity: '', summary: '', detail: ''};
+  private notification: NotificationMessage = { severity: '', summary: '', detail: '' };
 
   constructor(public incomeService: IncomeService, public expenseService: ExpenseService, private messageService: MessageService) {
   }
@@ -51,24 +54,51 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
       for (const income of this.income) {
         income.type = Constants.INCOME;
       }
-      this.incomes_and_expenses = this.income.concat(this.expense);
+      this.values = this.income.concat(this.expense);
     }
     if (changes[Constants.EXPENSE]) {
       for (const expense of this.expense) {
         expense.type = Constants.EXPENSE;
       }
-      this.incomes_and_expenses = this.income.concat(this.expense);
+      this.values = this.income.concat(this.expense);
     }
 
     if (changes['currentDate']) {
       this.selectedDate = changes['currentDate'].currentValue;
     }
+    if (changes['showOnlyIncomes']) {
+      if (changes['showOnlyIncomes'].currentValue == true) {
+        this.values = this.income.concat(this.expense);
+        this.values = this.values.filter((entry: any) => entry.type == Constants.INCOME);
+      }
+    }
+    if (changes['showOnlyExpenses']) {
+      if (changes['showOnlyExpenses'].currentValue == true) {
+        this.values = this.income.concat(this.expense); //Gibt es einen anderen weg? sonst wird von switch von ausgaben zu einnahmen nichts angezeigt, weil values nur mit expenses gefüllt war, beovr es wieder neu gefiltet wird
+        this.values = this.values.filter((entry: any) => entry.type == Constants.EXPENSE);
+      }
+    }
+    if (changes['showAllEntries']) {
+      if (changes['showAllEntries'].currentValue == true) {
+        this.values = this.income.concat(this.expense);
+
+      }
+    }
+
   }
 
   onUpdate(entry: Entry) {
 
     this.entry = entry;
     this.isDialogVisible = true;
+
+    if (entry.type == Constants.EXPENSE) {
+      this.expenseService.updateExpense(entry);
+    }
+    if (entry.type == Constants.INCOME) {
+      this.incomeService.updateIncome(entry);
+    }
+    
 
   }
 

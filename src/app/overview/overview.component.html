@@ -1,18 +1,20 @@
 <div class="outerContainer">
   <div class="innerContainer">
-    <p-button label="{{'labels.income' | translate}}" [text]="true" severity="success"></p-button>
+    <p-button label="{{'labels.income' | translate}}" [text]="true" severity="success"
+      (onClick)="showOnlyIncomes()"></p-button>
     <p *ngIf="total_income !== undefined">{{ total_income + '€' }}</p>
     <p *ngIf="total_income === undefined">{{ '0€' }}</p>
   </div>
   <div class="innerContainer">
-    <p-button label="{{'labels.expense' | translate}}" [text]="true" severity="danger"></p-button>
+    <p-button label="{{'labels.expense' | translate}}" [text]="true" severity="danger"
+      (onClick)="showOnlyExpenses()"></p-button>
     <p *ngIf="total_expense !== undefined">{{ total_expense + '€' }}</p>
     <p *ngIf="total_expense === undefined">{{ '0€' }}</p>
   </div>
   <div class="innerContainer">
-    <p-button label="{{'labels.total' | translate}}" [text]="true" severity="secondary"></p-button>
+    <p-button label="{{'labels.total' | translate}}" [text]="true" severity="secondary"
+      (onClick)="showAllEntries()"></p-button>
     <p *ngIf="total !== undefined">{{ total + '€' }}</p>
     <p *ngIf="total === undefined">{{ '0€' }}</p>
   </div>
 </div>
-
