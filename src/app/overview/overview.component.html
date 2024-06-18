@@ -1,6 +1,7 @@
 <div class="outerContainer">
   <div class="innerContainer">
-    <p-button label="{{'labels.income' | translate}}" [text]="true" severity="success"></p-button>
+    <p-button label="{{'labels.income' | translate}}" [text]="true" severity="success"
+              (onClick)="showOnlyIncomes()"></p-button>
     <p *ngIf="total_income !== undefined">{{ total_income + '€' }}</p>
     <p *ngIf="total_income === undefined">{{ '0€' }}</p>
   </div>
@@ -15,4 +16,3 @@
     <p *ngIf="total === undefined">{{ '0€' }}</p>
   </div>
 </div>
-
