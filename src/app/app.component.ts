@@ -20,6 +20,8 @@ export class AppComponent implements OnInit, OnDestroy {
   income: Entry[] = [];
   expense: Entry[] = [];
 
+  
+   /* holds the value that was outputted by the OverviewComponent */
   showOnlyIncomes: boolean = false;
   showOnlyExpenses: boolean = false;
   showAllEntries: boolean = false;
@@ -31,8 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
   /* holds the date that was emitted by the ToolbarComponent */
   selectedDate: Date = new Date();
 
-  /* holds the value that was outputted by the OverviewComponent */
-  showOnlyIncomes: boolean = false;
+
 
   constructor(public incomeService: IncomeService,
               public expenseService: ExpenseService,
