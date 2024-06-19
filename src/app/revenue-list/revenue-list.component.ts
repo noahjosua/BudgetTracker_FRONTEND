@@ -1,12 +1,12 @@
-import {ExpenseService} from '../services/expense.service';
-import {IncomeService} from '../services/income.service';
-import {DateConverterService} from "../services/date-converter.service";
-import {Entry} from '../model/entry.model';
-import {Constants} from "../constants";
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {MessageService} from "primeng/api";
-import {Subscription} from "rxjs";
-import {NotificationMessageModel} from "../model/notification-message.model";
+import { ExpenseService } from '../services/expense.service';
+import { IncomeService } from '../services/income.service';
+import { DateConverterService } from "../services/date-converter.service";
+import { Entry } from '../model/entry.model';
+import { Constants } from "../constants";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { MessageService } from "primeng/api";
+import { Subscription } from "rxjs";
+import { NotificationMessageModel } from "../model/notification-message.model";
 
 @Component({
   selector: 'app-revenue-list',
@@ -16,7 +16,7 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
 
   /* Subscriptions */
   private showMessageToUserSubscription: Subscription | undefined;
-  private notification: NotificationMessageModel = {severity: '', summary: '', detail: ''};
+  private notification: NotificationMessageModel = { severity: '', summary: '', detail: '' };
 
   /* Inputs from the AppComponent */
   @Input() income: any;
@@ -40,9 +40,9 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
 
 
   constructor(public incomeService: IncomeService,
-              public expenseService: ExpenseService,
-              private messageService: MessageService,
-              public dateConverterService: DateConverterService) {
+    public expenseService: ExpenseService,
+    private messageService: MessageService,
+    public dateConverterService: DateConverterService) {
   }
 
   /**
@@ -116,7 +116,7 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
     if (entry.type == Constants.INCOME) {
       this.incomeService.updateIncome(entry);
     }
-   
+
   }
 
   /**
@@ -181,6 +181,23 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
     if (changes['showOnlyIncomes']) {
       if (changes['showOnlyIncomes'].currentValue == true) {
         this.values = this.values.filter((entry: any) => entry.type == Constants.INCOME);
+      }
+    }
+  }
+
+  private onChangesShowOnlyExpenses(changes: SimpleChanges) {
+    if (changes['showOnlyExpenses']) {
+      if (changes['showOnlyExpenses'].currentValue == true) {
+        this.values = this.values.filter((entry: any) => entry.type == Constants.EXPENSE);
+      }
+    }
+  }
+
+  private onChangesShowAllEntries(changes: SimpleChanges) {
+    if (changes['showAllEntries']) {
+      if (changes['showAllEntries'].currentValue == true) {
+        this.values = this.income.concat(this.expense);
+
       }
     }
   }
