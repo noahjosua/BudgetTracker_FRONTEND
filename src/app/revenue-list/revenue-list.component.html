@@ -19,7 +19,8 @@
         [ngStyle]="{'color': entry.type == Constants.EXPENSE ? 'var(--expense-label)' : 'var(--income-label)', 'font-weight': 'bold'}">{{ entry.amount }}
       </td>
       <td>
-        <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" (onClick)="onUpdate(entry)"></p-button>
+        <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
+                  (onClick)="onUpdate(entry)"></p-button>
       </td>
       <td>
         <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary"
@@ -29,4 +30,5 @@
   </ng-template>
 </p-table>
 
-<app-create-edit-entry [currentDate]="selectedDate" [title]="title" [entry]="entry" [isVisible]="isDialogVisible" [isUpdating]="isUpdating" (visibilityChanged)="isDialogVisible = $event"></app-create-edit-entry>
+<app-create-edit-entry [currentDate]="selectedDate" [title]="title" [entry]="entry" [isDialogVisible]="isDialogVisible"
+                       [isUpdating]="isUpdating" (visibilityChanged)="isDialogVisible = $event"></app-create-edit-entry>

@@ -33,28 +33,28 @@ import {MessageService} from "primeng/api";
     CreateEditEntryComponent,
     CreateEntryButtonComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    ButtonModule,
-    HttpClientModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
-    FormsModule,
-    ToolbarModule,
-    TableModule,
-    DialogModule,
-    InputTextModule,
-    DropdownModule,
-    InputNumberModule,
-    CalendarModule,
-    ToastModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        ButtonModule,
+        HttpClientModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
+        FormsModule,
+        ToolbarModule,
+        TableModule,
+        DialogModule,
+        InputTextModule,
+        DropdownModule,
+        InputNumberModule,
+        CalendarModule,
+        ToastModule
+    ],
   providers: [MessageService],
   bootstrap: [AppComponent]
 })
