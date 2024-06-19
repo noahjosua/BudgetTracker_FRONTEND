@@ -8,6 +8,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {NotificationMessageModel} from "../model/notification-message.model";
 import {MessageService} from "primeng/api";
 
+
 @Component({
   selector: 'app-create-edit-entry',
   templateUrl: './create-edit-entry.component.html',
@@ -60,7 +61,8 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     isTypeChosen: false,
     isDesValid: false,
     isCategoryChosen: false,
-    isAmountValid: false
+    isAmountValid: false,
+    isTypeUpdating: false
   }
 
   constructor(public incomeService: IncomeService,
@@ -140,6 +142,9 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
    * @returns true if all validation criteria are met, otherwise false.
    */
   entryValidator(): boolean {
+    if (this.isUpdating && !this.validation.isTypeUpdating) {
+      return true;
+    }
     return this.validation.isTypeChosen && this.validation.isAmountValid && this.validation.isDesValid && this.validation.isCategoryChosen;
   }
 
@@ -148,6 +153,13 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
    * Adjusts category validation state when updating an entry.
    */
   typeChosen() {
+    if(this.isUpdating){
+      this.validation.isTypeUpdating = true
+    }
+    if(this.validation.isTypeUpdating){
+      this.validation.isCategoryChosen = false;
+    }
+
     this.validation.isTypeChosen = this.type == Constants.INCOME || this.type == Constants.EXPENSE;
     if (this.isUpdating) {
       this.newEntry.category = '';
@@ -223,6 +235,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
 
   private reset() {
     this.isDialogVisible = false;
+    this.isUpdating = false;
     this.visibilityChanged.emit(this.isDialogVisible);
     this.clearEntry();
     this.clearValidation();
