@@ -1,5 +1,5 @@
 <p-toast></p-toast>
-<p-table [value]="incomes_and_expenses">
+<p-table [value]="values">
   <ng-template pTemplate="header">
     <tr>
       <th>{{ 'labels.date' | translate }}</th>
@@ -16,6 +16,7 @@
       <td>{{ Constants.CATEGORIES_KEY + entry.category.toLowerCase() | translate }}</td>
       <td>{{ entry.description }}</td>
       <td
+
         [ngStyle]="{'color': entry.type == Constants.EXPENSE ? 'var(--expense-label)' : 'var(--income-label)', 'font-weight': 'bold'}">{{ entry.amount }}
       </td>
       <td>
@@ -23,10 +24,12 @@
       </td>
       <td>
         <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary"
-                  (onClick)="onDelete(entry)"></p-button>
+          (onClick)="onDelete(entry)"></p-button>
       </td>
     </tr>
   </ng-template>
+
 </p-table>
 
-<app-create-edit-entry [currentDate]="selectedDate" [title]="title" [entry]="entry" [isVisible]="isDialogVisible" (visibilityChanged)="isDialogVisible = $event"></app-create-edit-entry>
+<app-create-edit-entry [currentDate]="selectedDate" [title]="title" [entry]="entry" [isDialogVisible]="isDialogVisible"
+                       [isUpdating]="isUpdating" (visibilityChanged)="isDialogVisible = $event"></app-create-edit-entry>
