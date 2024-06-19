@@ -1,3 +1,4 @@
+
 import {Injectable} from "@angular/core";
 import {Entry} from "../model/entry.model";
 import {map, Observable, Subject} from "rxjs";
@@ -13,6 +14,7 @@ import {DateConverterService} from "./date-converter.service";
  * Provides methods to fetch categories and expenses, add, update, and delete expenses.
  */
 @Injectable({providedIn: 'root'})
+
 export class ExpenseService {
 
   private categories: string[] = [];
@@ -103,7 +105,7 @@ export class ExpenseService {
     expense = this.dateConverterService.setTime(expense);
     const URL = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_save}`
     this.httpClient.post(URL, JSON.stringify(expense), {
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       observe: 'response'
     })
       .pipe(map(response => response.body))
@@ -141,8 +143,37 @@ export class ExpenseService {
       });
   }
 
-  // TODO
+
   updateExpense(expense: Entry) {
+
+    const expenseId = expense.id;
+    const URL = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_update}/${expenseId}`
+    this.httpClient.put(URL, JSON.stringify(expense), {
+      headers: { 'Content-Type': 'application/json' },
+      observe: 'response'
+    })
+      .pipe(map(response => response.body))
+      .subscribe((body) => {
+        if (body && typeof body === 'object' && Constants.RESPONSE_MESSAGE_KEY in body && Constants.RESPONSE_ENTRY_KEY in body) {
+          try {
+            const indexId = this.expenses.findIndex(e => e.id === expense.id);
+            if (indexId !== -1) {
+
+              const updatedExpense: Entry = JSON.parse(JSON.stringify(body.entry));
+              this.expenses[indexId] = updatedExpense;
+              this.expensesUpdated.next([...this.expenses]);
+            }
+            else {
+              console.error('Error finding expense with the specified ID.')
+            }
+          } catch (error) {
+            console.error('Error parsing json expense object:', error);
+          }
+        } else {
+          console.error('The response body does not contain an entry property.');
+        }
+      });
+
   }
 
   /**

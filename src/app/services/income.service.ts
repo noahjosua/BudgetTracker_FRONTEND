@@ -1,3 +1,4 @@
+
 import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
@@ -14,6 +15,7 @@ import {DateConverterService} from "./date-converter.service";
  * Provides methods to fetch categories and incomes, add, update, and delete incomes.
  */
 @Injectable({providedIn: 'root'})
+
 export class IncomeService {
   private categories: string[] = [];
   private categoriesUpdated = new Subject<string[]>();
@@ -141,9 +143,38 @@ export class IncomeService {
       });
   }
 
+
   // TODO
+
   updateIncome(income: Entry) {
 
+    const incomeId = income.id;
+    const URL = `${environment.baseUrl}${environment.path_income}${environment.endpoint_update}/${incomeId}`
+    this.httpClient.put(URL, JSON.stringify(income), {
+      headers: { 'Content-Type': 'application/json' },
+      observe: 'response'
+    })
+      .pipe(map(response => response.body))
+      .subscribe((body) => {
+        if (body && typeof body === 'object' && Constants.RESPONSE_MESSAGE_KEY in body && Constants.RESPONSE_ENTRY_KEY in body) {
+          try {
+            const indexId = this.incomes.findIndex(i => i.id === income.id);
+            if (indexId !== -1) {
+
+              const updatedIncome: Entry = JSON.parse(JSON.stringify(body.entry));
+              this.incomes[indexId] = updatedIncome;
+              this.incomesUpdated.next([...this.incomes]);
+            }
+            else {
+              console.error('Error finding income with the specified ID.')
+            }
+          } catch (error) {
+            console.error('Error parsing json income object:', error);
+          }
+        } else {
+          console.error('The response body does not contain an entry property.');
+        }
+      });
   }
 
   /**
@@ -172,6 +203,7 @@ export class IncomeService {
             detail: 'Einnahme konnte nicht gelöscht werden.'
           });
         }
+
       });
   }
 }

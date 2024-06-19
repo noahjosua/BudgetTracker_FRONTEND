@@ -23,6 +23,8 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() expense: any;
   @Input() currentDate: any;
   @Input() showOnlyIncomes: any;
+  @Input() showOnlyExpenses: any;
+  @Input() showAllEntries: any;
 
   /* holds the value of the currentDate from the AppComponent */
   selectedDate: any;
@@ -77,6 +79,25 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
     if (changes['currentDate']) {
       this.selectedDate = changes['currentDate'].currentValue;
     }
+    if (changes['showOnlyIncomes']) {
+      if (changes['showOnlyIncomes'].currentValue == true) {
+        this.values = this.income.concat(this.expense);
+        this.values = this.values.filter((entry: any) => entry.type == Constants.INCOME);
+      }
+    }
+    if (changes['showOnlyExpenses']) {
+      if (changes['showOnlyExpenses'].currentValue == true) {
+        this.values = this.income.concat(this.expense); //Gibt es einen anderen weg? sonst wird von switch von ausgaben zu einnahmen nichts angezeigt, weil values nur mit expenses gefüllt war, beovr es wieder neu gefiltet wird
+        this.values = this.values.filter((entry: any) => entry.type == Constants.EXPENSE);
+      }
+    }
+    if (changes['showAllEntries']) {
+      if (changes['showAllEntries'].currentValue == true) {
+        this.values = this.income.concat(this.expense);
+
+      }
+    }
+
   }
 
   /**
@@ -85,9 +106,17 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
    * @param entry - The entry object being updated.
    */
   onUpdate(entry: Entry) {
+
     this.entry = entry;
     this.isDialogVisible = true;
     this.isUpdating = true;
+    if (entry.type == Constants.EXPENSE) {
+      this.expenseService.updateExpense(entry);
+    }
+    if (entry.type == Constants.INCOME) {
+      this.incomeService.updateIncome(entry);
+    }
+   
   }
 
   /**

@@ -1,10 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Entry} from "./model/entry.model";
-import {Constants} from "./constants";
-import {IncomeService} from "./services/income.service";
-import {ExpenseService} from "./services/expense.service";
-import {Subscription} from "rxjs";
-import {TranslateService} from "@ngx-translate/core";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Entry } from "./model/entry.model";
+import { Constants } from "./constants";
+import { IncomeService } from "./services/income.service";
+import { ExpenseService } from "./services/expense.service";
+import { Subscription } from "rxjs";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: 'app-root',
@@ -19,6 +19,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   income: Entry[] = [];
   expense: Entry[] = [];
+
+  showOnlyIncomes: boolean = false;
+  showOnlyExpenses: boolean = false;
+  showAllEntries: boolean = false;
+
   total_income: any;
   total_expense: any;
   total: any;
@@ -60,6 +65,20 @@ export class AppComponent implements OnInit, OnDestroy {
    */
   showIncomes(showIncomes: boolean) {
     this.showOnlyIncomes = showIncomes;
+    this.showAllEntries = false;
+    this.showOnlyExpenses = false;
+  }
+
+  showExpenses(showExpenses: boolean) {
+    this.showOnlyExpenses = showExpenses;
+    this.showAllEntries = false;
+    this.showOnlyIncomes = false;
+  }
+
+  showEntries(showEntries: boolean) {
+    this.showAllEntries = showEntries;
+    this.showOnlyIncomes = false;
+    this.showOnlyExpenses = false;
   }
 
   /**

@@ -17,9 +17,19 @@ export class OverviewComponent {
 
   /* Outputs to the AppComponent */
   @Output() showIncomes: EventEmitter<boolean> = new EventEmitter();
+  @Output() showExpenses: EventEmitter<boolean> = new EventEmitter();
+  @Output() showEntries: EventEmitter<boolean> = new EventEmitter();
 
   showOnlyIncomes() {
     this.showIncomes.emit(true);
+  }
+
+  showOnlyExpenses() {
+    this.showExpenses.emit(true);
+  }
+
+  showAllEntries() {
+    this.showEntries.emit(true);
   }
 
 }
