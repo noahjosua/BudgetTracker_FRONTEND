@@ -21,7 +21,6 @@
       </td>
       <td>
         <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" (onClick)="onUpdate(entry)"></p-button>
-
       </td>
       <td>
         <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary"
@@ -32,5 +31,5 @@
 
 </p-table>
 
-<app-create-edit-entry [currentDate]="selectedDate" [title]="title" [entry]="entry" [isVisible]="isDialogVisible" (visibilityChanged)="isDialogVisible = $event"></app-create-edit-entry>
-
+<app-create-edit-entry [currentDate]="selectedDate" [title]="title" [entry]="entry" [isDialogVisible]="isDialogVisible"
+                       [isUpdating]="isUpdating" (visibilityChanged)="isDialogVisible = $event"></app-create-edit-entry>

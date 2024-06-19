@@ -5,39 +5,56 @@ import {map, Observable, Subject} from "rxjs";
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Constants} from "../constants";
-import {NotificationMessage} from "../model/NotificationMessage";
+import {NotificationMessageModel} from "../model/notification-message.model";
+import {DateConverterService} from "./date-converter.service";
 
+/**
+ * Manages categories, expenses, and notification messages related to expenses.
+ * Uses HttpClient for API interactions and DateConverterService for date handling.
+ * Provides methods to fetch categories and expenses, add, update, and delete expenses.
+ */
 @Injectable({providedIn: 'root'})
 
 export class ExpenseService {
+
   private categories: string[] = [];
   private categoriesUpdated: Subject<string[]> = new Subject<string[]>();
 
   private expenses: Entry[] = [];
   private expensesUpdated: Subject<Entry[]> = new Subject<Entry[]>();
 
-  private showMessageToUserSubject = new Subject<NotificationMessage>();
-  private notificationErrorAddExpense: NotificationMessage = {
-    severity: 'error',
-    summary: 'Fehler',
-    detail: 'Ausgabe konnte nicht gespeichert werden.'
-  };
+  private showMessageToUserSubject = new Subject<NotificationMessageModel>();
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private dateConverterService: DateConverterService) {
   }
 
+  /**
+   * Returns an observable for categories updates.
+   * @returns Observable<string[]> - Observable emitting updated categories.
+   */
   getCategoriesUpdatedListener(): Observable<string[]> {
     return this.categoriesUpdated.asObservable();
   }
 
+  /**
+   * Returns an observable for expenses updates.
+   * @returns Observable<Entry[]> - Observable emitting updated expenses.
+   */
   getExpensesUpdatedListener(): Observable<Entry[]> {
     return this.expensesUpdated.asObservable();
   }
 
+  /**
+   * Returns an observable for notification messages related to expenses.
+   * @returns Observable<NotificationMessageModel> - Observable emitting notification messages.
+   */
   getShowMessageToUserSubject() {
     return this.showMessageToUserSubject.asObservable();
   }
 
+  /**
+   * Fetches expense categories from the server and updates the categories list.
+   */
   fetchCategories() {
     const url = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_get_categories}`;
     this.httpClient.get(url, {
@@ -50,8 +67,12 @@ export class ExpenseService {
       });
   }
 
+  /**
+   * Fetches expenses for a specific date from the server and updates the expenses list.
+   * @param date - The date for which expenses are fetched.
+   */
   fetchExpensesByDate(date: Date) {
-    const isoDateString = date.toISOString().split('T')[0];
+    const isoDateString = this.dateConverterService.convertToDateString(date);
     const url = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_get_by_date}/${isoDateString}`;
     this.httpClient.get(url, {
       observe: 'response',
@@ -74,7 +95,14 @@ export class ExpenseService {
       });
   }
 
+  /**
+   * Adds a new expense to the server and updates the expenses list upon success.
+   * Notifies subscribers with a success message upon successful addition, or an error message on failure.
+   * @param expense - The expense object to be added.
+   * @param date - The date associated with the expense.
+   */
   addExpense(expense: Entry, date: Date) {
+    expense = this.dateConverterService.setTime(expense);
     const URL = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_save}`
     this.httpClient.post(URL, JSON.stringify(expense), {
       headers: { 'Content-Type': 'application/json' },
@@ -97,12 +125,20 @@ export class ExpenseService {
                 detail: 'Ausgabe gespeichert.'
               });
             } catch (error) {
-              this.showMessageToUserSubject.next(this.notificationErrorAddExpense);
+              this.showMessageToUserSubject.next({
+                severity: 'error',
+                summary: 'Fehler',
+                detail: 'Ausgabe konnte nicht gespeichert werden.'
+              });
             }
           }
         },
         error: () => {
-          this.showMessageToUserSubject.next(this.notificationErrorAddExpense);
+          this.showMessageToUserSubject.next({
+            severity: 'error',
+            summary: 'Fehler',
+            detail: 'Ausgabe konnte nicht gespeichert werden.'
+          });
         }
       });
   }
@@ -140,14 +176,17 @@ export class ExpenseService {
 
   }
 
-  // TODO Fehler fangen -- wie in saveExpense
+  /**
+   * Deletes an expense from the server and updates the expenses list upon success.
+   * Notifies subscribers with a success message upon successful deletion, or an error message on failure.
+   * @param expense - The expense object to be deleted.
+   */
   deleteExpense(expense: Entry) {
     const expenseId = expense.id
     const URL = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_delete}/${expenseId}`;
     this.httpClient.delete(URL, {observe: 'response', responseType: 'text'})
       .subscribe({
-        next: (body) => {
-          console.log(body);
+        next: (_) => {
           this.expenses = this.expenses.filter(i => i.id !== expenseId);
           this.expensesUpdated.next([...this.expenses]);
           this.showMessageToUserSubject.next({
@@ -163,8 +202,7 @@ export class ExpenseService {
             detail: 'Ausgabe konnte nicht gelöscht werden.'
           });
         }
-      })
-
+      });
   }
 }
 

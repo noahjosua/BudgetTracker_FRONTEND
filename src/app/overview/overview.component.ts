@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
-
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.component.html',
@@ -8,6 +7,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 })
 export class OverviewComponent {
 
+  /* Inputs from the AppComponent */
   @Input() incomes: any;
   @Input() expenses: any;
 
@@ -15,7 +15,7 @@ export class OverviewComponent {
   @Input() total_expense: any;
   @Input() total: any;
 
-
+  /* Outputs to the AppComponent */
   @Output() showIncomes: EventEmitter<boolean> = new EventEmitter();
   @Output() showExpenses: EventEmitter<boolean> = new EventEmitter();
   @Output() showEntries: EventEmitter<boolean> = new EventEmitter();
@@ -23,6 +23,7 @@ export class OverviewComponent {
   showOnlyIncomes() {
     this.showIncomes.emit(true);
   }
+
   showOnlyExpenses() {
     this.showExpenses.emit(true);
   }
