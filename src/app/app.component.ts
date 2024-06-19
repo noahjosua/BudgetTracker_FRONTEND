@@ -20,8 +20,10 @@ export class AppComponent implements OnInit, OnDestroy {
   income: Entry[] = [];
   expense: Entry[] = [];
 
+
   
    /* holds the value that was outputted by the OverviewComponent */
+
   showOnlyIncomes: boolean = false;
   showOnlyExpenses: boolean = false;
   showAllEntries: boolean = false;
