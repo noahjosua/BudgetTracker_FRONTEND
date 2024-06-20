@@ -108,7 +108,6 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
    */
   ngOnChanges(changes: SimpleChanges) {
     this.onEntryChanges(changes);
-    this.onIsUpdatingChanges(changes);
     if (changes['currentDate']) {
       this.selectedDate = changes['currentDate'].currentValue;
     }
@@ -175,6 +174,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
    * Checks if a valid category has been chosen based on the entry type (income or expense).
    */
   categoryChosen() {
+    this.validation.isTypeUpdating = false;
     if (this.type == Constants.INCOME) {
       this.validation.isCategoryChosen = this.translatedIncomeCategories.some((category: any) => category.value == this.newEntry.category);
     } else if (this.type == Constants.EXPENSE) {
@@ -236,6 +236,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
   private reset() {
     this.isDialogVisible = false;
     this.isUpdating = false;
+    this.validation.isTypeUpdating = false;
     this.visibilityChanged.emit(this.isDialogVisible);
     this.clearEntry();
     this.clearValidation();
@@ -255,6 +256,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
         description: '',
         amount: 0.0
       }
+      this.type = '';
     }
   }
 
@@ -285,24 +287,6 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
           this.newEntry.category = this.translatedExpenseCategories.find((category: any) => category.value == changedEntry.category)['value'];
         }
         this.newEntry.datePlanned = new Date(changedEntry.datePlanned);
-      }
-    }
-  }
-
-  /**
-   * Handles changes to the 'isUpdating' input property, adjusting validation and state if necessary.
-   * @param changes - Object containing the changed properties mapped by property name.
-   */
-  private onIsUpdatingChanges(changes: SimpleChanges) {
-    if (changes['isUpdating']) {
-      this.isUpdating = changes['isUpdating'].currentValue;
-      if (this.isUpdating) {
-        this.validation = {
-          isTypeChosen: true,
-          isDesValid: true,
-          isCategoryChosen: true,
-          isAmountValid: true
-        }
       }
     }
   }
