@@ -62,7 +62,6 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     isDesValid: false,
     isCategoryChosen: false,
     isAmountValid: false,
-    isTypeUpdating: false
   }
 
   constructor(public incomeService: IncomeService,
@@ -111,7 +110,11 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     if (changes['currentDate']) {
       this.selectedDate = changes['currentDate'].currentValue;
     }
+    if (changes['isUpdating']) {
+      this.handleIsUpdatingChanges(changes['isUpdating'].currentValue, changes['isUpdating'].previousValue);
+    }
   }
+
 
   /**
    * Saves the new entry with the current date and notifies the corresponding service.
@@ -141,10 +144,16 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
    * @returns true if all validation criteria are met, otherwise false.
    */
   entryValidator(): boolean {
-    if (this.isUpdating && !this.validation.isTypeUpdating) {
-      return true;
-    }
     return this.validation.isTypeChosen && this.validation.isAmountValid && this.validation.isDesValid && this.validation.isCategoryChosen;
+  }
+
+  /**
+   * Sets the validation variables to true if an update is happening, so that the 'Save' button is enabled.
+   */
+  updateValidator(): void {
+    if (this.isUpdating) {
+      this.validation.isAmountValid = this.validation.isDesValid = this.validation.isCategoryChosen = this.validation.isTypeChosen = true;
+    }
   }
 
   /**
@@ -152,13 +161,6 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
    * Adjusts category validation state when updating an entry.
    */
   typeChosen() {
-    if(this.isUpdating){
-      this.validation.isTypeUpdating = true
-    }
-    if(this.validation.isTypeUpdating){
-      this.validation.isCategoryChosen = false;
-    }
-
     this.validation.isTypeChosen = this.type == Constants.INCOME || this.type == Constants.EXPENSE;
     if (this.isUpdating) {
       this.newEntry.category = '';
@@ -174,7 +176,6 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
    * Checks if a valid category has been chosen based on the entry type (income or expense).
    */
   categoryChosen() {
-    this.validation.isTypeUpdating = false;
     if (this.type == Constants.INCOME) {
       this.validation.isCategoryChosen = this.translatedIncomeCategories.some((category: any) => category.value == this.newEntry.category);
     } else if (this.type == Constants.EXPENSE) {
@@ -236,7 +237,6 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
   private reset() {
     this.isDialogVisible = false;
     this.isUpdating = false;
-    this.validation.isTypeUpdating = false;
     this.visibilityChanged.emit(this.isDialogVisible);
     this.clearEntry();
     this.clearValidation();
@@ -288,6 +288,19 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
         }
         this.newEntry.datePlanned = new Date(changedEntry.datePlanned);
       }
+    }
+  }
+
+
+  /** Handles changes to 'isUpdating', setting the validation variables to true if an update starts.
+   *
+   * @param newValue - contains new value of 'isUpdating'.
+   * @param oldValue - contains old value of 'isUpdating'
+   *
+   * */
+  handleIsUpdatingChanges(newValue: any, oldValue: any) {
+    if (newValue === true && newValue !== oldValue) {
+      this.updateValidator();
     }
   }
 
