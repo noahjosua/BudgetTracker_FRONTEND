@@ -6,7 +6,6 @@
           [closable]="false">
   <ng-template pTemplate="content">
     <div>
-      <!--Type-->
       <div class="dialog-container">
         <label class="dialog-label">{{ 'labels.type' | translate }}</label>
         <p-dropdown [options]="types" [(ngModel)]="type" optionLabel="name" optionValue="value" [showClear]="false"
@@ -14,14 +13,12 @@
         </p-dropdown>
       </div>
 
-      <!--Description-->
       <div class="dialog-container">
         <label class="dialog-label">{{ 'labels.description' | translate }}</label>
         <input pInputText type="text" maxlength="50" required [(ngModel)]="newEntry.description"
                (input)="validateDes()"/>
       </div>
 
-      <!--Category-->
       <div class="dialog-container">
         <label class="dialog-label">{{ 'labels.category' | translate }}</label>
         <p-dropdown *ngIf="type == Constants.INCOME" [options]="translatedIncomeCategories"
@@ -36,7 +33,6 @@
                     placeholder="Wähle zuerst einen Typ"></p-dropdown>
       </div>
 
-      <!--Amount-->
       <div class="dialog-container">
         <label class="dialog-label">{{ 'labels.amount' | translate }}</label>
         <p-inputNumber [(ngModel)]="newEntry.amount"
@@ -49,7 +45,6 @@
         ></p-inputNumber>
       </div>
 
-      <!-- Date planned -->
       <div class="dialog-container">
         <label class="dialog-label">{{ 'labels.datePlanned' | translate }}</label>
         <p-calendar [(ngModel)]="newEntry.datePlanned"
@@ -57,7 +52,6 @@
       </div>
     </div>
 
-    <!-- Save and Cancel Buttons -->
     <div class="dialog-buttons-container">
       <p-button label="{{'buttons.save' | translate}}" icon="pi pi-save" iconPos="right"
                 styleClass="p-button-sm" (onClick)="onSave()" [disabled]="!entryValidator()">
