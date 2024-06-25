@@ -12,6 +12,7 @@ Additionally, you are able to delete and completely edit previously created entr
 Installation
 ------------
 
+
 - Angular v17.3.6 -- to check your current angular version open your computer's terminal and type in `ng version`
 
 - Node.js v20.12.2 / v20.13.1 -- to check your current node js version open your computer's terminal and type in `ng version`
