@@ -32,4 +32,5 @@
 </p-table>
 
 <app-create-edit-entry [currentDate]="selectedDate" [title]="title" [entry]="entry" [isDialogVisible]="isDialogVisible"
-                       [isUpdating]="isUpdating" (visibilityChanged)="isDialogVisible = $event"></app-create-edit-entry>
+                       [isUpdating]="isUpdating" (visibilityChanged)="isDialogVisible = $event"
+                       (isUpdatingChanged)="isUpdating = $event"></app-create-edit-entry>

@@ -8,6 +8,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {NotificationMessageModel} from "../model/notification-message.model";
 import {MessageService} from "primeng/api";
 
+
 @Component({
   selector: 'app-create-edit-entry',
   templateUrl: './create-edit-entry.component.html',
@@ -36,6 +37,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
 
   /* Output to RevenueListComponent */
   @Output() visibilityChanged = new EventEmitter<boolean>();
+  @Output() isUpdatingChanged = new EventEmitter<boolean>();
 
   /* holds the value of the currentDate from the RevenueListComponent */
   selectedDate: any;
@@ -60,7 +62,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     isTypeChosen: false,
     isDesValid: false,
     isCategoryChosen: false,
-    isAmountValid: false
+    isAmountValid: false,
   }
 
   constructor(public incomeService: IncomeService,
@@ -106,11 +108,14 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
    */
   ngOnChanges(changes: SimpleChanges) {
     this.onEntryChanges(changes);
-    this.onIsUpdatingChanges(changes);
     if (changes['currentDate']) {
       this.selectedDate = changes['currentDate'].currentValue;
     }
+    if (changes['isUpdating']) {
+      this.handleIsUpdatingChanges(changes['isUpdating'].currentValue, changes['isUpdating'].previousValue);
+    }
   }
+
 
   /**
    * Saves the new entry with the current date and notifies the corresponding service.
@@ -158,6 +163,15 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
    */
   entryValidator(): boolean {
     return this.validation.isTypeChosen && this.validation.isAmountValid && this.validation.isDesValid && this.validation.isCategoryChosen;
+  }
+
+  /**
+   * Sets the validation variables to true if an update is happening, so that the 'Save' button is enabled.
+   */
+  updateValidator(): void {
+    if (this.isUpdating) {
+      this.validation.isAmountValid = this.validation.isDesValid = this.validation.isCategoryChosen = this.validation.isTypeChosen = true;
+    }
   }
 
   /**
@@ -240,7 +254,9 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
 
   private reset() {
     this.isDialogVisible = false;
+    this.isUpdating = false;
     this.visibilityChanged.emit(this.isDialogVisible);
+    this.isUpdatingChanged.emit(this.isUpdating);
     this.clearEntry();
     this.clearValidation();
   }
@@ -259,6 +275,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
         description: '',
         amount: 0.0
       }
+      this.type = '';
     }
   }
 
@@ -293,21 +310,16 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  /**
-   * Handles changes to the 'isUpdating' input property, adjusting validation and state if necessary.
-   * @param changes - Object containing the changed properties mapped by property name.
-   */
-  private onIsUpdatingChanges(changes: SimpleChanges) {
-    if (changes['isUpdating']) {
-      this.isUpdating = changes['isUpdating'].currentValue;
-      if (this.isUpdating) {
-        this.validation = {
-          isTypeChosen: true,
-          isDesValid: true,
-          isCategoryChosen: true,
-          isAmountValid: true
-        }
-      }
+
+  /** Handles changes to 'isUpdating', setting the validation variables to true if an update starts.
+   *
+   * @param newValue - contains new value of 'isUpdating'.
+   * @param oldValue - contains old value of 'isUpdating'
+   *
+   * */
+  handleIsUpdatingChanges(newValue: any, oldValue: any) {
+    if (newValue === true && newValue !== oldValue) {
+      this.updateValidator();
     }
   }
 
