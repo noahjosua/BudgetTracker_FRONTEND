@@ -20,8 +20,8 @@ export class AppComponent implements OnInit, OnDestroy {
   income: Entry[] = [];
   expense: Entry[] = [];
 
-  
-   /* holds the value that was outputted by the OverviewComponent */
+
+  /* holds the value that was outputted by the OverviewComponent */
   showOnlyIncomes: boolean = false;
   showOnlyExpenses: boolean = false;
   showAllEntries: boolean = false;
@@ -36,8 +36,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   constructor(public incomeService: IncomeService,
-              public expenseService: ExpenseService,
-              private translate: TranslateService) {
+    public expenseService: ExpenseService,
+    private translate: TranslateService) {
     this.translate.setDefaultLang('de');
   }
 

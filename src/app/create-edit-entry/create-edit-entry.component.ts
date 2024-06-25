@@ -117,18 +117,35 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
    * Resets the form and displays a notification message after a delay.
    */
   onSave() {
-    this.newEntry.dateCreated = new Date();
+    if (this.isUpdating) {
+      this.onIsUpdating();
+    } else {
+      this.onIsSaving();
+    }
+    this.reset();
+    setTimeout(() => {
+      this.messageService.add(this.notification);
+    }, 1000);
+  }
 
+  private onIsUpdating() {
+    this.newEntry.id = this.entry.id;
+    if (this.entry.type == Constants.EXPENSE) {
+      this.expenseService.updateExpense(this.newEntry, this.selectedDate);
+    }
+    if (this.entry.type == Constants.INCOME) {
+      this.incomeService.updateIncome(this.newEntry, this.selectedDate);
+    }
+  }
+
+  private onIsSaving() {
+    this.newEntry.dateCreated = new Date();
     if (this.type == Constants.EXPENSE) {
       this.expenseService.addExpense(this.newEntry, this.selectedDate);
     }
     if (this.type == Constants.INCOME) {
       this.incomeService.addIncome(this.newEntry, this.selectedDate);
     }
-    this.reset();
-    setTimeout(() => {
-      this.messageService.add(this.notification);
-    }, 1000);
   }
 
   onCancel() {
