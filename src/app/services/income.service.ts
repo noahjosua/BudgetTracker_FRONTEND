@@ -143,7 +143,6 @@ export class IncomeService {
       });
   }
 
-
   /**
  * Updates an existing income entry by sending an HTTP PUT request.
  *

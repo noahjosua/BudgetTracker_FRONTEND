@@ -143,7 +143,6 @@ export class ExpenseService {
       });
   }
 
-
   /**
  * Updates an existing expense entry by sending an HTTP PUT request.
  *
