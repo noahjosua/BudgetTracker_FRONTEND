@@ -4,7 +4,7 @@ Description
 -----------
 You can use this software to plan finances by creating income and expense entries according to what amount you spent, when you spent it and what you spent it on. 
 The entries you create will be displayed as a list with all the details you added to give you a clear overview of your finances.
-After creating several entries you will be able to see your total incomes and total expenses, as well as your current balance. 
+After creating several entries you will be able to see your total income and total expenses, as well as your current balance. 
 By clicking on either of those buttons, you will toggle a income-only or expense-only list view. If you click on your total balance, the list will go back to displaying both kind of entries.
 Additionally, you are able to delete and completely edit previously created entries.
 
@@ -30,7 +30,7 @@ Installation
 Running the Application
 -----------------------
 
-- Type "ng serve --open" into the console. If everything has been installed correctly, your browser should open the Application at "localhost:4200"
+- Type "ng serve --open" into the console. Your browser should open the Application at "localhost:4200"
 
 
 
