@@ -75,29 +75,14 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges) {
     this.onChangesIncomes(changes);
     this.onChangesExpenses(changes);
+
     this.onChangesShowOnlyIncomes(changes);
+    this.onChangesShowOnlyExpenses(changes);
+    this.onChangesShowAllEntries(changes);
+
     if (changes['currentDate']) {
       this.selectedDate = changes['currentDate'].currentValue;
     }
-    if (changes['showOnlyIncomes']) {
-      if (changes['showOnlyIncomes'].currentValue == true) {
-        this.values = this.income.concat(this.expense);
-        this.values = this.values.filter((entry: any) => entry.type == Constants.INCOME);
-      }
-    }
-    if (changes['showOnlyExpenses']) {
-      if (changes['showOnlyExpenses'].currentValue == true) {
-        this.values = this.income.concat(this.expense); //Gibt es einen anderen weg? sonst wird von switch von ausgaben zu einnahmen nichts angezeigt, weil values nur mit expenses gefüllt war, beovr es wieder neu gefiltet wird
-        this.values = this.values.filter((entry: any) => entry.type == Constants.EXPENSE);
-      }
-    }
-    if (changes['showAllEntries']) {
-      if (changes['showAllEntries'].currentValue == true) {
-        this.values = this.income.concat(this.expense);
-
-      }
-    }
-
   }
 
   /**
@@ -172,6 +157,7 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
   private onChangesShowOnlyIncomes(changes: SimpleChanges) {
     if (changes['showOnlyIncomes']) {
       if (changes['showOnlyIncomes'].currentValue == true) {
+        this.values = this.income.concat(this.expense);
         this.values = this.values.filter((entry: any) => entry.type == Constants.INCOME);
       }
     }
@@ -180,6 +166,7 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
   private onChangesShowOnlyExpenses(changes: SimpleChanges) {
     if (changes['showOnlyExpenses']) {
       if (changes['showOnlyExpenses'].currentValue == true) {
+        this.values = this.income.concat(this.expense);
         this.values = this.values.filter((entry: any) => entry.type == Constants.EXPENSE);
       }
     }

@@ -116,7 +116,6 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-
   /**
    * Saves the new entry with the current date and notifies the corresponding service.
    * Resets the form and displays a notification message after a delay.
@@ -131,26 +130,6 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     setTimeout(() => {
       this.messageService.add(this.notification);
     }, 1000);
-  }
-
-  private onIsUpdating() {
-    this.newEntry.id = this.entry.id;
-    if (this.entry.type == Constants.EXPENSE) {
-      this.expenseService.updateExpense(this.newEntry, this.selectedDate);
-    }
-    if (this.entry.type == Constants.INCOME) {
-      this.incomeService.updateIncome(this.newEntry, this.selectedDate);
-    }
-  }
-
-  private onIsSaving() {
-    this.newEntry.dateCreated = new Date();
-    if (this.type == Constants.EXPENSE) {
-      this.expenseService.addExpense(this.newEntry, this.selectedDate);
-    }
-    if (this.type == Constants.INCOME) {
-      this.incomeService.addIncome(this.newEntry, this.selectedDate);
-    }
   }
 
   onCancel() {
@@ -310,6 +289,26 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  private onIsUpdating() {
+    this.newEntry.id = this.entry.id;
+    if (this.entry.type == Constants.EXPENSE) {
+      this.expenseService.updateExpense(this.newEntry, this.selectedDate);
+    }
+    if (this.entry.type == Constants.INCOME) {
+      this.incomeService.updateIncome(this.newEntry, this.selectedDate);
+    }
+  }
+
+  private onIsSaving() {
+    this.newEntry.dateCreated = new Date();
+    if (this.type == Constants.EXPENSE) {
+      this.expenseService.addExpense(this.newEntry, this.selectedDate);
+    }
+    if (this.type == Constants.INCOME) {
+      this.incomeService.addIncome(this.newEntry, this.selectedDate);
+    }
+  }
+
 
   /** Handles changes to 'isUpdating', setting the validation variables to true if an update starts.
    *
@@ -317,7 +316,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
    * @param oldValue - contains old value of 'isUpdating'
    *
    * */
-  handleIsUpdatingChanges(newValue: any, oldValue: any) {
+  private handleIsUpdatingChanges(newValue: any, oldValue: any) {
     if (newValue === true && newValue !== oldValue) {
       this.updateValidator();
     }
