@@ -37,6 +37,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
 
   /* Output to RevenueListComponent */
   @Output() visibilityChanged = new EventEmitter<boolean>();
+  @Output() isUpdatingChanged = new EventEmitter<boolean>();
 
   /* holds the value of the currentDate from the RevenueListComponent */
   selectedDate: any;
@@ -238,6 +239,7 @@ export class CreateEditEntryComponent implements OnInit, OnDestroy, OnChanges {
     this.isDialogVisible = false;
     this.isUpdating = false;
     this.visibilityChanged.emit(this.isDialogVisible);
+    this.isUpdatingChanged.emit(this.isUpdating);
     this.clearEntry();
     this.clearValidation();
   }
