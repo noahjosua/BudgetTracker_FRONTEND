@@ -106,17 +106,9 @@ export class RevenueListComponent implements OnInit, OnChanges, OnDestroy {
    * @param entry - The entry object being updated.
    */
   onUpdate(entry: Entry) {
-
     this.entry = entry;
     this.isDialogVisible = true;
     this.isUpdating = true;
-    if (entry.type == Constants.EXPENSE) {
-      this.expenseService.updateExpense(entry);
-    }
-    if (entry.type == Constants.INCOME) {
-      this.incomeService.updateIncome(entry);
-    }
-
   }
 
   /**
