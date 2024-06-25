@@ -1,27 +1,57 @@
-# BudgetTrackerFrontend
+BUDGET TRACKER / PLANNER
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.6.
+Description
+-----------
+##############################
 
-## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+Installation
+------------
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+The following is required if you want to look at the database the application will be using.
+After finishing the download, go to localhost:8080/h2-console. You can find the corresponding paths, the username and the password in the backend's src -> main -> resources -> application.properties, it should look like this:
+Driver class: org.h2.Driver
+JDBC URL: jdbc:h2:file:/data/budgettracker
+User Name: sa
+Password: password
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+- You'll need an IDE. For example: VS Code, IntelliJ IDE, Webstorm...
 
-## Further help
+- Angular v17.3.6 -- to check your current angular version open your computer's terminal and type in "ng version" 
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- PrimeNG -- download with "npm install primeng"
+
+- Node.js v20.12.2 / v20.13.1 -- to check your current node js version open your computer's terminal and type in "ng version"
+
+
+
+
+---> make sure you restart your computer after installing!
+
+
+
+
+
+Running the Application
+-----------------------
+
+To run the Backend:
+- run the "BudgetTrackerV1Application" java file 
+
+To run the Frontend:
+- Type "ng serve --open" into the console. If everything has been installed correctly, your browser should open the Application at "localhost:4200"
+
+
+
+
+
+Authors
+-------
+Noah-Josua Hartmann, Michelle Koops, Avery Lönker, Laura Siekierksi
+
