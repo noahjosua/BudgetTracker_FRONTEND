@@ -14,3 +14,23 @@ i {
   background: none;
   margin-bottom: 20px;
 }
+
+::ng-deep .p-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  padding: 0;
+  background: none;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.toolbar-center-content {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
