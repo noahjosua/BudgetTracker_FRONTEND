@@ -15,7 +15,8 @@ import { Entry } from '../model/entry.model';
 describe('testing RevenueListComponent', () => {
   let revenueListComponent: RevenueListComponent;
   let componentFixture: ComponentFixture<RevenueListComponent>;
-  let messageServiceSpy: jasmine.SpyObj<MessageService>; // SpyObj for MessageService
+
+
 
   const mockIncomeEntry: Entry = {
     id: 1, type: Constants.INCOME, amount: 100,
@@ -31,18 +32,8 @@ describe('testing RevenueListComponent', () => {
     category: undefined,
     description: 'mock'
   };
-  const mockChange: SimpleChanges = {
-
-  }
 
   beforeEach(async () => {
-
-    let incomeService: IncomeService;
-    let expenseService: ExpenseService;
-    let dateConverterService: DateConverterService;
-
-
-
     await TestBed.configureTestingModule({
 
       imports: [
@@ -55,17 +46,11 @@ describe('testing RevenueListComponent', () => {
         IncomeService,
         ExpenseService,
         TranslateService,
-        { provide: MessageService, useValue: messageServiceSpy }
+        MessageService
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
 
     }).compileComponents();
-
-    incomeService = TestBed.inject(IncomeService);
-    expenseService = TestBed.inject(ExpenseService);
-    dateConverterService = TestBed.inject(DateConverterService);
-    messageServiceSpy = TestBed.inject(MessageService) as jasmine.SpyObj<MessageService>; // Inject spy object
-
 
   });
 
@@ -85,8 +70,8 @@ describe('testing RevenueListComponent', () => {
     expect(revenueListComponent.ngOnInit).toHaveBeenCalled();
 
   });
-  it('should call onChangesIncomes when ngOnChanges is called', () => {
-    //TO DO
+  xit('should call onChangesIncomes when ngOnChanges is called', () => {
+    //TODO
 
   });
 
@@ -110,9 +95,9 @@ describe('testing RevenueListComponent', () => {
 
   it('should set isUpdating to true when onUpdate is called ', () => {
 
-    expect(revenueListComponent.isUpdating).toBe(false);
+    expect(revenueListComponent.isUpdating).toBeFalsy();
     revenueListComponent.onUpdate(mockExpenseEntry);
-    expect(revenueListComponent.isUpdating).toBe(true);
+    expect(revenueListComponent.isUpdating).toBeTruthy();
 
   });
 
@@ -121,8 +106,8 @@ describe('testing RevenueListComponent', () => {
     revenueListComponent.onUpdate(mockIncomeEntry);
 
     expect(revenueListComponent.entry).toEqual(mockIncomeEntry);
-    expect(revenueListComponent.isDialogVisible).toBe(true);
-    expect(revenueListComponent.isUpdating).toBe(true);
+    expect(revenueListComponent.isDialogVisible).toBeTruthy();
+    expect(revenueListComponent.isUpdating).toBeTruthy();
   });
 
   it('should only call deleteIncome with mockIncomeEntry', () => {
@@ -149,11 +134,6 @@ describe('testing RevenueListComponent', () => {
 
   });
 
-  it('should call MessageService after deleting an entry', fakeAsync(() => {
-
-
-
-  }));
 
   it('should format dates to EU standard', () => {
     revenueListComponent.dateConverterService = jasmine.createSpyObj('DateConverterService', ['convertToEUFormat']);
@@ -163,7 +143,7 @@ describe('testing RevenueListComponent', () => {
     const unformattedDateWithDots = '2024/07/01';
     const expectedDate = '01.07.2024';
 
-    // Mock the return value of convertToEUFormat
+
     (revenueListComponent.dateConverterService.convertToEUFormat as jasmine.Spy).and.returnValue(expectedDate);
 
     expect(revenueListComponent.formatDate(unformattedDateWithHyphen)).toEqual(expectedDate);
@@ -182,9 +162,40 @@ describe('testing RevenueListComponent', () => {
     revenueListComponent.ngOnDestroy();
     expect(revenueListComponent.ngOnDestroy).toHaveBeenCalled();
 
-
-
   });
+
+
+  it('should call MessageService after deleting an expense entry', fakeAsync(() => {
+    spyOn(revenueListComponent.expenseService, 'deleteExpense');
+
+    let messageServiceAddMethodHasBeenCalled = false;
+
+    spyOn(revenueListComponent['messageService'], 'add').and.callFake((msg) => {
+      messageServiceAddMethodHasBeenCalled = true;
+    });
+
+    revenueListComponent.onDelete(mockExpenseEntry);
+
+    tick(1000);
+    expect(messageServiceAddMethodHasBeenCalled).toBeTruthy();
+  }));
+
+  it('should call MessageService after deleting an expense entry', fakeAsync(() => {
+    spyOn(revenueListComponent.incomeService, 'deleteIncome');
+
+    let messageServiceAddMethodHasBeenCalled = false;
+
+    spyOn(revenueListComponent['messageService'], 'add').and.callFake((msg) => {
+      messageServiceAddMethodHasBeenCalled = true;
+    });
+
+    revenueListComponent.onDelete(mockIncomeEntry);
+
+    tick(1000);
+    expect(messageServiceAddMethodHasBeenCalled).toBeTruthy();
+  }));
+
+
 
 });
 

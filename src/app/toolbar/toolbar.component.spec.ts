@@ -6,23 +6,21 @@ import { MessageService } from 'primeng/api';
 import { ToolbarComponent } from './toolbar.component';
 import { IncomeService } from '../services/income.service';
 import { ExpenseService } from '../services/expense.service';
-import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
-import { By } from '@angular/platform-browser';
-import { ButtonModule } from 'primeng/button';
+import { CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+
 
 
 describe('testing ToolbarComponent', () => {
     let toolbarComponent: ToolbarComponent;
     let componentFixture: ComponentFixture<ToolbarComponent>;
-    let debugElement: DebugElement;
+
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
                 FormsModule,
-                TranslateModule.forRoot(),
-                ButtonModule
+                TranslateModule.forRoot()
             ],
             declarations: [ToolbarComponent],
             providers: [
@@ -39,6 +37,10 @@ describe('testing ToolbarComponent', () => {
         componentFixture = TestBed.createComponent(ToolbarComponent);
         toolbarComponent = componentFixture.componentInstance;
         componentFixture.detectChanges();
+    });
+
+    it('should create the component', () => {
+        expect(toolbarComponent).toBeTruthy();
     });
 
     it('should call emitDateChanged`s emit when prevMonth() is called', () => {
@@ -59,9 +61,9 @@ describe('testing ToolbarComponent', () => {
         const currentMonth = toolbarComponent.currentDate.getMonth();
         const newMonth = toolbarComponent.currentDate.getMonth() + 1;
 
-        expect(toolbarComponent.currentDate.getMonth()).toBe(currentMonth);
+        expect(toolbarComponent.currentDate.getMonth()).toEqual(currentMonth);
         toolbarComponent.nextMonth();
-        expect(toolbarComponent.currentDate.getMonth()).toBe(newMonth);
+        expect(toolbarComponent.currentDate.getMonth()).toEqual(newMonth);
 
         expect(toolbarComponent.dateChanged.emit).toHaveBeenCalledWith(toolbarComponent.currentDate);
 
@@ -73,9 +75,9 @@ describe('testing ToolbarComponent', () => {
         const currentMonth = toolbarComponent.currentDate.getMonth();
         const newMonth = toolbarComponent.currentDate.getMonth() - 1;
 
-        expect(toolbarComponent.currentDate.getMonth()).toBe(currentMonth);
+        expect(toolbarComponent.currentDate.getMonth()).toEqual(currentMonth);
         toolbarComponent.prevMonth();
-        expect(toolbarComponent.currentDate.getMonth()).toBe(newMonth);
+        expect(toolbarComponent.currentDate.getMonth()).toEqual(newMonth);
 
         expect(toolbarComponent.dateChanged.emit).toHaveBeenCalledWith(toolbarComponent.currentDate);
 
@@ -90,9 +92,9 @@ describe('testing ToolbarComponent', () => {
         const currentMonth = toolbarComponent.currentDate.getMonth();
         const newMonth = toolbarComponent.currentDate.getMonth() + 1;
 
-        expect(toolbarComponent.currentDate.getMonth()).toBe(currentMonth);
+        expect(toolbarComponent.currentDate.getMonth()).toEqual(currentMonth);
         toolbarComponent.nextMonth();
-        expect(toolbarComponent.currentDate.getMonth()).toBe(newMonth);
+        expect(toolbarComponent.currentDate.getMonth()).toEqual(newMonth);
 
         expect(toolbarComponent.dateChanged.emit).toHaveBeenCalledWith(toolbarComponent.currentDate);
 
@@ -107,9 +109,9 @@ describe('testing ToolbarComponent', () => {
         const newYear = toolbarComponent.currentDate.getFullYear() + 1;
 
 
-        expect(toolbarComponent.currentDate.getFullYear()).toBe(currentYear);
+        expect(toolbarComponent.currentDate.getFullYear()).toEqual(currentYear);
         toolbarComponent.nextMonth();
-        expect(toolbarComponent.currentDate.getFullYear()).toBe(newYear);
+        expect(toolbarComponent.currentDate.getFullYear()).toEqual(newYear);
 
         expect(toolbarComponent.dateChanged.emit).toHaveBeenCalledWith(toolbarComponent.currentDate);
 

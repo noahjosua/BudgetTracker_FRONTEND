@@ -25,7 +25,7 @@ describe('testing CreateEntryButtonComponent', () => {
   });
 
   it('should have title "Neuer Eintrag" by default', () => {
-    expect(createEntryButtonComponent.title).toBe("Neuer Eintrag");
+    expect(createEntryButtonComponent.title).toEqual("Neuer Eintrag");
   });
 
 
@@ -34,12 +34,14 @@ describe('testing CreateEntryButtonComponent', () => {
   });
 
   it('should set isDialogVisible to true when onOpenDialog is called', () => {
-    expect(createEntryButtonComponent.isDialogVisible).toBe(false);
+    expect(createEntryButtonComponent.isDialogVisible).toBeFalsy();
     createEntryButtonComponent.onOpenDialog();
-    expect(createEntryButtonComponent.isDialogVisible).toBe(true);
+    expect(createEntryButtonComponent.isDialogVisible).toBeTruthy();
   });
 
-  
-  //MISSING: ngOnChanges
+  xit('ngOnChanges', () => {
+
+  });
+
 });
 

@@ -51,7 +51,7 @@ describe('testing OverviewComponent', () => {
     //find total income in first <p> element of first .innercontainer
     const totalIncome = nativeElement.querySelector('.innerContainer:nth-child(1) p');
 
-    expect(totalIncome.textContent).toBe('100€');
+    expect(totalIncome.textContent).toEqual('100€');
 
   });
 
@@ -65,7 +65,7 @@ describe('testing OverviewComponent', () => {
     //find total expense in first <p> element of second .innercontainer
     const totalExpense = nativeElement.querySelector('.innerContainer:nth-child(2) p');
 
-    expect(totalExpense.textContent).toBe('50€');
+    expect(totalExpense.textContent).toEqual('50€');
   });
 
   it('should display calculated total values correctly', () => {
@@ -78,7 +78,7 @@ describe('testing OverviewComponent', () => {
     //find total in first <p> element of third .innercontainer
     const total = nativeElement.querySelector('.innerContainer:nth-child(3) p');
 
-    expect(total.textContent).toBe('50€');
+    expect(total.textContent).toEqual('50€');
   });
 
 
@@ -98,6 +98,45 @@ describe('testing OverviewComponent', () => {
     spyOn(overviewComponent.showEntries, 'emit');
     overviewComponent.showAllEntries();
     expect(overviewComponent.showEntries.emit).toHaveBeenCalled();
+  });
+
+  it('should display 0€ if no incomes have been defined', () => {
+    overviewComponent.incomes = null;
+    overviewComponent.total_income = undefined;
+    componentFixture.detectChanges();
+
+    const nativeElement = componentFixture.nativeElement;
+
+    const totalIncome = nativeElement.querySelector('.innerContainer:nth-child(1) p');
+
+    expect(totalIncome.textContent).toEqual('0€');
+  });
+
+  it('should display 0€ if no expenses have been defined', () => {
+    overviewComponent.expenses = undefined;
+    overviewComponent.total_expense = undefined;
+    componentFixture.detectChanges();
+
+    const nativeElement = componentFixture.nativeElement;
+
+    const totalExpense = nativeElement.querySelector('.innerContainer:nth-child(2) p');
+
+    expect(totalExpense.textContent).toEqual('0€');
+  });
+
+  it('should display 0€ if nothing has been defined', () => {
+    overviewComponent.incomes = null;
+    overviewComponent.expenses = undefined;
+    overviewComponent.total_income = undefined;
+    overviewComponent.total_expense = undefined;
+    overviewComponent.total = undefined;
+    componentFixture.detectChanges();
+
+    const nativeElement = componentFixture.nativeElement;
+
+    const total = nativeElement.querySelector('.innerContainer:nth-child(3) p');
+
+    expect(total.textContent).toEqual('0€');
   });
 
 });
