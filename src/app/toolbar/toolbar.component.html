@@ -1,15 +1,18 @@
 <p-toolbar>
   <ng-template pTemplate="start">
-    <img src="https://primefaces.org/cdn/primeng/images/primeng.svg"/>
+    <img src="assets/image/BudgetIcon.png" style="width: 150px; height: auto;"/>
   </ng-template>
   <ng-template pTemplate="center">
-    <p-button [text]="true" (onClick)="prevMonth()">
-      <i class="pi pi-angle-left" style="font-size: 2rem; color: var(--main-text-color)"></i>
-    </p-button>
-    <p>{{ currentDate.toLocaleString('default', {month: 'long', year: 'numeric'}) }}</p>
-    <p-button [text]="true" (onClick)="nextMonth()">
-      <i class="pi pi-angle-right" style="font-size: 2rem; color: var(--main-text-color)"></i>
-    </p-button>
+    <div class="toolbar-center-content">
+      <p-button [text]="true" (onClick)="prevMonth()">
+        <i class="pi pi-angle-left" style="font-size: 2rem; color: var(--main-text-color)"></i>
+      </p-button>
+      <p>{{ currentDate.toLocaleString('default', {month: 'long', year: 'numeric'}) }}</p>
+      <p-button [text]="true" (onClick)="nextMonth()">
+        <i class="pi pi-angle-right" style="font-size: 2rem; color: var(--main-text-color)"></i>
+      </p-button>
+    </div>
   </ng-template>
   <ng-template pTemplate="end"></ng-template>
 </p-toolbar>
+
