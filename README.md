@@ -1,27 +1,45 @@
-# BudgetTrackerFrontend
+# Budget Tracker
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.6.
+Description
+-----------
 
-## Development server
+You can use this software to plan finances by creating income and expense entries according to what amount you spent, when you spent it and what you spent it on. 
+The entries you create will be displayed as a list with all the details you added to give you a clear overview of your finances.
+After creating several entries you will be able to see your total income and total expenses, as well as your current balance. 
+By clicking on either of those buttons, you will toggle a income-only or expense-only list view. If you click on your total balance, the list will go back to displaying both kind of entries.
+Additionally, you are able to delete and completely edit previously created entries.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Installation
+------------
 
-## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Angular v17.3.6 -- to check your current angular version open your computer's terminal and type in `ng version`
 
-## Build
+- Node.js v20.12.2 / v20.13.1 -- to check your current node js version open your computer's terminal and type in `ng version`
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- You'll need an IDE. For example: [VS Code](https://code.visualstudio.com/) or [IntelliJ IDE](https://www.jetbrains.com/idea/)
 
-## Running unit tests
+- Restart your Computer.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Clone this Repository and open the Project in your IDE
 
-## Running end-to-end tests
+- Type `npm install` in your console to ensure that you are not missing any packages.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-## Further help
+Running the Application
+-----------------------
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- Run the start skript by typing `npm run start` in your terminal. Your browser should open the Application at [http://localhost:4200](http://localhost:4200)
+
+- To actually use the application, you'll need to run the [backend](https://github.com/noahjosua/BudgetTracker_BACKEND) too.
+
+
+Documentation
+------------
+You can look at our Documentation while the application is running: [http://localhost:5000](http://localhost:5000)
+
+
+Authors
+-------
+Noah-Josua Hartmann, Michelle Koops, Avery Lönker, Laura Siekierksi
+

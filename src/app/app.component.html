@@ -3,13 +3,15 @@
 </div>
 
 <div class="container">
-  <app-overview (showIncomes)="showIncomes($event)" [incomes]="income" (showExpenses)="showExpenses($event)" [expenses]="expense" (showEntries)="showEntries($event)"
+  <app-overview (showIncomes)="showIncomes($event)" [incomes]="income" (showExpenses)="showExpenses($event)"
+                [expenses]="expense" (showEntries)="showEntries($event)"
                 [total_income]="total_income" [total_expense]="total_expense"
                 [total]="total"></app-overview>
 </div>
 
 <div class="container">
-  <app-revenue-list [showOnlyIncomes]="showOnlyIncomes" [showOnlyExpenses]="showOnlyExpenses" [showAllEntries]="showAllEntries" [currentDate]="selectedDate" [income]="income"
+  <app-revenue-list [showOnlyIncomes]="showOnlyIncomes" [showOnlyExpenses]="showOnlyExpenses"
+                    [showAllEntries]="showAllEntries" [currentDate]="selectedDate" [income]="income"
                     [expense]="expense"></app-revenue-list>
 </div>
 

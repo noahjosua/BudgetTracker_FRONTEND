@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Entry } from "./model/entry.model";
-import { Constants } from "./constants";
-import { IncomeService } from "./services/income.service";
-import { ExpenseService } from "./services/expense.service";
-import { Subscription } from "rxjs";
-import { TranslateService } from "@ngx-translate/core";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Entry} from "./model/entry.model";
+import {Constants} from "./constants";
+import {IncomeService} from "./services/income.service";
+import {ExpenseService} from "./services/expense.service";
+import {Subscription} from "rxjs";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-root',
@@ -20,8 +20,7 @@ export class AppComponent implements OnInit, OnDestroy {
   income: Entry[] = [];
   expense: Entry[] = [];
 
-  
-   /* holds the value that was outputted by the OverviewComponent */
+  /* holds the value that was outputted by the OverviewComponent */
   showOnlyIncomes: boolean = false;
   showOnlyExpenses: boolean = false;
   showAllEntries: boolean = false;
@@ -32,7 +31,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   /* holds the date that was emitted by the ToolbarComponent */
   selectedDate: Date = new Date();
-
 
 
   constructor(public incomeService: IncomeService,
@@ -62,7 +60,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   /**
    * Sets whether to show only incomes.
-   * @param showIncomes - True to show only incomes.
+   * @param showIncomes
    */
   showIncomes(showIncomes: boolean) {
     this.showOnlyIncomes = showIncomes;
@@ -70,12 +68,20 @@ export class AppComponent implements OnInit, OnDestroy {
     this.showOnlyExpenses = false;
   }
 
+  /**
+   * Sets whether to show only expenses.
+   * @param showExpenses
+   */
   showExpenses(showExpenses: boolean) {
     this.showOnlyExpenses = showExpenses;
     this.showAllEntries = false;
     this.showOnlyIncomes = false;
   }
 
+  /**
+   * Sets whether to show expenses and incomes.
+   * @param showEntries
+   */
   showEntries(showEntries: boolean) {
     this.showAllEntries = showEntries;
     this.showOnlyIncomes = false;
