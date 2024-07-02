@@ -6,7 +6,8 @@
     "serve": "ng serve --open",
     "compodoc": "compodoc -p tsconfig.doc.json -s -r --port 5000",
     "test": "jasmine",
-    "build": "npm-run-all build:app build:docs",
+    "build": "npm-run-all build:app build:docs postbuild",
+    "postbuild": "node fix-documentation-paths.js",
     "build:app": "ng build",
     "build:docs": "compodoc -p tsconfig.doc.json -d dist/budget-tracker-frontend/browser/documentation"
   },
