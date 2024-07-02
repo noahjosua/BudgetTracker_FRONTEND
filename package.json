@@ -5,7 +5,8 @@
     "start": "npm-run-all --parallel serve compodoc",
     "serve": "ng serve --open",
     "compodoc": "compodoc -p tsconfig.doc.json -s -r --port 5000",
-    "test": "jasmine"
+    "test": "jasmine",
+    "build": "ng build"
   },
   "private": true,
   "dependencies": {
