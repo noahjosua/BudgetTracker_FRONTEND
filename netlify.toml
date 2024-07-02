@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"
-  publish = "dist/budget-tracker-frontend"
+  publish = "dist/budget-tracker-frontend/browser"
 
 [[redirects]]
   from = "/docs/*"
