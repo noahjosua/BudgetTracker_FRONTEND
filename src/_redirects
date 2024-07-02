@@ -1,2 +1,2 @@
-/docs/*  /documentation/:splat  200
+/documentation/*  /documentation/:splat  200
 /*  /index.html  200
