@@ -39,9 +39,6 @@ describe('testing CreateEntryButtonComponent', () => {
     expect(createEntryButtonComponent.isDialogVisible).toBeTruthy();
   });
 
-  xit('ngOnChanges', () => {
-
-  });
 
 });
 

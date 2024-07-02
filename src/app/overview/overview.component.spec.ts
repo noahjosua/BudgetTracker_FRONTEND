@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule, } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
@@ -16,7 +15,6 @@ describe('testing OverviewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
         FormsModule,
         TranslateModule.forRoot()
       ],
@@ -48,7 +46,7 @@ describe('testing OverviewComponent', () => {
     componentFixture.detectChanges();
 
     const nativeElement = componentFixture.nativeElement;
-    //find total income in first <p> element of first .innercontainer
+  
     const totalIncome = nativeElement.querySelector('.innerContainer:nth-child(1) p');
 
     expect(totalIncome.textContent).toEqual('100€');
@@ -62,7 +60,7 @@ describe('testing OverviewComponent', () => {
     componentFixture.detectChanges();
 
     const nativeElement = componentFixture.nativeElement;
-    //find total expense in first <p> element of second .innercontainer
+   
     const totalExpense = nativeElement.querySelector('.innerContainer:nth-child(2) p');
 
     expect(totalExpense.textContent).toEqual('50€');

@@ -70,10 +70,6 @@ describe('testing RevenueListComponent', () => {
     expect(revenueListComponent.ngOnInit).toHaveBeenCalled();
 
   });
-  xit('should call onChangesIncomes when ngOnChanges is called', () => {
-    //TODO
-
-  });
 
   it('should initialize isDialogVisible to false', () => {
     expect(revenueListComponent.isDialogVisible).toBeFalsy();

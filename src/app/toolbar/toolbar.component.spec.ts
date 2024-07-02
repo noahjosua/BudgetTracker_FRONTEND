@@ -83,22 +83,6 @@ describe('testing ToolbarComponent', () => {
 
     });
 
-    xit('should emit correct month when nextMonth() is called in december', () => {
-        spyOn(toolbarComponent.dateChanged, 'emit');
-
-        toolbarComponent.currentDate = new Date('2023-12-01');
-
-
-        const currentMonth = toolbarComponent.currentDate.getMonth();
-        const newMonth = toolbarComponent.currentDate.getMonth() + 1;
-
-        expect(toolbarComponent.currentDate.getMonth()).toEqual(currentMonth);
-        toolbarComponent.nextMonth();
-        expect(toolbarComponent.currentDate.getMonth()).toEqual(newMonth);
-
-        expect(toolbarComponent.dateChanged.emit).toHaveBeenCalledWith(toolbarComponent.currentDate);
-
-    });
 
     it('should emit correct year when nextMonth() is called in december', () => {
         spyOn(toolbarComponent.dateChanged, 'emit');
