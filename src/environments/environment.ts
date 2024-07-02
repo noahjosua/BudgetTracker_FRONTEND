@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  baseUrl: 'https://budgettracker-backend-pudu.onrender.com',
+  baseUrl: 'http://localhost:8080',
   path_income: '/api/incomes',
   path_expense: '/api/expenses',
 

@@ -6,8 +6,15 @@ import {environment} from "../../environments/environment";
 import {Entry} from "../model/entry.model";
 import {Constants} from "../constants";
 import {NotificationMessageModel} from "../model/notification-message.model";
+import {DateConverterService} from "./date-converter.service";
 
+/**
+ * Manages categories, incomes, and notification messages related to incomes.
+ * Uses HttpClient for API interactions and DateConverterService for date handling.
+ * Provides methods to fetch categories and incomes, add, update, and delete incomes.
+ */
 @Injectable({providedIn: 'root'})
+
 export class IncomeService {
   private categories: string[] = [];
   private categoriesUpdated = new Subject<string[]>();
@@ -16,27 +23,37 @@ export class IncomeService {
   private incomesUpdated = new Subject<Entry[]>();
 
   private showMessageToUserSubject = new Subject<NotificationMessageModel>();
-  private notificationErrorAddIncome: NotificationMessageModel = {
-    severity: 'error',
-    summary: 'Fehler',
-    detail: 'Einnahme konnte nicht gespeichert werden.'
-  };
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private dateConverterService: DateConverterService) {
   }
 
+  /**
+   * Returns an observable for categories updates.
+   * @returns Observable<string[]> - Observable emitting updated categories.
+   */
   getCategoriesUpdatedListener(): Observable<string[]> {
     return this.categoriesUpdated.asObservable();
   }
 
+  /**
+   * Returns an observable for incomes updates.
+   * @returns Observable<Entry[]> - Observable emitting updated incomes.
+   */
   getIncomesUpdatedListener(): Observable<Entry[]> {
     return this.incomesUpdated.asObservable();
   }
 
+  /**
+   * Returns an observable for notification messages related to incomes.
+   * @returns Observable<NotificationMessageModel> - Observable emitting notification messages.
+   */
   getShowMessageToUserSubject() {
     return this.showMessageToUserSubject.asObservable();
   }
 
+  /**
+   * Fetches expense categories from the server and updates the categories list.
+   */
   fetchCategories() {
     const url = `${environment.baseUrl}${environment.path_income}${environment.endpoint_get_categories}`;
     this.httpClient.get(url, {
@@ -49,8 +66,12 @@ export class IncomeService {
       });
   }
 
+  /**
+   * Fetches incomes for a specific date from the server and updates the incomes list.
+   * @param date - The date for which incomes are fetched.
+   */
   fetchIncomesByDate(date: Date) {
-    const isoDateString = date.toISOString().split('T')[0];
+    const isoDateString = this.dateConverterService.convertToDateString(date);
     const url = `${environment.baseUrl}${environment.path_income}${environment.endpoint_get_by_date}/${isoDateString}`;
     this.httpClient.get(url, {
       observe: 'response',
@@ -73,7 +94,14 @@ export class IncomeService {
       });
   }
 
+  /**
+   * Adds a new income to the server and updates the incomes list upon success.
+   * Notifies subscribers with a success message upon successful addition, or an error message on failure.
+   * @param income - The income object to be added.
+   * @param date - The date associated with the income.
+   */
   addIncome(income: Entry, date: Date) {
+    income = this.dateConverterService.setTime(income);
     const URL = `${environment.baseUrl}${environment.path_income}${environment.endpoint_save}`
     this.httpClient.post(URL, JSON.stringify(income), {
       headers: {'Content-Type': 'application/json'},
@@ -96,29 +124,89 @@ export class IncomeService {
                 detail: 'Einnahme gespeichert.'
               });
             } catch (error) {
-              this.showMessageToUserSubject.next(this.notificationErrorAddIncome);
+              this.showMessageToUserSubject.next({
+                severity: 'error',
+                summary: 'Fehler',
+                detail: 'Einnahme konnte nicht gespeichert werden.'
+              });
             }
           }
         },
         error: () => {
-          this.showMessageToUserSubject.next(this.notificationErrorAddIncome);
+          this.showMessageToUserSubject.next({
+            severity: 'error',
+            summary: 'Fehler',
+            detail: 'Einnahme konnte nicht gespeichert werden.'
+          });
         }
       });
   }
 
-  // TODO
-  updateIncome(income: Entry) {
-
+  /**
+   * Updates an existing income entry by sending an HTTP PUT request.
+   *
+   * If the update is successful and the response contains the expected keys, the updated entry is parsed.
+   * The entry is then compared against the provided date to determine if it should be included in the current
+   * month's incomes. The updated list of incomes is emitted and a success message is shown.
+   *
+   * In case of errors, an error message is shown to the user.
+   *
+   * @param income - The income entry to be updated.
+   * @param date - The date to compare against the planned date of the updated income.
+   */
+  updateIncome(income: Entry, date: Date) {
+    const URL = `${environment.baseUrl}${environment.path_income}${environment.endpoint_update}`
+    this.httpClient.put(URL, JSON.stringify(income), {
+      headers: {'Content-Type': 'application/json'},
+      observe: 'response'
+    })
+      .pipe(map(response => response.body))
+      .subscribe({
+        next: (body) => {
+          if (body && typeof body === 'object' && Constants.RESPONSE_MESSAGE_KEY in body && Constants.RESPONSE_ENTRY_KEY in body) {
+            try {
+              const updatedIncome: Entry = JSON.parse(JSON.stringify(body.entry));
+              const planned = new Date(updatedIncome.datePlanned);
+              this.incomes = this.incomes.filter(entry => entry.id !== updatedIncome.id);
+              if (planned.getMonth() === date.getMonth()) {
+                this.incomes.push(updatedIncome);
+              }
+              this.incomesUpdated.next([...this.incomes]);
+              this.showMessageToUserSubject.next({
+                severity: 'success',
+                summary: 'Erfolg',
+                detail: 'Einnahme geändert.'
+              });
+            } catch (error) {
+              this.showMessageToUserSubject.next({
+                severity: 'error',
+                summary: 'Fehler',
+                detail: 'Einnahme konnte nicht geändert werden.'
+              });
+            }
+          }
+        },
+        error: () => {
+          this.showMessageToUserSubject.next({
+            severity: 'error',
+            summary: 'Fehler',
+            detail: 'Einnahme konnte nicht geändert werden.'
+          });
+        }
+      });
   }
 
-  // TODO Fehler fangen -- wie in saveExpense
+  /**
+   * Deletes an income from the server and updates the incomes list upon success.
+   * Notifies subscribers with a success message upon successful deletion, or an error message on failure.
+   * @param income - The income object to be deleted.
+   */
   deleteIncome(income: Entry) {
     const incomeId = income.id;
     const URL = `${environment.baseUrl}${environment.path_income}${environment.endpoint_delete}/${incomeId}`;
     this.httpClient.delete(URL, {observe: 'response', responseType: 'text'})
       .subscribe({
-        next: (body) => {
-          console.log(body);
+        next: (_) => {
           this.incomes = this.incomes.filter(i => i.id !== incomeId);
           this.incomesUpdated.next([...this.incomes]);
           this.showMessageToUserSubject.next({
@@ -134,6 +222,7 @@ export class IncomeService {
             detail: 'Einnahme konnte nicht gelöscht werden.'
           });
         }
+
       });
   }
 }
