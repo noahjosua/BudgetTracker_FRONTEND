@@ -6,7 +6,9 @@
     "serve": "ng serve --open",
     "compodoc": "compodoc -p tsconfig.doc.json -s -r --port 5000",
     "test": "jasmine",
-    "build": "ng build"
+    "build": "npm-run-all build:app build:docs",
+    "build:app": "ng build",
+    "build:docs": "compodoc -p tsconfig.doc.json"
   },
   "private": true,
   "dependencies": {
