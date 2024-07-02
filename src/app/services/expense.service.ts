@@ -155,6 +155,7 @@ export class ExpenseService {
    * @param date - The date to compare against the planned date of the updated expense.
    */
   updateExpense(expense: Entry, date: Date) {
+    expense = this.dateConverterService.setTime(expense);
     const URL = `${environment.baseUrl}${environment.path_expense}${environment.endpoint_update}`
     this.httpClient.put(URL, JSON.stringify(expense), {
       headers: {'Content-Type': 'application/json'},

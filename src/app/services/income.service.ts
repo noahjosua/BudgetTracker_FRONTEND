@@ -155,6 +155,7 @@ export class IncomeService {
    * @param date - The date to compare against the planned date of the updated income.
    */
   updateIncome(income: Entry, date: Date) {
+    income = this.dateConverterService.setTime(income);
     const URL = `${environment.baseUrl}${environment.path_income}${environment.endpoint_update}`
     this.httpClient.put(URL, JSON.stringify(income), {
       headers: {'Content-Type': 'application/json'},
