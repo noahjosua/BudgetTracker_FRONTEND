@@ -3,6 +3,6 @@
   publish = "dist/budget-tracker-frontend/browser"
 
 [[redirects]]
-  from = "/docs/*"
+  from = "/docs"
   to = "/documentation/:splat"
   status = 200

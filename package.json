@@ -8,7 +8,7 @@
     "test": "jasmine",
     "build": "npm-run-all build:app build:docs",
     "build:app": "ng build",
-    "build:docs": "compodoc -p tsconfig.doc.json"
+    "build:docs": "compodoc -p tsconfig.doc.json -d dist/budget-tracker-frontend/browser/documentation"
   },
   "private": true,
   "dependencies": {
