@@ -87,16 +87,16 @@ describe('testing CreateEditEntryComponent', () => {
 
   });
 
-  /*it('should call onCancel when cancel button is clicked', () => {
+  xit('should call onCancel when cancel button is clicked', () => {
     const cancelButton = fixture.nativeElement.querySelector('.p-button[label=\'Abbrechen\']');
     spyOn(createEditEntryComponent, 'onCancel');
 
-    translateServiceMock.get.and.returnValue(of('Abbrechen'));
+    //translateServiceMock.get.and.returnValue(of('Abbrechen'));
 
     cancelButton.click();
 
     expect(createEditEntryComponent.onCancel).toHaveBeenCalled();
-  }); */
+  });
 
 
   it('should emit visibilityChanged event when onCancel() is called', () => {
@@ -144,7 +144,6 @@ describe('testing CreateEditEntryComponent', () => {
   });
 
   it('should call onSave for adding new expense when isUpdating is false', () => {
-    // Vorbereitung der Testumgebung
     createEditEntryComponent.isUpdating = false;
     createEditEntryComponent.type = 'expense';
     createEditEntryComponent.newEntry = {
@@ -161,11 +160,10 @@ describe('testing CreateEditEntryComponent', () => {
     expect(expenseService.addExpense).toHaveBeenCalled();
   });
 
-  /*
-  it('should call onSave for updating existing expense when isUpdating is true', () => {
-    // Set up test conditions
+
+  xit('should call onSave for updating existing expense when isUpdating is true', () => {
     createEditEntryComponent.isUpdating = true;
-    createEditEntryComponent.type = Constants.EXPENSE;
+    createEditEntryComponent.type = 'expense';
     createEditEntryComponent.newEntry = {
       dateCreated: testDate,
       datePlanned: testDate,
@@ -175,7 +173,7 @@ describe('testing CreateEditEntryComponent', () => {
     };
 
     // Spy on the updateExpense method
-    spyOn(expenseService, 'updateExpense').and.callThrough();
+    spyOn(expenseService, 'updateExpense');
 
     // Call onSave
     createEditEntryComponent.onSave();
@@ -184,6 +182,6 @@ describe('testing CreateEditEntryComponent', () => {
     expect(expenseService.updateExpense).toHaveBeenCalled();
     expect(expenseService.updateExpense).toHaveBeenCalledWith(createEditEntryComponent.newEntry, createEditEntryComponent.selectedDate);
   });
-*/
+
 
 });
