@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule, } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
@@ -39,10 +38,8 @@ describe('testing AppComponent', () => {
 
         };
 
-
         await TestBed.configureTestingModule({
             imports: [
-                HttpClientTestingModule,
                 FormsModule,
                 TranslateModule.forRoot()
             ],
@@ -127,7 +124,6 @@ describe('testing AppComponent', () => {
 
         expect(appComponent.incomeService.fetchIncomesByDate).toHaveBeenCalled();
     });
-
 
 
     it('should update total when updateTotal() is called', () => {
