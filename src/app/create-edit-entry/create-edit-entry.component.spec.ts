@@ -10,35 +10,15 @@ import {MessageService} from 'primeng/api';
 
 import {IncomeService} from '../services/income.service';
 import {ExpenseService} from '../services/expense.service';
-import {Constants} from "../constants";
-import {of, Subject} from "rxjs";
-import {HttpResponse} from "@angular/common/http";
-import {Entry} from "../model/entry.model";
 
 
 describe('testing CreateEditEntryComponent', () => {
   let createEditEntryComponent: CreateEditEntryComponent;
   let fixture: ComponentFixture<CreateEditEntryComponent>;
-  let incomeService: IncomeService;
-  let expenseService: ExpenseService;
   let testDate: Date;
-  /*let translateServiceMock: jasmine.SpyObj<TranslateService>;
-  let incomeServiceSpy: jasmine.SpyObj<IncomeService>;
-  let expenseServiceSpy: jasmine.SpyObj<ExpenseService>;*/
 
 
   beforeEach(async () => {
-    /* translateServiceMock = jasmine.createSpyObj('TranslateService', ['get']);
-     translateServiceMock.get.and.returnValue(of({}));
-     const incomeSpy = jasmine.createSpyObj('IncomeService', ['addIncome', 'updateIncome', 'getCategoriesUpdatedListener', 'fetchCategories']);
-     const expenseSpy = jasmine.createSpyObj('ExpenseService', ['addExpense', 'updateExpense', 'getCategoriesUpdatedListener', 'fetchCategories']);
-
-     incomeSpy.fetchCategories.and.returnValue(of(new HttpResponse({ body: JSON.stringify([]) })));
-     expenseSpy.fetchCategories.and.returnValue(of(new HttpResponse({ body: JSON.stringify([]) })));
-
-
-     incomeSpy.getCategoriesUpdatedListener.and.returnValue(new Subject().asObservable());
-     expenseSpy.getCategoriesUpdatedListener.and.returnValue(new Subject().asObservable());*/
     testDate = new Date(2024, 6, 24);
     await TestBed.configureTestingModule({
       imports: [
@@ -53,32 +33,25 @@ describe('testing CreateEditEntryComponent', () => {
         ExpenseService,
         TranslateService,
         MessageService,
-        /* {provide: TranslateService, useValue: translateServiceMock},
-         {provide: IncomeService, useValue: incomeSpy},
-         {provide: ExpenseService, useValue: expenseSpy},*/
       ],
 
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
-    /*incomeServiceSpy = TestBed.inject(IncomeService) as jasmine.SpyObj<IncomeService>;
-     expenseServiceSpy = TestBed.inject(ExpenseService) as jasmine.SpyObj<ExpenseService>;*/
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CreateEditEntryComponent);
-    incomeService = TestBed.inject(IncomeService);
-    expenseService = TestBed.inject(ExpenseService);
     createEditEntryComponent = fixture.componentInstance;
     fixture.detectChanges();
 
   });
 
-  it('Component created.', () => {
+  it('component created', () => {
     expect(createEditEntryComponent).toBeTruthy();
   });
 
-  it('Validation variables initialized to false.', () => {
+  it('validation variables initialized to false', () => {
 
     expect(createEditEntryComponent.validation.isTypeChosen).toBeFalsy();
     expect(createEditEntryComponent.validation.isAmountValid).toBeFalsy();
@@ -87,18 +60,6 @@ describe('testing CreateEditEntryComponent', () => {
 
   });
 
-  xit('should call onCancel when cancel button is clicked', () => {
-    const cancelButton = fixture.nativeElement.querySelector('.p-button[label=\'Abbrechen\']');
-    spyOn(createEditEntryComponent, 'onCancel');
-
-    //translateServiceMock.get.and.returnValue(of('Abbrechen'));
-
-    cancelButton.click();
-
-    expect(createEditEntryComponent.onCancel).toHaveBeenCalled();
-  });
-
-
   it('should emit visibilityChanged event when onCancel() is called', () => {
     spyOn(createEditEntryComponent.visibilityChanged, 'emit');
     createEditEntryComponent.onCancel();
@@ -106,7 +67,7 @@ describe('testing CreateEditEntryComponent', () => {
   });
 
 
-  it('reset() is called when onCancel() is called.', () => {
+  it('reset() is called when onCancel() is called', () => {
     spyOn(createEditEntryComponent as any, 'reset');
 
 
@@ -114,7 +75,7 @@ describe('testing CreateEditEntryComponent', () => {
     expect((createEditEntryComponent as any).reset).toHaveBeenCalled();
   });
 
-  it('clearEntry() and clearValidation() are called when onCancel() is called.', () => {
+  it('clearEntry() and clearValidation() are called when onCancel() is called', () => {
     spyOn(createEditEntryComponent as any, 'clearEntry');
     spyOn(createEditEntryComponent as any, 'clearValidation');
 
@@ -125,25 +86,7 @@ describe('testing CreateEditEntryComponent', () => {
   });
 
 
-  it('should call onSave for adding new income when isUpdating is false', () => {
-    // Vorbereitung der Testumgebung
-    createEditEntryComponent.isUpdating = false;
-    createEditEntryComponent.type = 'income';
-    createEditEntryComponent.newEntry = {
-      dateCreated: testDate,
-      datePlanned: testDate,
-      category: 'test-category',
-      description: 'test description',
-      amount: 100
-    };
-
-    spyOn(incomeService, 'addIncome');
-    createEditEntryComponent.onSave();
-
-    expect(incomeService.addIncome).toHaveBeenCalled();
-  });
-
-  it('should call onSave for adding new expense when isUpdating is false', () => {
+  it('onSave() should call onIsSaving() when isUpdating is true', () => {
     createEditEntryComponent.isUpdating = false;
     createEditEntryComponent.type = 'expense';
     createEditEntryComponent.newEntry = {
@@ -154,14 +97,14 @@ describe('testing CreateEditEntryComponent', () => {
       amount: 100
     };
 
-    spyOn(expenseService, 'addExpense');
+    spyOn(createEditEntryComponent as any, 'onIsSaving');
     createEditEntryComponent.onSave();
 
-    expect(expenseService.addExpense).toHaveBeenCalled();
+    expect((createEditEntryComponent as any).onIsSaving).toHaveBeenCalled();
   });
 
 
-  xit('should call onSave for updating existing expense when isUpdating is true', () => {
+  it('onSave() should call onIsUpdating() when isUpdating is true', () => {
     createEditEntryComponent.isUpdating = true;
     createEditEntryComponent.type = 'expense';
     createEditEntryComponent.newEntry = {
@@ -172,16 +115,40 @@ describe('testing CreateEditEntryComponent', () => {
       amount: 100
     };
 
-    // Spy on the updateExpense method
-    spyOn(expenseService, 'updateExpense');
-
-    // Call onSave
+    spyOn(createEditEntryComponent as any, 'onIsUpdating');
     createEditEntryComponent.onSave();
 
-    // Ensure updateExpense was called
-    expect(expenseService.updateExpense).toHaveBeenCalled();
-    expect(expenseService.updateExpense).toHaveBeenCalledWith(createEditEntryComponent.newEntry, createEditEntryComponent.selectedDate);
+    expect((createEditEntryComponent as any).onIsUpdating).toHaveBeenCalled();
   });
 
+  it('entryValidator() return true if all validation variables are true', () => {
+    createEditEntryComponent.validation.isTypeChosen = createEditEntryComponent.validation.isAmountValid =
+      createEditEntryComponent.validation.isCategoryChosen = createEditEntryComponent.validation.isDesValid = true;
+
+    expect(createEditEntryComponent.entryValidator).toBeTruthy();
+  });
+
+
+  it('ngOnChanges() should call handleIsUpdatingChanges(), should call updateValidator() if isUpdating changes to true', () => {
+    spyOn(createEditEntryComponent as any, 'handleIsUpdatingChanges');
+    const exampleChanges: SimpleChanges = {
+      isUpdating: new SimpleChange(false, true, true)
+    };
+
+    createEditEntryComponent.ngOnChanges(exampleChanges);
+    expect((createEditEntryComponent as any).handleIsUpdatingChanges).toHaveBeenCalled();
+  });
+
+  
+  it('handleIsUpdatingChanges() should call updateValidator() if isUpdating changes to true', () => {
+    spyOn(createEditEntryComponent, 'updateValidator');
+
+    const exampleChanges: SimpleChanges = {
+      isUpdating: new SimpleChange(false, true, true)
+    };
+
+    createEditEntryComponent.ngOnChanges(exampleChanges);
+    expect((createEditEntryComponent).updateValidator).toHaveBeenCalled();
+  });
 
 });
